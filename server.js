@@ -13,14 +13,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "build")));
 
 app.get("/ping", async (req, res) => {
-  const { ItemType } = db;
-  const itemType = await ItemType.findOne({
-    where: {
-      name: "image-item"
-    }
-  });
+  const { Quiz } = db;
+  const quiz = await Quiz.findOne();
+  const type = await quiz.getQuizType();
+  const questionRecords = await quiz.getQuestions();
+  const questions = await Promise.all(
+    questionRecords.map(async q => ({
+      correctAnswerIndex: q.correctAnswerIndex,
+      choices: await Promise.all(
+        (await q.getChoices()).map(async c => ({ item: await c.getItem() }))
+      )
+    }))
+  );
 
-  return res.json({ itemType });
+  const formattedQuiz = {
+    name: quiz.name,
+    type,
+    questions
+  };
+
+  return res.json({ formattedQuiz });
 });
 
 app.get("/", function(req, res) {

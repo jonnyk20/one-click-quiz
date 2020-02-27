@@ -1,10 +1,14 @@
-'use strict';
+"use strict";
 module.exports = (sequelize, DataTypes) => {
-  const ItemType = sequelize.define('ItemType', {
-    name: DataTypes.STRING
-  }, {});
+  const ItemType = sequelize.define(
+    "ItemType",
+    {
+      name: DataTypes.STRING
+    },
+    {}
+  );
   ItemType.associate = function(models) {
-    // associations can be defined here
+    ItemType.hasMany(models.Item, { foreignKey: "itemTypeId" });
   };
   return ItemType;
 };
