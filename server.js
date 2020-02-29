@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/quiz/1", async (req, res) => {
+app.get("/api/quiz/1", async (req, res) => {
   const { Quiz } = db;
   const quiz = await Quiz.findOne();
   const type = await quiz.getQuizType();

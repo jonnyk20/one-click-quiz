@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Question from "./Question";
 
 const fetchQuiz = async id => {
-  const response = await fetch(`${id}/`);
+  const response = await fetch(`${window.location.origin}/api/quiz/${id}`);
   const json = await response.json();
 
   return json;
