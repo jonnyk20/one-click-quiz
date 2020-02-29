@@ -20,7 +20,6 @@ const Quiz = () => {
   useEffect(() => {
     const prepareQuiz = async () => {
       const data = await fetchQuiz(id);
-      console.log("DATA", data);
       setQuiz(data.quiz);
       setMaxScore(data.quiz.questions.length);
     };

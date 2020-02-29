@@ -13,6 +13,7 @@
     "node-sass": "^4.13.1",
     "pg": "^7.18.2",
     "pg-hstore": "^2.3.3",
+    "ramda": "^0.27.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
