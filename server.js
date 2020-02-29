@@ -35,7 +35,7 @@ app.get("/api/quiz/1", async (req, res) => {
   return res.json({ quiz: formattedQuiz });
 });
 
-app.get("/", function(req, res) {
+app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
