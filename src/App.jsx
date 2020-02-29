@@ -1,21 +1,22 @@
 import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import logo from "./logo.svg";
-import "./App.css";
+import Builder from "./Builder";
+import Quiz from "./Quiz";
 
-const callApi = async () => {
-  const response = await fetch("/ping");
-  const body = await response.json();
-  if (response.status !== 200) throw Error(body.message);
-  console.log("BODY", body);
-};
+import "./App.scss";
 
-const App = () => {
-  return (
-    <div>
-      <button onClick={callApi}> HA</button>
-    </div>
-  );
-};
+const App = () => (
+  <Router>
+    <Switch>
+      <Route path="/quiz/:id">
+        <Quiz />
+      </Route>
+      <Route path="/">
+        <Builder />
+      </Route>
+    </Switch>
+  </Router>
+);
 
 export default App;

@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/ping", async (req, res) => {
+app.get("/quiz/1", async (req, res) => {
   const { Quiz } = db;
   const quiz = await Quiz.findOne();
   const type = await quiz.getQuizType();
@@ -21,18 +21,18 @@ app.get("/ping", async (req, res) => {
     questionRecords.map(async q => ({
       correctAnswerIndex: q.correctAnswerIndex,
       choices: await Promise.all(
-        (await q.getChoices()).map(async c => ({ item: await c.getItem() }))
+        (await q.getChoices()).map(async c => (await c.getItem()).data)
       )
     }))
   );
 
   const formattedQuiz = {
     name: quiz.name,
-    type,
+    type: type.name,
     questions
   };
 
-  return res.json({ formattedQuiz });
+  return res.json({ quiz: formattedQuiz });
 });
 
 app.get("/", function(req, res) {
