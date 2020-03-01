@@ -3,8 +3,7 @@ import bodyParser from "body-parser";
 import path from "path";
 import http from "http";
 
-const env = process.env.NODE_ENV || "development";
-const buildPath = env === "development" ? "/../build/" : "build";
+const buildPath = "/../build/";
 
 const app = express();
 
@@ -21,7 +20,7 @@ app.use(express.static(path.join(__dirname, buildPath)));
 routes(app);
 
 app.get("*", function(req, res) {
-  res.sendFile(path.join(__dirname, buildPath, "index.html"));
+  res.sendFile(path.join(__dirname, "/../build/", "index.html"));
 });
 
 const PORT = process.env.PORT || 8080;
