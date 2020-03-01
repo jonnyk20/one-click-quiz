@@ -1,16 +1,18 @@
-const db = require("./models/index.js");
+import models from "./db/models/index";
+import { Express, Response } from "express";
+import { Sequelize } from "sequelize";
 
-const routes = app => {
-  app.get("/api/quiz/1", async (req, res) => {
-    const { Quiz } = db;
+const routes = (app: Express) => {
+  app.get("/api/quiz/1", async (req: Express.Request, res: Response) => {
+    const { Quiz } = models;
     const quiz = await Quiz.findOne();
     const type = await quiz.getQuizType();
     const questionRecords = await quiz.getQuestions();
     const questions = await Promise.all(
-      questionRecords.map(async q => ({
+      questionRecords.map(async (q: any) => ({
         correctAnswerIndex: q.correctAnswerIndex,
         choices: await Promise.all(
-          (await q.getChoices()).map(async c => (await c.getItem()).data)
+          (await q.getChoices()).map(async (c: any) => (await c.getItem()).data)
         )
       }))
     );

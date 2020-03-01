@@ -1,5 +1,5 @@
-const parseString = str => str.split("\n");
-const mockRequest = (item, i) => {
+const parseString = (str: string) => str.split("\n");
+const mockRequest = (item: any, i: number) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (i !== 2) {
@@ -10,7 +10,7 @@ const mockRequest = (item, i) => {
   });
 };
 
-const getImage = async (item, i) => {
+const getImage = async (item: any, i: number) => {
   let image = null;
   try {
     image = await mockRequest(item, i);
@@ -20,11 +20,13 @@ const getImage = async (item, i) => {
   return { item, image };
 };
 
-const getAllImages = async (items, socket) => {
+type getAllImagesType = (items: any, socket: SocketIO.Socket) => any[];
+
+const getAllImages = async (items: any, socket: SocketIO.Socket) => {
   const itemCount = items.length;
   let completed = 0;
 
-  const getImageAndUpdateCount = async (item, i) => {
+  const getImageAndUpdateCount = async (item: any, i: number) => {
     const value = await getImage(item, i);
     if (value.image) {
       completed += 1;
@@ -38,10 +40,12 @@ const getAllImages = async (items, socket) => {
   return values;
 };
 
-const buildQuiz = async (data, socket) => {
+type buildQuizType = (data: string, socket: any) => void;
+
+const buildQuiz: buildQuizType = async (data, socket) => {
   const items = parseString(data);
   const itemsWithImages = await getAllImages(items, socket);
   console.log("submitting with items", itemsWithImages);
 };
 
-module.exports = buildQuiz;
+export default buildQuiz;

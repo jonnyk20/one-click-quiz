@@ -19,7 +19,7 @@ const createQuiz = async items => {
 
 const Builder = () => {
   const [items, setItems] = useState(
-    convertArrayToString(["Tiger", "Leopard", "Cheetah"])
+    convertArrayToString(["Tiger", "Leopard", "Cheetah", "Koala"])
   );
   const [inputValue, setInputValue] = useState(items);
   const [socket, setSocket] = useState(null);

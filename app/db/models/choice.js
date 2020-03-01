@@ -1,4 +1,3 @@
-"use strict";
 module.exports = (sequelize, DataTypes) => {
   const Choice = sequelize.define("Choice", {}, {});
   Choice.associate = function(models) {

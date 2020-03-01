@@ -6,6 +6,8 @@ import Quiz from "./Quiz";
 
 import "./App.scss";
 
+console.log("HELLO WORLD");
+
 const App = () => (
   <Router>
     <Switch>

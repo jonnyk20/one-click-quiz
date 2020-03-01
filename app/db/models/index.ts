@@ -1,16 +1,36 @@
-"use strict";
+import fs from "fs";
+import path from "path";
+import { Sequelize } from "sequelize";
+import configs from "../config/config.json";
 
-const fs = require("fs");
-const path = require("path");
-const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
-const db = {};
 
-let sequelize;
+type environmentType = "development" | "test" | "production";
+const env: string = process.env.NODE_ENV || "development";
+
+let envType: environmentType = "development";
+
+switch (env) {
+  case "test":
+    envType = "test";
+    break;
+  case "production":
+    envType = "production";
+    break;
+  default:
+    break;
+}
+
+const config: any = configs[envType];
+
+const db: any = {};
+
+let sequelize: Sequelize;
+
+const custom: any = process.env[config.use_env_variable];
+
 if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  sequelize = new Sequelize(custom, config);
 } else {
   sequelize = new Sequelize(
     config.database,
@@ -40,14 +60,14 @@ Object.keys(db).forEach(modelName => {
 // test connection
 sequelize
   .authenticate()
-  .then(function(err) {
+  .then((err: any) => {
     console.log("Connection has been established successfully.");
   })
-  .catch(function(err) {
+  .catch((err: any) => {
     console.log("Unable to connect to the database:", err);
   });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = db;
+export default db;

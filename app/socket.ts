@@ -1,7 +1,8 @@
-const socketIO = require("socket.io");
-const buildQuiz = require("./buildQuiz");
+import socketIO from "socket.io";
+import buildQuiz from "./buildQuiz";
+import { Server } from "http";
 
-const socket = server => {
+const socket = (server: Server) => {
   const io = socketIO.listen(server);
   io.on("connection", socket => {
     console.log("a user is connected!");
