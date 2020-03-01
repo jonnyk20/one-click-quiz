@@ -33,7 +33,7 @@
   "scripts": {
     "type": "npx ts-node app/index.ts",
     "typemon": "nodemon",
-    "start": "node app/index.js",
+    "start": "node index.js",
     "back": "npx ts-node --project app/tsconfig.json app/index.ts",
     "front": "react-scripts start",
     "hello": "node app/server.js",
