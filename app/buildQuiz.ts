@@ -1,5 +1,5 @@
 import { getBingImages } from "./services/Azureservice";
-import models from "./db/models/index";
+import ItemType from "./db/models/ItemType";
 
 const parseString = (str: string) => str.split("\n");
 
@@ -7,7 +7,12 @@ type buildQuizType = (data: string, socket: any) => void;
 
 const buildQuiz: buildQuizType = async (data, socket) => {
   const items = parseString(data);
-  const itemsWithImages = await getBingImages(items, socket);
+  // const itemsWithImages = await getBingImages(items, socket);
+
+  const itemTtype = await ItemType.findOne();
+  console.log("itemTtype", itemTtype);
+
+  const itemsWithImages: string[] = [itemTtype?.name || ""];
 
   socket.emit("completed", { items: itemsWithImages });
 

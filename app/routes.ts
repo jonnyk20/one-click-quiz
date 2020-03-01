@@ -1,6 +1,5 @@
-import models from "./db/models/index";
+import models from "./db/index";
 import { Express, Response } from "express";
-import { Sequelize } from "sequelize";
 
 const routes = (app: Express) => {
   app.get("/api/quiz/1", async (req: Express.Request, res: Response) => {

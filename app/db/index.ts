@@ -1,7 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { Sequelize } from "sequelize";
-import configs from "../config/config.json";
+import { Sequelize } from "sequelize-typescript";
+import configs from "./config/config";
+import QuizType from "./models/QuizType";
+import Quiz from "./models/Quiz";
+import ItemType from "./models/ItemType";
+import Question from "./models/Question";
+import Choice from "./models/Choice";
+import Item from "./models/Item";
 
 const basename = path.basename(__filename);
 
@@ -40,22 +46,10 @@ if (config.use_env_variable) {
   );
 }
 
-fs.readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
-    );
-  })
-  .forEach(file => {
-    const model = sequelize["import"](path.join(__dirname, file));
-    db[model.name] = model;
-  });
+console.log("__dirname", __dirname);
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+sequelize.addModels([QuizType, Quiz, ItemType, Item, Question, Choice]);
+// sequelize.addModels([__dirname + "/models/*.ts"]);
 
 // test connection
 sequelize
