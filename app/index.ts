@@ -2,6 +2,9 @@ import express from "express";
 import bodyParser from "body-parser";
 import path from "path";
 import http from "http";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const buildPath = "/../build/";
 
@@ -25,4 +28,3 @@ app.get("*", function(req, res) {
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-console.log("HELLO WORLD!!");
