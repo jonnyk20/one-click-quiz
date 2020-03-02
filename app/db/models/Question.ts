@@ -22,7 +22,7 @@ class Question extends Model {
   quiz!: Quiz;
 
   @HasMany(() => Choice, "questionId")
-  choices!: Choice[];
+  choices?: Choice[];
 }
 
 export default Question;

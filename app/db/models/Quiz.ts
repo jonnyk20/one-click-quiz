@@ -16,11 +16,17 @@ import Question from "./Question";
 }))
 @Table
 class Quiz extends Model<Quiz> {
+  @Column
+  name?: string;
+
+  @Column
+  url?: string;
+
   @BelongsTo(() => QuizType, "quizTypeId")
   quizType!: QuizType;
 
   @HasMany(() => Question, "quizId")
-  questions!: Question[];
+  questions?: Question[];
 }
 
 export default Quiz;
