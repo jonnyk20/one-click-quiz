@@ -1,3 +1,4 @@
+import faker from "faker";
 import { getBingImages } from "./services/Azureservice";
 import Quiz from "./db/models/Quiz";
 import QuizType from "./db/models/QuizType";
@@ -5,8 +6,34 @@ import Question from "./db/models/Question";
 import ItemType from "./db/models/ItemType";
 import Item from "./db/models/Item";
 import { splitEvery, range } from "ramda";
+import words from "./constants/words";
+
+const { animals, adjectives } = words;
 
 const parseString = (str: string) => str.split("\n");
+const getRandomItem = (items: any) =>
+  items[Math.floor(Math.random() * items.length)];
+
+const makeSlug = () =>
+  `${getRandomItem(adjectives)}-${getRandomItem(animals)}`
+    .replace(/[^a-z]+/gi, "")
+    .toLocaleLowerCase();
+
+const generateSlug = async (): Promise<string> => {
+  let slug: string | null = null;
+
+  while (!slug) {
+    const generatedSlug = makeSlug();
+    const existingRecord = await Quiz.findOne({
+      where: { url: generatedSlug }
+    });
+    if (!existingRecord) {
+      slug = generatedSlug;
+    }
+  }
+
+  return slug;
+};
 
 type RawItemData = {
   data: {
@@ -38,9 +65,12 @@ const buildTestQuiz = async (rawItemData: RawItemData[]) => {
       };
     });
 
+    const slug = await generateSlug();
+
     const quiz = await Quiz.create(
       {
-        name: "please",
+        name: slug,
+        url: slug,
         quizTypeId,
         questions
       },

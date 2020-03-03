@@ -11,8 +11,8 @@ import QuizType from "./QuizType";
 import Question from "./Question";
 
 @DefaultScope(() => ({
-  attributes: ["id", "name"],
-  include: [Question]
+  attributes: ["id", "name", "url"],
+  include: [Question, QuizType]
 }))
 @Table
 class Quiz extends Model<Quiz> {

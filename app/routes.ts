@@ -1,28 +1,12 @@
-import models from "./db/index";
-import { Express, Response } from "express";
+import Quiz from "./db/models/Quiz";
+import { Express, Response, Request } from "express";
 
 const routes = (app: Express) => {
-  app.get("/api/quiz/1", async (req: Express.Request, res: Response) => {
-    const { Quiz } = models;
-    const quiz = await Quiz.findOne();
-    const type = await quiz.getQuizType();
-    const questionRecords = await quiz.getQuestions();
-    const questions = await Promise.all(
-      questionRecords.map(async (q: any) => ({
-        correctAnswerIndex: q.correctAnswerIndex,
-        choices: await Promise.all(
-          (await q.getChoices()).map(async (c: any) => (await c.getItem()).data)
-        )
-      }))
-    );
+  app.get("/api/quiz/:slug", async (req: Request, res: Response) => {
+    const { slug } = req.params;
+    const quiz = await Quiz.findOne({ where: { url: slug } });
 
-    const formattedQuiz = {
-      name: quiz.name,
-      type: type.name,
-      questions
-    };
-
-    return res.json({ quiz: formattedQuiz });
+    return res.json({ quiz });
   });
 };
 

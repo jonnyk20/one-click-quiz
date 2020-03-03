@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Question from "./Question";
+import formatQuiz from "./utils/formatQuiz";
 
 const fetchQuiz = async id => {
   const response = await fetch(`${window.location.origin}/api/quiz/${id}`);
@@ -10,7 +11,7 @@ const fetchQuiz = async id => {
 };
 
 const Quiz = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [quiz, setQuiz] = useState([]);
   const [score, setScore] = useState(0);
   const [maxScore, setMaxScore] = useState(0);
@@ -19,12 +20,16 @@ const Quiz = () => {
 
   useEffect(() => {
     const prepareQuiz = async () => {
-      const data = await fetchQuiz(id);
-      setQuiz(data.quiz);
-      setMaxScore(data.quiz.questions.length);
+      const data = await fetchQuiz(slug);
+
+      if (data?.quiz?.id) {
+        const formattedQuiz = formatQuiz(data.quiz);
+        setQuiz(formattedQuiz);
+        setMaxScore(formattedQuiz.questions.length);
+      }
     };
     prepareQuiz();
-  }, [id]);
+  }, [slug]);
 
   const incrementScore = () => setScore(score + 1);
   const incrementQuestion = () => {

@@ -46,20 +46,7 @@ if (config.use_env_variable) {
   );
 }
 
-console.log("__dirname", __dirname);
-
 sequelize.addModels([QuizType, Quiz, ItemType, Item, Question, Choice]);
-// sequelize.addModels([__dirname + "/models/*.ts"]);
-
-// test connection
-sequelize
-  .authenticate()
-  .then((err: any) => {
-    console.log("Connection has been established successfully.");
-  })
-  .catch((err: any) => {
-    console.log("Unable to connect to the database:", err);
-  });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

@@ -12,7 +12,6 @@ const addDates = records => records.map(r => ({ ...r, ...getDates() }));
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const insertRecords = async (model, records, options = {}) => {
-      console.log("INSERTINH", records.length);
       await queryInterface.bulkInsert(model, addDates(records), {}, options);
     };
 

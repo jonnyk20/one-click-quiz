@@ -6,12 +6,10 @@ import Quiz from "./Quiz";
 
 import "./App.scss";
 
-console.log("HELLO WORLD");
-
 const App = () => (
   <Router>
     <Switch>
-      <Route path="/quiz/:id">
+      <Route path="/quiz/:slug">
         <Quiz />
       </Route>
       <Route path="/">
