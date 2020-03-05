@@ -1,0 +1,18 @@
+.builder {
+  text-align: center;
+  display: grid;
+  justify-content: center;
+
+  &__title {
+    margin: 10px 0px;
+  }
+
+  &__quiz-link {
+    margin: 10px 0px;
+  }
+}
+
+textarea {
+  width: 200px;
+  height: 200px;
+}

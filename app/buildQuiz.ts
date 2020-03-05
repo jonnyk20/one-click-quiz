@@ -1,4 +1,3 @@
-import faker from "faker";
 import { getBingImages } from "./services/Azureservice";
 import Quiz from "./db/models/Quiz";
 import QuizType from "./db/models/QuizType";
@@ -16,7 +15,8 @@ const getRandomItem = (items: any) =>
 
 const makeSlug = () =>
   `${getRandomItem(adjectives)}-${getRandomItem(animals)}`
-    .replace(/[^a-z]+/gi, "")
+    .replace(" ", "-")
+    .replace(/(?!-)[^a-z]+/gi, "")
     .toLocaleLowerCase();
 
 const generateSlug = async (): Promise<string> => {
@@ -43,7 +43,9 @@ type RawItemData = {
 };
 
 type buildQuizType = (data: string, socket: any) => void;
-const buildTestQuiz = async (rawItemData: RawItemData[]) => {
+const buildTestQuiz = async (
+  rawItemData: RawItemData[]
+): Promise<Quiz | null> => {
   try {
     // make quiz
     const quizType = await QuizType.findOne({ where: { name: "image-quiz" } });
@@ -83,15 +85,20 @@ const buildTestQuiz = async (rawItemData: RawItemData[]) => {
     return formattedQuiz;
   } catch (error) {
     console.log("FAILED TO CREATE QUIZ", error);
-    return {};
+    return null;
   }
+};
+
+type CompletedQuizPayload = {
+  url: string;
 };
 
 const buildQuiz: buildQuizType = async (data, socket) => {
   const items = parseString(data);
   const formattedItems: RawItemData[] = await getBingImages(items, socket);
-  const quiz = await buildTestQuiz(formattedItems);
-  socket.emit("completed", quiz);
+  const quiz: Quiz | null = await buildTestQuiz(formattedItems);
+  const payload: CompletedQuizPayload = { url: quiz?.url || "" };
+  socket.emit("completed", payload);
 };
 
 export default buildQuiz;

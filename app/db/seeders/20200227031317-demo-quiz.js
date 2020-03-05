@@ -55,7 +55,7 @@ module.exports = {
       "image-quiz"
     );
 
-    await insertRecords("Quizzes", [{ quizTypeId, name: "test-quiz" }]);
+    await insertRecords("Quizzes", [{ quizTypeId, name: "test", url: "test" }]);
     const quizId = await getFirstIdByValue("Quizzes", "name", "test-quiz");
 
     const itemIds = await getAllIds("Items");

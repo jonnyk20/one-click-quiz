@@ -1,10 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import Builder from "./Builder";
+import Builder from "./components/Builder";
 import Quiz from "./Quiz";
-
-import "./App.scss";
 
 const App = () => (
   <Router>

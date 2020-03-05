@@ -58,6 +58,10 @@ const getImageOrReturnNull = async (item: string) => {
 };
 
 type GetBingImages = (items: string[], socket: SocketIO.Socket) => RawItemData;
+type BuilderProgress = {
+  completed: number;
+  total: number;
+};
 
 export const getBingImages = async (
   items: string[],
@@ -68,9 +72,11 @@ export const getBingImages = async (
 
   const getImageAndUpdateCount = async (item: string) => {
     const value: any = await getImageOrReturnNull(item);
+
+    const update: BuilderProgress = { total: itemCount, completed };
     if (value.data.image_url) {
       completed += 1;
-      socket.emit("update", { total: itemCount, completed });
+      socket.emit("builder-progress-update", update);
     }
     return value;
   };

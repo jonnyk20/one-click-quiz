@@ -1,0 +1,50 @@
+$animation-duration: 1s;
+$animation-bg-width: 980px;
+
+@mixin background-image-shine {
+  background-image: linear-gradient(
+    90deg,
+    rgb(109, 177, 255) 0px,
+    rgba(255, 255, 255, 0.15) 40px,
+    rgba(255, 255, 255, 0.15) 40px,
+    rgb(109, 177, 255) 80px
+  );
+}
+
+@keyframes shine-line {
+  0% {
+    background-position: -200px;
+  }
+
+  100% {
+    background-position: 780px;
+  }
+}
+
+.progress-bar {
+  position: relative;
+  height: 20px;
+  width: 175px;
+  background: #e3f2fd;
+  @include background-image-shine;
+  animation: shine-line $animation-duration linear infinite;
+  background-size: $animation-bg-width;
+}
+
+.progress-bar__filler {
+  background: #2196f3;
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.2s ease-in;
+}
+
+.progress-bar__button {
+  margin-right: 10px;
+  padding: 7px 12px;
+  font-size: 14px;
+  background: #d14836;
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  cursor: pointer;
+  outline: 0;
+}
