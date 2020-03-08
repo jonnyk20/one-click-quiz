@@ -7,13 +7,31 @@ const states = {
   INCORRECT: "INCORRECT"
 };
 
-const Question = ({ question, incrementScore, incrementQuestion }) => {
+type Choice = {
+  image_url: string;
+  name: string;
+};
+
+type PropTypes = {
+  question: {
+    choices: Choice[];
+    correctAnswerIndex: number;
+  };
+  incrementScore: () => void;
+  incrementQuestion: () => void;
+};
+
+const Question: React.SFC<PropTypes> = ({
+  question,
+  incrementScore,
+  incrementQuestion
+}) => {
   const { choices, correctAnswerIndex } = question;
   const [state, setState] = useState(states.UNANSWERED);
   const answerCorrectly = () => console.log("YES");
   const answerIncorrectly = () => console.log("NO");
 
-  const answerQuestion = i => {
+  const answerQuestion = (i: number) => {
     if (isAnswered) return;
     if (i === correctAnswerIndex) {
       setState(states.CORRECT);
@@ -34,11 +52,7 @@ const Question = ({ question, incrementScore, incrementQuestion }) => {
   const isAnswered = state !== states.UNANSWERED;
   const isAnsweredCorrectly = state === states.CORRECT;
 
-  const answerFeedback = isAnsweredCorrectly ? "Correct!" : "Wrong!";
-
-  console.log("choices[correctAnswerIndex]", choices[correctAnswerIndex]);
-  console.log("choices[correctAnswerIndex]", choices);
-  console.log("choices[correctAnswerIndex]", correctAnswerIndex);
+  const answerFeedback = isAnsweredCorrectly ? "Correct!" : "So Close!";
 
   return (
     <div className="question">

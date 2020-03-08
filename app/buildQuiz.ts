@@ -42,7 +42,6 @@ type RawItemData = {
   };
 };
 
-type buildQuizType = (data: string, socket: any) => void;
 const buildTestQuiz = async (
   rawItemData: RawItemData[]
 ): Promise<Quiz | null> => {
@@ -59,10 +58,17 @@ const buildTestQuiz = async (
     const items = await Item.bulkCreate(formattedItems);
     const itemIds = items.map(({ id }) => id);
     const groupedItemIds = splitEvery(numChoices, itemIds);
+    const lastQuestionChoiceCount =
+      groupedItemIds[groupedItemIds.length - 1].length;
 
-    const questions = range(0, numQuestions).map(i => {
+    const questions = range(0, numQuestions).map((i: number) => {
+      const isLastQuestion: boolean = i === numQuestions - 1;
+      const choiceCount: number = isLastQuestion
+        ? lastQuestionChoiceCount
+        : numChoices;
+
       return {
-        correctAnswerIndex: Math.floor(Math.random() * numChoices),
+        correctAnswerIndex: Math.floor(Math.random() * choiceCount),
         choices: groupedItemIds[i].map(itemId => ({ itemId }))
       };
     });
@@ -93,8 +99,8 @@ type CompletedQuizPayload = {
   url: string;
 };
 
-const buildQuiz: buildQuizType = async (data, socket) => {
-  const items = parseString(data);
+const buildQuiz = async (data: string[], socket: SocketIO.Socket) => {
+  const items = data;
   const formattedItems: RawItemData[] = await getBingImages(items, socket);
   const quiz: Quiz | null = await buildTestQuiz(formattedItems);
   const payload: CompletedQuizPayload = { url: quiz?.url || "" };

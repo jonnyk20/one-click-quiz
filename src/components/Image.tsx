@@ -3,7 +3,16 @@ import classNames from "classnames";
 
 const labelBaseClass = "image__label";
 
-const Image = ({
+type PropTypes = {
+  i: number;
+  image_url: string;
+  answerQuestion: (i: number) => void;
+  isAnswered: boolean;
+  isCorrect: boolean;
+  name: string;
+};
+
+const Image: React.SFC<PropTypes> = ({
   i,
   image_url,
   answerQuestion,
@@ -18,7 +27,7 @@ const Image = ({
   return (
     <div className="image" onClick={() => answerQuestion(i)}>
       <img key={image_url} src={image_url} />
-      <div className={className}>{isAnswered && isCorrect && name}</div>
+      <div className={className}>{isAnswered && name}</div>
     </div>
   );
 };

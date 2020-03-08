@@ -1,37 +1,44 @@
 import React, { useState, useEffect } from "react";
 import socketIOClient from "socket.io-client";
-import wait from "../utils/wait";
+import { uniq } from "ramda";
+import { isNotNilOrEmpty } from "../utils/utils";
 import ProgressIndicator, { BuilderProgress } from "./ProgressIndicator";
+import Button from "./Button";
 import { BuilderState } from "../constants/states";
 import "./Builder.scss";
 
-const convertArrayToString = (arr: string[]) => arr.join("\n");
+const convertItemsToInput = (arr: string[]): string => arr.join("\n");
+const convertInputToItems = (input: string): string[] => input.split("\n");
+
+const defaultItems = ["Tiger", "Leopard", "Cheetah", "Koala"];
+
 type CompletedQuizPayload = {
   url: string;
 };
 
 const Builder = () => {
-  const [items, setItems] = useState(
-    convertArrayToString(["Tiger", "Leopard", "Cheetah", "Koala"])
-  );
-  const [inputValue, setInputValue] = useState<string>(items);
+  const [items, setItems] = useState<string[]>(defaultItems);
   const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
   const [quizUrl, setQuizUrl] = useState<string>("my-quiz");
   const [progress, setProgress] = useState<BuilderProgress>({
     completed: 0,
     total: 0
   });
-  const [builderState, setBuilderState] = useState(BuilderState.INPUTTING);
+  const [builderState, setBuilderState] = useState<BuilderState>(
+    BuilderState.INPUTTING
+  );
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+
+  const validItems = items.filter(isNotNilOrEmpty);
 
   const handleChange = (event: any) => {
-    setInputValue(event.target.value);
+    setItems(convertInputToItems(event.target.value));
   };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    socket?.emit("submit-quiz", inputValue);
+    socket?.emit("submit-quiz", uniq(validItems));
     setBuilderState(BuilderState.PREPARING);
-    await wait(10000);
   };
 
   const handleComplete = (payload: CompletedQuizPayload) => {
@@ -42,7 +49,7 @@ const Builder = () => {
   useEffect(() => {
     const socket = socketIOClient();
     socket.on("builder-progress-update", (progress: BuilderProgress) => {
-      console.log("progross update received", progress);
+      console.log("progress update received", progress);
       setProgress(progress);
     });
     socket.on("completed", (payload: CompletedQuizPayload) => {
@@ -57,6 +64,7 @@ const Builder = () => {
   const isPreparing = builderState === BuilderState.PREPARING;
   const isComplete = builderState === BuilderState.READY;
   const formattedQuizUrl = `${window.location.origin}/quiz/${quizUrl}`;
+  const inputValue = convertItemsToInput(items);
 
   return (
     <div className="builder">
@@ -64,11 +72,23 @@ const Builder = () => {
         <h1>1 Click Quiz</h1>
       </div>
       {isInputting && (
-        <form onSubmit={handleSubmit}>
-          <textarea value={inputValue} onChange={handleChange} />
-          <br />
-          <button type="submit">Create Quiz</button>
-        </form>
+        <div className="builder__form">
+          <div className="builder__form__submit-button">
+            <Button onClick={handleSubmit}>Create Quiz</Button>
+          </div>
+          <textarea
+            className="builder__form__input"
+            value={inputValue}
+            onChange={handleChange}
+          />
+          <div className="builder__form__preview">
+            {validItems.map((item, i) => (
+              <div key={item} className="builder__form__preview__item">
+                {`${i + 1}. ${item}`}
+              </div>
+            ))}
+          </div>
+        </div>
       )}
       {isPreparing && <ProgressIndicator {...progress} />}
       {isComplete && (

@@ -11,7 +11,7 @@ const options: RequestPromiseOptions = {
 };
 
 type Value = {
-  contentUrl: string;
+  thumbnailUrl: string;
 };
 
 type Result = {
@@ -26,7 +26,7 @@ type RawItemData = {
   };
 };
 
-const getImageUrl = (result: Result) => result?.value?.[0].contentUrl || "";
+const getImageUrl = (result: Result) => result?.value?.[0].thumbnailUrl || "";
 
 const delay = (interval: number) =>
   new Promise(resolve => setTimeout(resolve, interval));

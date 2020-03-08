@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Question from "./Question";
+import Question from "./components/Question";
 import formatQuiz from "./utils/formatQuiz";
 
 const fetchQuiz = async id => {
