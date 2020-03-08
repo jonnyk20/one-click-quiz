@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import socketIOClient from "socket.io-client";
 import { uniq } from "ramda";
 import { isNotNilOrEmpty } from "../utils/utils";
-import ProgressIndicator, { BuilderProgress } from "./ProgressIndicator";
-import Button from "./Button";
+import ProgressIndicator, {
+  BuilderProgress
+} from "../components/ProgressIndicator";
+import Button from "../components/Button";
 import { BuilderState } from "../constants/states";
-import "./Builder.scss";
+import "./MainQuizBuilder.scss";
 
 const convertItemsToInput = (arr: string[]): string => arr.join("\n");
 const convertInputToItems = (input: string): string[] => input.split("\n");
@@ -48,10 +50,13 @@ const Builder = () => {
 
   useEffect(() => {
     const socket = socketIOClient();
-    socket.on("builder-progress-update", (progress: BuilderProgress) => {
-      console.log("progress update received", progress);
-      setProgress(progress);
-    });
+    socket.on(
+      "main-quiz-builder-progress-update",
+      (progress: BuilderProgress) => {
+        console.log("progress update received", progress);
+        setProgress(progress);
+      }
+    );
     socket.on("completed", (payload: CompletedQuizPayload) => {
       console.log("Quiz comleted", payload);
       handleComplete(payload);
@@ -67,23 +72,26 @@ const Builder = () => {
   const inputValue = convertItemsToInput(items);
 
   return (
-    <div className="builder">
-      <div className="builder__title">
+    <div className="main-quiz-builder">
+      <div className="main-quiz-builder__title">
         <h1>1 Click Quiz</h1>
       </div>
       {isInputting && (
-        <div className="builder__form">
-          <div className="builder__form__submit-button">
+        <div className="main-quiz-builder__form">
+          <div className="main-quiz-builder__form__submit-button">
             <Button onClick={handleSubmit}>Create Quiz</Button>
           </div>
           <textarea
-            className="builder__form__input"
+            className="main-quiz-builder__form__input"
             value={inputValue}
             onChange={handleChange}
           />
-          <div className="builder__form__preview">
+          <div className="main-quiz-builder__form__preview">
             {validItems.map((item, i) => (
-              <div key={item} className="builder__form__preview__item">
+              <div
+                key={item}
+                className="main-quiz-builder__form__preview__item"
+              >
                 {`${i + 1}. ${item}`}
               </div>
             ))}
@@ -95,7 +103,7 @@ const Builder = () => {
         <div>
           Your Quiz is ready at
           <br />
-          <div className="builder__quiz-link">
+          <div className="main-quiz-builder__quiz-link">
             <a href={formattedQuizUrl} target="_blank">
               {formattedQuizUrl}
             </a>

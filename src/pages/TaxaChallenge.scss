@@ -1,0 +1,17 @@
+.taxa-challange {
+  display: grid;
+  justify-content: center;
+  text-align: center;
+
+  &__search {
+    &__form {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+    }
+
+    &__suggestions {
+      max-height: 100px;
+      overflow: scroll;
+    }
+  }
+}

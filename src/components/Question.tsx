@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Image from "./Image";
+import { FormattedQuestion } from "../utils/formatQuiz";
 
 const states = {
   UNANSWERED: "UNANSWERED",
@@ -7,16 +8,8 @@ const states = {
   INCORRECT: "INCORRECT"
 };
 
-type Choice = {
-  image_url: string;
-  name: string;
-};
-
 type PropTypes = {
-  question: {
-    choices: Choice[];
-    correctAnswerIndex: number;
-  };
+  question: FormattedQuestion;
   incrementScore: () => void;
   incrementQuestion: () => void;
 };
