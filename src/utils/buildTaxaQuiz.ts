@@ -1,9 +1,5 @@
 import { splitEvery, range, groupWith, flatten } from "ramda";
-import {
-  FormattedQuiz,
-  FormattedChoice,
-  FormattedQuestion
-} from "./formatQuiz";
+import { FormattedQuiz, FormattedChoice } from "./formatQuiz";
 
 type Taxon = {
   taxon: {
@@ -16,7 +12,7 @@ type Taxon = {
 };
 
 const CHOICE_COUNT = 4;
-const QUESTION_COUNT = 10;
+const MAX_QUESTION_COUNT = 10;
 
 const shuffle = (a: Taxon[][]): Taxon[][] => {
   for (let i = a.length - 1; i > 0; i--) {
@@ -40,12 +36,13 @@ const sortByAncestry = (arr: Taxon[]) => {
   return sorted;
 };
 
-const buildTaxaQuiz = (taxa: Taxon[]): FormattedQuiz => {
+const buildTaxaQuiz = (taxa: Taxon[], quizName: string): FormattedQuiz => {
   const sortedTaxa = sortByAncestry(taxa);
   const groupedChoices = splitEvery(CHOICE_COUNT, sortedTaxa);
-  const shuffledGroups = shuffle(groupedChoices).slice(0, QUESTION_COUNT);
+  const shuffledGroups = shuffle(groupedChoices).slice(0, MAX_QUESTION_COUNT);
+  const questionCount = Math.min(shuffledGroups.length, MAX_QUESTION_COUNT);
 
-  const questions = range(0, QUESTION_COUNT).map((i: number) => {
+  const questions = range(0, questionCount).map((i: number) => {
     return {
       correctAnswerIndex: Math.floor(Math.random() * CHOICE_COUNT),
       choices: shuffledGroups[i].map(
@@ -58,7 +55,7 @@ const buildTaxaQuiz = (taxa: Taxon[]): FormattedQuiz => {
   });
 
   const quiz = {
-    name: "Taxa Challenge",
+    name: quizName,
     quizType: "image-quiz",
     questions
   };

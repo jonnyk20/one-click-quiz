@@ -67,7 +67,9 @@ const Question: React.SFC<PropTypes> = ({
       </div>
       <div className="question__prompt mv-20">
         {!isAnswered ? (
-          `Find the ${choices[correctAnswerIndex].name}`
+          <span>
+            Find the <b>{choices[correctAnswerIndex].name}</b>
+          </span>
         ) : (
           <>
             <span>{answerFeedback}</span>

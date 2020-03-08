@@ -96,9 +96,17 @@ const TaxaChallenge = () => {
   const buildQuiz = async (kingdom: KINGDOMS) => {
     setQuizBuildingState(QuizBuildingState.BUILDING);
     const kingdomIds: number[] = [taxonIDs[kingdom]];
-    const quiz: FormattedQuiz = await fetchSpeciesData(place, kingdomIds);
-    setQuiz(quiz);
-    setQuizBuildingState(QuizBuildingState.COMPLETE);
+    const quiz: FormattedQuiz | null = await fetchSpeciesData(
+      place,
+      kingdomIds,
+      "",
+      "Taxa Challange"
+    );
+
+    if (quiz) {
+      setQuiz(quiz);
+      setQuizBuildingState(QuizBuildingState.COMPLETE);
+    }
   };
 
   const showLocationPrompt = locationState === LocationState.INITIAL;

@@ -77,21 +77,41 @@ export const getSuggestedPlaces = async (
   return results.results;
 };
 
+type iNatParams = {
+  place_id?: number;
+  taxon_id?: string;
+  user_login?: string;
+};
+
 export const fetchSpeciesData = async (
   place: SuggestedPlace | null,
-  kingdomIds: number[]
-): Promise<FormattedQuiz> => {
-  const params = {
-    place_id: place?.id,
-    taxon_id: kingdomIds.join(",")
-  };
-  const querystring = getQueryString(params);
-  const res: Response = await fetch(
-    `${baseUrl}/observations/species_counts${querystring}`
-  );
+  kingdomIds: number[],
+  user: string,
+  quizName: string
+): Promise<FormattedQuiz | null> => {
+  try {
+    const params: iNatParams = {};
+    if (place?.id) {
+      params.place_id = place.id;
+    }
 
-  const taxa = await res.json();
-  const quiz = buildTaxaQuiz(taxa.results);
+    if (!isNilOrEmpty(kingdomIds)) {
+      params.taxon_id = kingdomIds.join(",");
+    }
 
-  return quiz;
+    if (user) {
+      params.user_login = user;
+    }
+    const querystring = getQueryString(params);
+    const res: Response = await fetch(
+      `${baseUrl}/observations/species_counts${querystring}`
+    );
+
+    const taxa = await res.json();
+    const quiz = buildTaxaQuiz(taxa.results, quizName);
+
+    return quiz;
+  } catch (err) {
+    return null;
+  }
 };
