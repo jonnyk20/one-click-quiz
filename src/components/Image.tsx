@@ -29,7 +29,9 @@ const Image: React.SFC<PropTypes> = ({
   return (
     <div className="image" onClick={() => answerQuestion(i)}>
       <img key={image_url} src={image_url} />
-      <div className={className}>{isAnswered && name}</div>
+      <div className={className}>
+        <div>{isAnswered && name}</div>
+      </div>
     </div>
   );
 };

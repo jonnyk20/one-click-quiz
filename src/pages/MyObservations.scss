@@ -10,7 +10,6 @@
   &__search {
     display: grid;
     grid-template-columns: 3fr auto;
-    min-width: 500px;
     box-shadow: $shadow;
 
     &__input {

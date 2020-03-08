@@ -9,29 +9,29 @@
     object-fit: cover;
   }
 
-  .image__label {
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
+  &__label {
     position: absolute;
     top: 0;
+    height: 100%;
+    width: 100%;
     color: white;
     font-size: 26px;
     font-weight: bold;
-
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     &--correct,
     &--incorrect {
       background: #0000007d;
     }
-
     &--correct {
-      border: solid 6px green;
       z-index: 2;
-      transform: scale(1.05);
       box-shadow: $shadow;
+      box-shadow: 0px 0px 20px 0px inset #75f5ff;
+      color: skyblue;
     }
     &--incorrect {
-      border: solid 3px red;
+      color: pink;
     }
   }
 }

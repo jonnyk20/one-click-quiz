@@ -9,6 +9,13 @@ body {
   background: #dff6ff;
 }
 
+textarea,
+select,
+input,
+button {
+  outline: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

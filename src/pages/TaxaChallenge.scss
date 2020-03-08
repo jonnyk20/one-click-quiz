@@ -11,7 +11,6 @@
       display: grid;
       grid-template-columns: 3fr auto;
       box-shadow: $shadow;
-      min-width: 500px;
 
       &__input {
         border-color: $blue;

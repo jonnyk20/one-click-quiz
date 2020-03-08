@@ -115,6 +115,7 @@ const TaxaChallenge = () => {
     quizBuildingState === QuizBuildingState.BUILDING;
   const showQuizChoices =
     !isNilOrEmpty(place) && quizBuildingState === QuizBuildingState.INITIAL;
+  const isPlaceReady = !isNilOrEmpty(place);
 
   return (
     <div className="taxa-challange">
@@ -122,42 +123,44 @@ const TaxaChallenge = () => {
         <h3>Taxa Challenge</h3>
         <div>Test how well you know the wildlife around you</div>
       </div>
-      <div className="taxa-challange__search mv-20">
-        <form
-          onSubmit={onSearch}
-          className="taxa-challange__search__form mt-10"
-        >
-          <input
-            value={inputValue}
-            onChange={handleChange}
-            placeholder="Find a place"
-            className="taxa-challange__search__form__input"
-          />
-          <Button onClick={onSearch}>Search</Button>
-        </form>
-        {!isNilOrEmpty(suggestedPlaces) && (
-          <div className="taxa-challange__search__suggestions padding-10">
-            {suggestedPlaces.map(place => (
-              <div
-                key={place.id}
-                onClick={() => onSelectPlace(place)}
-                className="taxa-challange__search__suggestions__suggestion"
-              >
-                {place.display_name}
-              </div>
-            ))}
-            {noPlacesFound && (
-              <div>{`No Places Found for "${searchedValue}"`}</div>
-            )}
-          </div>
-        )}
-        {showLocationPrompt && (
-          <div className="taxa-challange__search__location-prompt">
-            <div className="mv-20"> - Or - </div>
-            <Button onClick={getLocation}>Use Your Location</Button>
-          </div>
-        )}
-      </div>
+      {!isPlaceReady && (
+        <div className="taxa-challange__search mv-20">
+          <form
+            onSubmit={onSearch}
+            className="taxa-challange__search__form mt-10"
+          >
+            <input
+              value={inputValue}
+              onChange={handleChange}
+              placeholder="Find a place"
+              className="taxa-challange__search__form__input"
+            />
+            <Button onClick={onSearch}>Search</Button>
+          </form>
+          {!isNilOrEmpty(suggestedPlaces) && (
+            <div className="taxa-challange__search__suggestions padding-10">
+              {suggestedPlaces.map(place => (
+                <div
+                  key={place.id}
+                  onClick={() => onSelectPlace(place)}
+                  className="taxa-challange__search__suggestions__suggestion"
+                >
+                  {place.display_name}
+                </div>
+              ))}
+              {noPlacesFound && (
+                <div>{`No Places Found for "${searchedValue}"`}</div>
+              )}
+            </div>
+          )}
+          {showLocationPrompt && (
+            <div className="taxa-challange__search__location-prompt">
+              <div className="mv-20"> - Or - </div>
+              <Button onClick={getLocation}>Use Your Location</Button>
+            </div>
+          )}
+        </div>
+      )}
       {showLocationProgress && (
         <div className="taxa-challange__progress mv-10">
           <div className="mv-10">Getting Location...</div>
