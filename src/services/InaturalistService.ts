@@ -34,10 +34,16 @@ const getQueryString = (params: any) => {
   return "";
 };
 
-export const getNearbyPlaces = async (
+type NearestPlacesResults = {
+  results: {
+    standard: SuggestedPlace[];
+  };
+};
+
+export const getNearestPlace = async (
   lat: number,
   lng: number
-): Promise<SuggestedPlace[]> => {
+): Promise<SuggestedPlace> => {
   const params = {
     nelat: lat.toFixed(3),
     nelng: lng.toFixed(3),
@@ -48,9 +54,16 @@ export const getNearbyPlaces = async (
   const querystring = getQueryString(params);
 
   const res = await fetch(`${baseUrl}/places/nearby/${querystring}`);
-  const results: SuggestedPlacesResponse = await res.json();
+  const results: NearestPlacesResults = await res.json();
 
-  return results.results;
+  const places = results.results.standard;
+
+  const nearestPlace = places[places.length - 1];
+
+  console.log("places", places);
+  console.log("nearestPlace", nearestPlace);
+
+  return nearestPlace;
 };
 
 export const getSuggestedPlaces = async (
@@ -68,10 +81,12 @@ export const getSuggestedPlaces = async (
 };
 
 export const fetchSpeciesData = async (
-  placeId: number
+  place: SuggestedPlace | null,
+  kingdomIds: number[]
 ): Promise<FormattedQuiz> => {
   const params = {
-    place_id: placeId
+    place_id: place?.id,
+    taxon_id: kingdomIds.join(",")
   };
   const querystring = getQueryString(params);
   const res: Response = await fetch(
