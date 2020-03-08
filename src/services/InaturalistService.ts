@@ -60,9 +60,6 @@ export const getNearestPlace = async (
 
   const nearestPlace = places[places.length - 1];
 
-  console.log("places", places);
-  console.log("nearestPlace", nearestPlace);
-
   return nearestPlace;
 };
 
@@ -94,9 +91,7 @@ export const fetchSpeciesData = async (
   );
 
   const taxa = await res.json();
-  const top40 = taxa.results.slice(0, 40);
-  const quiz = buildTaxaQuiz(top40);
-  console.log("QUIZ", quiz);
+  const quiz = buildTaxaQuiz(taxa.results);
 
   return quiz;
 };

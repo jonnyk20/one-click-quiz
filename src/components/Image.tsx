@@ -1,6 +1,8 @@
 import React from "react";
 import classNames from "classnames";
 
+import "./Image.scss";
+
 const labelBaseClass = "image__label";
 
 type PropTypes = {

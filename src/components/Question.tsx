@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import Image from "./Image";
 import { FormattedQuestion } from "../utils/formatQuiz";
 
+import "./Question.scss";
+import Button from "./Button";
+
 const states = {
   UNANSWERED: "UNANSWERED",
   CORRECT: "CORRECT",
@@ -62,13 +65,15 @@ const Question: React.SFC<PropTypes> = ({
           />
         ))}
       </div>
-      <div className="question__prompt">
+      <div className="question__prompt mv-20">
         {!isAnswered ? (
           `Find the ${choices[correctAnswerIndex].name}`
         ) : (
           <>
-            {answerFeedback}
-            <button onClick={moveToNexQuestion}>Next</button>
+            <span>{answerFeedback}</span>
+            <div>
+              <Button onClick={moveToNexQuestion}>Next</Button>
+            </div>
           </>
         )}
       </div>

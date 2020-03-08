@@ -5,6 +5,8 @@ import Question from "../components/Question";
 import formatQuiz, { FormattedQuiz } from "../utils/formatQuiz";
 import { isNilOrEmpty } from "../utils/utils";
 
+import "./Quiz.scss";
+
 const fetchQuiz = async (slug: string) => {
   const response = await fetch(`${window.location.origin}/api/quiz/${slug}`);
   const json = await response.json();
@@ -69,7 +71,7 @@ const Quiz = () => {
   return (
     <div className="container">
       <div className="quiz">
-        <div>{`Score: ${score}/${maxScore}`}</div>
+        <div className="mv-20">{`Score: ${score}/${maxScore}`}</div>
         {!isNilOrEmpty(quiz.questions) && !isFinished && (
           <Question
             question={currentQuestion}

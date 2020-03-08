@@ -1,21 +1,48 @@
+@import "../utils/variables.scss";
+
 .taxa-challange {
   display: grid;
   justify-content: center;
   text-align: center;
+  color: $blue;
 
   &__search {
     &__form {
       display: grid;
-      grid-template-columns: 3fr 1fr;
+      grid-template-columns: 3fr auto;
+      box-shadow: $shadow;
+      min-width: 500px;
+
+      &__input {
+        border-color: $blue;
+        padding: 5px;
+      }
     }
 
     &__suggestions {
       max-height: 100px;
       overflow: scroll;
+      background-color: lightblue;
+      box-shadow: $shadow;
+
+      &__suggestion {
+        padding: 5px;
+        margin: 5px;
+        background: $blue;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      }
     }
   }
 
-  &__build {
+  &__progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__quiz-choices {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
   }

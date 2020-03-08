@@ -16,8 +16,9 @@ type Taxon = {
 };
 
 const CHOICE_COUNT = 4;
+const QUESTION_COUNT = 10;
 
-const shuffle = (a: FormattedQuestion[]): FormattedQuestion[] => {
+const shuffle = (a: Taxon[][]): Taxon[][] => {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
@@ -39,24 +40,15 @@ const sortByAncestry = (arr: Taxon[]) => {
   return sorted;
 };
 
-const formatTaxaQuiz = (taxa: Taxon[]): FormattedQuiz => {
-  const numQuestions = Math.ceil(taxa.length / CHOICE_COUNT);
-
+const buildTaxaQuiz = (taxa: Taxon[]): FormattedQuiz => {
   const sortedTaxa = sortByAncestry(taxa);
-
   const groupedChoices = splitEvery(CHOICE_COUNT, sortedTaxa);
-  const lastQuestionChoiceCount =
-    groupedChoices[groupedChoices.length - 1].length;
+  const shuffledGroups = shuffle(groupedChoices).slice(0, QUESTION_COUNT);
 
-  const questions = range(0, numQuestions).map((i: number) => {
-    const isLastQuestion: boolean = i === numQuestions - 1;
-    const choiceCount: number = isLastQuestion
-      ? lastQuestionChoiceCount
-      : CHOICE_COUNT;
-
+  const questions = range(0, QUESTION_COUNT).map((i: number) => {
     return {
-      correctAnswerIndex: Math.floor(Math.random() * choiceCount),
-      choices: groupedChoices[i].map(
+      correctAnswerIndex: Math.floor(Math.random() * CHOICE_COUNT),
+      choices: shuffledGroups[i].map(
         (taxon: Taxon): FormattedChoice => ({
           name: taxon.taxon.preferred_common_name,
           image_url: taxon.taxon.default_photo.medium_url
@@ -65,19 +57,13 @@ const formatTaxaQuiz = (taxa: Taxon[]): FormattedQuiz => {
     };
   });
 
-  // Omitting the last question from the shuffle
-  const shuffledQuestions: FormattedQuestion[] = [
-    ...shuffle(questions.slice(0, -1)),
-    ...questions.slice(-1)
-  ];
-
   const quiz = {
     name: "Taxa Challenge",
     quizType: "image-quiz",
-    questions: shuffledQuestions
+    questions
   };
 
   return quiz;
 };
 
-export default formatTaxaQuiz;
+export default buildTaxaQuiz;
