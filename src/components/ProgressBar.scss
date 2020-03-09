@@ -1,13 +1,15 @@
+@import "../utils/variables.scss";
+
 $animation-duration: 1s;
 $animation-bg-width: 980px;
 
 @mixin background-image-shine {
   background-image: linear-gradient(
     90deg,
-    rgb(109, 177, 255) 0px,
+    $medium-color 0px,
     rgba(255, 255, 255, 0.15) 40px,
     rgba(255, 255, 255, 0.15) 40px,
-    rgb(109, 177, 255) 80px
+    $medium-color 80px
   );
 }
 

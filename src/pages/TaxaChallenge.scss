@@ -4,7 +4,7 @@
   display: grid;
   justify-content: center;
   text-align: center;
-  color: $blue;
+  color: white;
 
   &__search {
     &__form {
@@ -13,21 +13,21 @@
       box-shadow: $shadow;
 
       &__input {
-        border-color: $blue;
-        padding: 5px;
+        padding: 10px;
+        font-size: 16px;
       }
     }
 
     &__suggestions {
       max-height: 100px;
       overflow: scroll;
-      background-color: lightblue;
+      background-color: $light-color;
       box-shadow: $shadow;
 
       &__suggestion {
         padding: 5px;
         margin: 5px;
-        background: $blue;
+        background: $main-color;
         color: white;
         font-weight: bold;
         cursor: pointer;

@@ -4,11 +4,7 @@
   text-align: center;
   display: grid;
   justify-content: center;
-
-  &__title {
-    margin: 10px 0px;
-    color: $blue;
-  }
+  color: white;
 
   &__form {
     display: grid;
@@ -16,9 +12,10 @@
 
     &__input {
       height: 100%;
-      color: $blue;
-      border-color: $blue;
+      color: $main-color;
+      border-color: $main-color;
       resize: none;
+      font-size: 16px;
     }
 
     &__preview {
@@ -26,8 +23,7 @@
       padding-left: 10px;
 
       &__item {
-        border: solid 1px $blue;
-        color: $blue;
+        border: solid 1px white;
         margin-bottom: 5px;
         padding: 5px;
       }

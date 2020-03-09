@@ -8,20 +8,23 @@ import MyObservations from "./pages/MyObservations";
 
 const App = () => (
   <Router>
-    <Switch>
-      <Route path="/quiz/:slug">
-        <Quiz />
-      </Route>
-      <Route path="/taxa-challenge">
-        <TaxaChallenge />
-      </Route>
-      <Route path="/my-observations">
-        <MyObservations />
-      </Route>
-      <Route path="/">
-        <Builder />
-      </Route>
-    </Switch>
+    <div className="app">
+      <div className="appp__bg-overlay"></div>
+      <Switch>
+        <Route path="/quiz/:slug">
+          <Quiz />
+        </Route>
+        <Route path="/taxa-challenge">
+          <TaxaChallenge />
+        </Route>
+        <Route path="/my-observations">
+          <MyObservations />
+        </Route>
+        <Route path="/">
+          <Builder />
+        </Route>
+      </Switch>
+    </div>
   </Router>
 );
 

@@ -1,11 +1,11 @@
 @import "../utils/variables.scss";
 
 .my-observations {
-  margin: auto;
+  margin-left: auto;
+  margin-right: auto;
   display: grid;
   justify-content: center;
   text-align: center;
-  color: $blue;
 
   &__search {
     display: grid;

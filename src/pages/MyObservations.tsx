@@ -67,7 +67,7 @@ const MyObservations = () => {
   const showInput = !userName || showQuizBuildingError;
 
   return (
-    <div className="my-observations">
+    <div className="my-observations container">
       <div>
         <h1>My Observations</h1>
         <h4>How well do you know the animals you've observed?</h4>

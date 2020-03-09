@@ -73,13 +73,14 @@ const Builder = () => {
   const inputValue = convertItemsToInput(items);
 
   return (
-    <div className="main-quiz-builder">
-      <div className="main-quiz-builder__title">
+    <div className="main-quiz-builder container">
+      <div>
         <h1>1 Click Quiz</h1>
+        <h4>Add Items to the input below then create your quiz</h4>
       </div>
       {isInputting && (
         <div className="main-quiz-builder__form">
-          <div className="main-quiz-builder__form__submit-button">
+          <div className="main-quiz-builder__form__submit-button mb-20">
             <Button onClick={handleSubmit}>Create Quiz</Button>
           </div>
           <textarea

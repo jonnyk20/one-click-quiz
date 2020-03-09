@@ -118,7 +118,7 @@ const TaxaChallenge = () => {
   const isPlaceReady = !isNilOrEmpty(place);
 
   return (
-    <div className="taxa-challange">
+    <div className="taxa-challange container">
       <div>
         <h3>Taxa Challenge</h3>
         <div>Test how well you know the wildlife around you</div>
