@@ -47,7 +47,6 @@ const Question: React.SFC<PropTypes> = ({
       const interval: NodeJS.Timeout = setInterval(() => {
         const decrease = (intervalTime / totalTime) * MULTIPLIER_START;
         if (multiplier > MULTIPLIER_END) {
-          console.log("ONE");
           setMultiplier(Math.max(multiplier - decrease, MULTIPLIER_END));
           return;
         }

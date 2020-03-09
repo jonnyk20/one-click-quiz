@@ -76,7 +76,7 @@ const Builder = () => {
     <div className="main-quiz-builder container">
       <div>
         <h1>1 Click Quiz</h1>
-        <h4>Add Items to the input below then create your quiz</h4>
+        <h4>Add Items below then create your quiz</h4>
       </div>
       {isInputting && (
         <div className="main-quiz-builder__form">

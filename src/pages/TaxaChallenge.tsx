@@ -155,7 +155,9 @@ const TaxaChallenge = () => {
           )}
           {showLocationPrompt && (
             <div className="taxa-challange__search__location-prompt">
-              <div className="mv-20"> - Or - </div>
+              <div className="mv-20 text-large">
+                <b>- OR -</b>
+              </div>
               <Button onClick={getLocation}>Use Your Location</Button>
             </div>
           )}
