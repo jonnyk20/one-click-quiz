@@ -17,6 +17,25 @@
     }
   }
 
+  &__scoreboard {
+    display: flex;
+    padding-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+
+    &__added-score {
+      font-size: 36px;
+      color: $medium-color;
+    }
+
+    &__indicator {
+      border: solid 1px;
+      display: flex;
+      margin: 10px;
+    }
+  }
+
   &__image-container {
     margin: auto;
     display: flex;

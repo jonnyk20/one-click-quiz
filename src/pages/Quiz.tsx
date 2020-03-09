@@ -29,10 +29,11 @@ const Quiz = () => {
     quizType: "",
     questions: []
   });
-  const [score, setScore] = useState(0);
-  const [maxScore, setMaxScore] = useState(0);
+  const [correctAnswers, setCorrectAnswerrs] = useState<number>(0);
+  const [maxCorrectAnswers, setmaxCorrectAnswers] = useState<number>(0);
+  const [score, setScore] = useState<number>(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-  const [isFinished, setIsFinished] = useState(false);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
   const location: Location = useLocation();
 
   useEffect(() => {
@@ -41,23 +42,25 @@ const Quiz = () => {
       if (data?.quiz?.id) {
         const formattedQuiz = formatQuiz(data.quiz);
         setQuiz(formattedQuiz);
-        setMaxScore(formattedQuiz.questions.length);
+        setmaxCorrectAnswers(formattedQuiz.questions.length);
       }
     };
 
     if (!isNilOrEmpty(location?.state?.quiz)) {
       const { quiz } = location.state;
       setQuiz(quiz);
-      setMaxScore(quiz.questions.length);
+      setmaxCorrectAnswers(quiz.questions.length);
       return;
     }
 
     if (!isEmpty(slug)) {
       prepareQuiz();
     }
-  }, [slug]);
+  }, [location, slug]);
 
-  const incrementScore = () => setScore(score + 1);
+  const incrementCorrectAnswers = () => setCorrectAnswerrs(correctAnswers + 1);
+  const incrementScore = (addedScore: number) => setScore(score + addedScore);
+
   const incrementQuestion = () => {
     if (currentQuestionIndex < quiz!.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -70,15 +73,24 @@ const Quiz = () => {
 
   return (
     <div className="quiz container">
-      <div className="mv-20">{`Score: ${score}/${maxScore}`}</div>
       {!isNilOrEmpty(quiz.questions) && !isFinished && (
         <Question
+          correctAnswers={correctAnswers}
+          maxCorrectAnswers={maxCorrectAnswers}
+          score={score}
           question={currentQuestion}
+          incrementCorrectAnswers={incrementCorrectAnswers}
           incrementScore={incrementScore}
           incrementQuestion={incrementQuestion}
         />
       )}
-      {isFinished && <div>Done</div>}
+      {isFinished && (
+        <div className="quiz__results">
+          <div className="mv-20">
+            {`Correct: ${correctAnswers}/${maxCorrectAnswers} - Score: ${score}`}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -6,10 +6,10 @@ $animation-bg-width: 980px;
 @mixin background-image-shine {
   background-image: linear-gradient(
     90deg,
-    $medium-color 0px,
+    $light-color 0px,
     rgba(255, 255, 255, 0.15) 40px,
     rgba(255, 255, 255, 0.15) 40px,
-    $medium-color 80px
+    $light-color 80px
   );
 }
 
@@ -28,16 +28,25 @@ $animation-bg-width: 980px;
   height: 20px;
   width: 175px;
   background: #e3f2fd;
+
   @include background-image-shine;
   animation: shine-line $animation-duration linear infinite;
   background-size: $animation-bg-width;
+  &--transparent {
+    animation: none;
+    background-image: none;
+    background: none;
+    height: 100%;
+    width: 100px;
+  }
 }
 
 .progress-bar__filler {
-  background: #2196f3;
+  background: $medium-color;
   height: 100%;
   border-radius: inherit;
   transition: width 0.2s ease-in;
+  animation: shine-line $animation-duration linear infinite;
 }
 
 .progress-bar__button {

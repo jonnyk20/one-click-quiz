@@ -25,6 +25,13 @@
   margin-bottom: 5px;
 }
 
+.ml-5 {
+  margin-left: 5px;
+}
+.mr-5 {
+  margin-right: 5px;
+}
+
 .mv-5 {
   margin-top: 5px;
   margin-bottom: 5px;
@@ -36,6 +43,14 @@
 
 .mb-10 {
   margin-bottom: 10px;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.mr-10 {
+  margin-right: 10px;
 }
 
 .mv-10 {
@@ -54,4 +69,24 @@
 .mv-20 {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.border {
+  border: solid 1px;
+}
+
+.border-right {
+  border-right: solid 1px;
+}
+
+.border-left {
+  border-left: solid 1px;
+}
+
+.border-top {
+  border-top: solid 1px;
+}
+
+.border-bottom {
+  border-bottom: solid 1px;
 }
