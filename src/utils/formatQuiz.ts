@@ -1,3 +1,5 @@
+import { QUIZ_TAGS, QUIZ_TYPES } from "../constants/quizProperties";
+
 export type FormattedChoice = {
   name: string;
   image_url: string;
@@ -10,8 +12,9 @@ export type FormattedQuestion = {
 
 export type FormattedQuiz = {
   name: string;
-  quizType: string;
+  quizType: QUIZ_TYPES;
   questions: FormattedQuestion[];
+  tags: QUIZ_TAGS[];
 };
 
 type RawItem = {
@@ -30,7 +33,7 @@ type RawQuestion = {
 type RawQuiz = {
   name: string;
   quizType: {
-    name: string;
+    name: QUIZ_TYPES;
   };
   questions: RawQuestion[];
 };
@@ -52,14 +55,15 @@ const formatQuestion = (question: RawQuestion): FormattedQuestion => {
   return formattedQuestion;
 };
 
-export default (rawQuiz: RawQuiz): FormattedQuiz => {
+export default (rawQuiz: RawQuiz, tags: QUIZ_TAGS[] = []): FormattedQuiz => {
   const { name } = rawQuiz;
   const quizType = rawQuiz.quizType.name;
   const questions = rawQuiz.questions.map(formatQuestion);
   const quiz = {
     name,
     quizType,
-    questions
+    questions,
+    tags
   };
 
   return quiz;

@@ -1,6 +1,7 @@
-import { isNilOrEmpty } from "../utils/utils";
+import { isNilOrEmpty, encodeQueryString } from "../utils/utils";
 import buildTaxaQuiz from "../utils/buildTaxaQuiz";
 import { FormattedQuiz } from "../utils/formatQuiz";
+import { QUIZ_TAGS } from "../constants/quizProperties";
 
 const baseUrl = "https://api.inaturalist.org/v1";
 
@@ -20,20 +21,6 @@ export type SuggestedPlacesResponse = {
   results: SuggestedPlace[];
 };
 
-const getQueryString = (params: any) => {
-  const keys: string[] = Object.keys(params);
-
-  if (!isNilOrEmpty(keys)) {
-    var esc = encodeURIComponent;
-    const paramsString = Object.keys(params)
-      .map(k => esc(k) + "=" + esc(params[k]))
-      .join("&");
-    return `?${paramsString}`;
-  }
-
-  return "";
-};
-
 type NearestPlacesResults = {
   results: {
     standard: SuggestedPlace[];
@@ -51,7 +38,7 @@ export const getNearestPlace = async (
     swlng: lng.toFixed(3)
   };
 
-  const querystring = getQueryString(params);
+  const querystring = encodeQueryString(params);
 
   const res = await fetch(`${baseUrl}/places/nearby/${querystring}`);
   const results: NearestPlacesResults = await res.json();
@@ -66,7 +53,7 @@ export const getNearestPlace = async (
 export const getSuggestedPlaces = async (
   query: string
 ): Promise<SuggestedPlace[]> => {
-  const querystring = getQueryString({ q: query });
+  const querystring = encodeQueryString({ q: query });
 
   const res: Response = await fetch(
     `${baseUrl}/places/autocomplete/${querystring}`
@@ -87,7 +74,8 @@ export const fetchSpeciesData = async (
   place: SuggestedPlace | null,
   kingdomIds: number[],
   user: string,
-  quizName: string
+  quizName: string,
+  quizTags?: QUIZ_TAGS[]
 ): Promise<FormattedQuiz | null> => {
   try {
     const params: iNatParams = {};
@@ -102,13 +90,13 @@ export const fetchSpeciesData = async (
     if (user) {
       params.user_login = user;
     }
-    const querystring = getQueryString(params);
+    const querystring = encodeQueryString(params);
     const res: Response = await fetch(
       `${baseUrl}/observations/species_counts${querystring}`
     );
 
     const taxa = await res.json();
-    const quiz = buildTaxaQuiz(taxa.results, quizName);
+    const quiz = buildTaxaQuiz(taxa.results, quizName, quizTags);
 
     return quiz;
   } catch (err) {

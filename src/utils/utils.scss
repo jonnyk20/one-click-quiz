@@ -1,3 +1,5 @@
+@import "./variables.scss";
+
 .full-row {
   grid-column: 1 / -1;
 }
@@ -91,10 +93,30 @@
   border-bottom: solid 1px;
 }
 
+.text-small {
+  font-size: 12px;
+}
+
 .text-medium {
   font-size: 16px;
 }
 
 .text-large {
   font-size: 24px;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-main-color {
+  color: $main-color;
+}
+
+.text-medium-color {
+  color: $medium-color;
+}
+
+.text-light-color {
+  color: $light-color;
 }

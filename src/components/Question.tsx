@@ -99,7 +99,7 @@ const Question: React.SFC<PropTypes> = ({
       <div className="question__image-container">
         {choices.map(({ image_url, name }, i) => (
           <Image
-            key={image_url}
+            key={name}
             answerQuestion={answerQuestion}
             i={i}
             image_url={image_url}

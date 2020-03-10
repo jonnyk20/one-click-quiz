@@ -1,5 +1,6 @@
 import { splitEvery, range, groupWith, flatten } from "ramda";
 import { FormattedQuiz, FormattedChoice } from "./formatQuiz";
+import { QUIZ_TYPES, QUIZ_TAGS } from "../constants/quizProperties";
 
 type Taxon = {
   taxon: {
@@ -36,7 +37,11 @@ const sortByAncestry = (arr: Taxon[]) => {
   return sorted;
 };
 
-const buildTaxaQuiz = (taxa: Taxon[], quizName: string): FormattedQuiz => {
+const buildTaxaQuiz = (
+  taxa: Taxon[],
+  quizName: string,
+  tags: QUIZ_TAGS[] = []
+): FormattedQuiz => {
   const sortedTaxa = sortByAncestry(taxa);
   const groupedChoices = splitEvery(CHOICE_COUNT, sortedTaxa);
   const shuffledGroups = shuffle(groupedChoices).slice(0, MAX_QUESTION_COUNT);
@@ -56,8 +61,9 @@ const buildTaxaQuiz = (taxa: Taxon[], quizName: string): FormattedQuiz => {
 
   const quiz = {
     name: quizName,
-    quizType: "image-quiz",
-    questions
+    quizType: QUIZ_TYPES.IMAGE_QUIZ,
+    questions,
+    tags
   };
 
   return quiz;

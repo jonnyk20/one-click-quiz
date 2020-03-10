@@ -7,7 +7,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #dff6ff;
+  background: $light-color;
   background-image: url("https://images.pexels.com/photos/355321/pexels-photo-355321.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260");
 }
 
@@ -44,4 +44,9 @@ code {
   margin-top: 50px;
   color: white;
   border: solid 1px white;
+}
+
+.text-link {
+  color: inherit;
+  text-decoration: inherit;
 }

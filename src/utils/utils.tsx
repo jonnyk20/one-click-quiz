@@ -10,6 +10,20 @@ export const wait = async (delay: number) => {
   });
 };
 
+export const encodeQueryString = (params: any) => {
+  const keys: string[] = Object.keys(params);
+
+  if (!isNilOrEmpty(keys)) {
+    var esc = encodeURIComponent;
+    const paramsString = Object.keys(params)
+      .map(k => esc(k) + "=" + esc(params[k]))
+      .join("&");
+    return `?${paramsString}`;
+  }
+
+  return "";
+};
+
 export const parseQueryString = (s: any): any =>
   s
     .slice(1)

@@ -11,7 +11,8 @@ import { BuilderState } from "../constants/states";
 import "./MainQuizBuilder.scss";
 
 const convertItemsToInput = (arr: string[]): string => arr.join("\n");
-const convertInputToItems = (input: string): string[] => input.split("\n");
+const convertInputToItems = (input: string): string[] =>
+  input.split("\n").slice(0, 40);
 
 const defaultItems = ["Tiger", "Leopard", "Cheetah", "Koala"];
 
@@ -30,7 +31,6 @@ const Builder = () => {
   const [builderState, setBuilderState] = useState<BuilderState>(
     BuilderState.INPUTTING
   );
-  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const validItems = items.filter(isNotNilOrEmpty);
 
@@ -50,7 +50,7 @@ const Builder = () => {
   };
 
   useEffect(() => {
-    const socket = socketIOClient();
+    const socket = socketIOClient({ reconnectionAttempts: 0 });
     socket.on(
       "main-quiz-builder-progress-update",
       (progress: BuilderProgress) => {

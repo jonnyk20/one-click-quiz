@@ -7,6 +7,7 @@ import Button from "../components/Button";
 
 import "./MyObservations.scss";
 import ProgressBar from "../components/ProgressBar";
+import { QUIZ_TAGS } from "../constants/quizProperties";
 
 enum QuizBuildingState {
   INITIAL,
@@ -31,7 +32,8 @@ const MyObservations = () => {
       null,
       [],
       userLogin,
-      `My Observations - ${userLogin}`
+      `My Observations - ${userLogin}`,
+      [QUIZ_TAGS.MY_OBSERVATIONS]
     );
     if (quiz && quiz.questions.length > 0) {
       setQuiz(quiz);
@@ -103,7 +105,13 @@ const MyObservations = () => {
           <div className="mv-20">
             Tip: answering faster gets you a higher score
           </div>
-          <Link to={{ pathname: "/quiz/my-observations", state: { quiz } }}>
+          <Link
+            className="text-link"
+            to={{
+              pathname: "/quiz/my-observations",
+              state: { quiz, user: userName }
+            }}
+          >
             <Button onClick={() => {}}> Start</Button>
           </Link>
         </div>

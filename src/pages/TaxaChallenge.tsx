@@ -13,6 +13,7 @@ import ProgressBar from "../components/ProgressBar";
 import { FormattedQuiz } from "../utils/formatQuiz";
 
 import "./TaxaChallenge.scss";
+import { QUIZ_TAGS } from "../constants/quizProperties";
 
 enum KINGDOMS {
   ANIMAL,
@@ -100,7 +101,8 @@ const TaxaChallenge = () => {
       place,
       kingdomIds,
       "",
-      "Taxa Challange"
+      "Taxa Challange",
+      [QUIZ_TAGS.TAXA_CHALLENGE]
     );
 
     if (quiz) {
