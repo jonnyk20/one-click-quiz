@@ -9,6 +9,7 @@ import {
 import { isNilOrEmpty } from "../utils/utils";
 import Button from "../components/Button";
 import ProgressBar from "../components/ProgressBar";
+import ProjectInfo from "../components/ProjectInfo";
 
 import { FormattedQuiz } from "../utils/formatQuiz";
 
@@ -212,6 +213,7 @@ const TaxaChallenge = () => {
           </Link>
         </div>
       )}
+      <ProjectInfo />
     </div>
   );
 };

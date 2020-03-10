@@ -9,6 +9,7 @@ import { QUIZ_TYPES, QUIZ_TAGS } from "../constants/quizProperties";
 
 import "./Quiz.scss";
 import Button from "../components/Button";
+import ProjectInfo from "../components/ProjectInfo";
 
 const fetchQuiz = async (slug: string) => {
   const response = await fetch(`${window.location.origin}/api/quiz/${slug}`);
@@ -86,6 +87,7 @@ const Quiz = () => {
   const currentQuestion = quiz?.questions[currentQuestionIndex];
   const isMyObservationQuiz = quiz.tags.includes(QUIZ_TAGS.MY_OBSERVATIONS);
   const isTaxaChallengeQuiz = quiz.tags.includes(QUIZ_TAGS.TAXA_CHALLENGE);
+  const isInaturalistQuiz = isMyObservationQuiz || isTaxaChallengeQuiz;
 
   return (
     <div className="quiz container">
@@ -124,7 +126,7 @@ const Quiz = () => {
                       My Observations
                     </Link>
                   </Button>
-                  <div className="mv-20"> OR</div>
+                  <div className="mv-20 text-medium">-OR-</div>
                   <div className="mv-20 text-medium">
                     Test how well you know your local wildlife
                   </div>
@@ -151,8 +153,27 @@ const Quiz = () => {
                       Let's go
                     </Link>
                   </Button>
+                  <div className="mv-20">OR</div>
+                  <div className="mv-20 text-medium">
+                    <div>
+                      Are you an{" "}
+                      <a href="https://www.inaturalist.org/">iNaturalist</a>{" "}
+                      user?
+                    </div>
+                    Quiz yourself on the animals you've found
+                  </div>
+                  <Button onClick={() => {}}>
+                    <Link
+                      to="/my-observations"
+                      className="text-link text-medium"
+                    >
+                      My Observations
+                    </Link>
+                  </Button>
                 </>
               )}
+
+              {isInaturalistQuiz && <ProjectInfo />}
             </div>
           </div>
         </div>

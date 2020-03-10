@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import "./MyObservations.scss";
 import ProgressBar from "../components/ProgressBar";
 import { QUIZ_TAGS } from "../constants/quizProperties";
+import ProjectInfo from "../components/ProjectInfo";
 
 enum QuizBuildingState {
   INITIAL,
@@ -100,7 +101,12 @@ const MyObservations = () => {
       {!isNilOrEmpty(quiz) && (
         <div>
           <div className="mv-20">
-            <h4>{`${userName}, your quiz is ready`}</h4>
+            <div className="text-large">
+              <span className="text-light-color">
+                <b>{userName}</b>
+              </span>
+              , your quiz is ready
+            </div>
           </div>
           <div className="mv-20">
             Tip: answering faster gets you a higher score
@@ -116,6 +122,7 @@ const MyObservations = () => {
           </Link>
         </div>
       )}
+      <ProjectInfo />
     </div>
   );
 };

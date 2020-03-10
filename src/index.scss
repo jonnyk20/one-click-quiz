@@ -50,3 +50,11 @@ code {
   color: inherit;
   text-decoration: inherit;
 }
+
+a {
+  color: $light-color;
+
+  // &:visited {
+  //   color: white;
+  // }
+}
