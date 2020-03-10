@@ -9,12 +9,13 @@ import Button from "../components/Button";
 import { BuilderState } from "../constants/states";
 
 import "./MainQuizBuilder.scss";
+import { Link } from "react-router-dom";
 
 const convertItemsToInput = (arr: string[]): string => arr.join("\n");
 const convertInputToItems = (input: string): string[] =>
   input.split("\n").slice(0, 40);
 
-const defaultItems = ["Tiger", "Leopard", "Cheetah", "Koala"];
+const defaultItems = ["Dandelion", "Lilly", "Rose", "Tulip"];
 
 type CompletedQuizPayload = {
   url: string;
@@ -74,9 +75,15 @@ const Builder = () => {
 
   return (
     <div className="main-quiz-builder container">
+      <div className="main-quiz-builder__examples">
+        <Link to="/taxa-challenge">Try an animal Quiz</Link>
+      </div>
       <div>
         <h1>1 Click Quiz</h1>
-        <h4>Add Items below then create your quiz</h4>
+        <p className="text-medium">Create an image quiz on anything you want</p>
+        <p className="text-medium">
+          Then test yourself and share it with others
+        </p>
       </div>
       {isInputting && (
         <div className="main-quiz-builder__form">

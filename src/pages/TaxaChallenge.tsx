@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, Redirect } from "react-router-dom";
 import {
   getSuggestedPlaces,
   SuggestedPlace,
   fetchSpeciesData,
   getNearestPlace
 } from "../services/InaturalistService";
-import { isNilOrEmpty } from "../utils/utils";
+import {
+  isNilOrEmpty,
+  parseQueryString,
+  encodeQueryString
+} from "../utils/utils";
 import Button from "../components/Button";
 import ProgressBar from "../components/ProgressBar";
 import ProjectInfo from "../components/ProjectInfo";
@@ -53,6 +57,20 @@ const TaxaChallenge = () => {
     QuizBuildingState.INITIAL
   );
   const [quiz, setQuiz] = useState<FormattedQuiz | null>(null);
+  const location = useLocation();
+  const params = parseQueryString(location.search);
+  const { user } = params;
+
+  if (!isNilOrEmpty(user)) {
+    return (
+      <Redirect
+        to={{
+          pathname: "/my-observations",
+          search: encodeQueryString({ user })
+        }}
+      />
+    );
+  }
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>): void => {
     const element = event.currentTarget as HTMLInputElement;
