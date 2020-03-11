@@ -22,11 +22,13 @@
       resize: none;
       font-size: 16px;
       padding: 10px;
+      width: auto;
     }
 
     &__preview {
       text-align: left;
       padding-left: 10px;
+      word-break: break-all;
 
       &__item {
         border: solid 1px white;
