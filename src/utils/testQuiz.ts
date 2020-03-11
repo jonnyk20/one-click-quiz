@@ -21,7 +21,9 @@ const testQuiz: FormattedQuiz = {
   name: "test",
   quizType: QUIZ_TYPES.IMAGE_QUIZ,
   questions: range(0, 4).map(makeQuestion),
-  tags: [QUIZ_TAGS.TAXA_CHALLENGE]
+  tags: [
+    /*QUIZ_TAGS.TAXA_CHALLENGE*/
+  ]
 };
 
 export default testQuiz;

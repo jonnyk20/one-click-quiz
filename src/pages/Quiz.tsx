@@ -166,6 +166,9 @@ const Quiz = () => {
               <div className="mv-50">
                 <MoreFeaturesCTA />
               </div>
+              <div className="mt-50 text-medium">
+                <Link to="/">Home</Link>
+              </div>
               {isInaturalistQuiz && <ProjectInfo />}
             </div>
           </div>
