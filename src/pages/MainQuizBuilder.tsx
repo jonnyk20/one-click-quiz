@@ -15,7 +15,7 @@ const convertItemsToInput = (arr: string[]): string => arr.join("\n");
 const convertInputToItems = (input: string): string[] =>
   input.split("\n").slice(0, 40);
 
-const defaultItems = ["Dandelion", "Lilly", "Rose", "Tulip"];
+const defaultItems = ["jade", "amethyst", "topaz", "sapphire", "turquoise"];
 
 type CompletedQuizPayload = {
   url: string;
@@ -76,14 +76,14 @@ const Builder = () => {
   return (
     <div className="main-quiz-builder container">
       <div className="main-quiz-builder__examples">
-        <Link to="/taxa-challenge">Taxa Challenge (Animal Quiz)</Link>
+        <Link to="/taxa-challenge">Wildlife Quiz</Link>
         <Link to="/upcoming-features">Project Info</Link>
       </div>
       <div>
         <h1>1 Click Quiz</h1>
         <p className="text-medium">Create an image quiz on anything you want</p>
         <p className="text-medium">
-          Then test yourself and share it with others
+          Then test yourself and share it with others for free
         </p>
       </div>
       {isInputting && (

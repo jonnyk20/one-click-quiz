@@ -4,6 +4,8 @@ import MailingListSignup from "../components/MailingListSignup";
 import "./UpcomingFeatures.scss";
 import ProjectInfo from "../components/ProjectInfo";
 
+const EMAIL_SUBJECT = encodeURI("1 Click Quiz - Feedback and Feature Requests");
+
 const UpcomingFeatures = () => (
   <div className="upcoming-features container">
     <h2 className="text-light-color">More Features Coming Soon...</h2>
@@ -21,7 +23,7 @@ const UpcomingFeatures = () => (
         More based on your&nbsp;
         <a
           className="text-light-color"
-          href="mailto:jonnyk_78@hotmail.com"
+          href={`mailto:jonnyk_78@hotmail.com?subject=${EMAIL_SUBJECT}`}
           target="_blank"
         >
           your feedback
@@ -29,7 +31,7 @@ const UpcomingFeatures = () => (
       </li>
     </ul>
     <h3 className="mv-50 text-center text-light-color">
-      Leave your email to be the fist to know!
+      Leave your email to be the first to know!
     </h3>
     <MailingListSignup />
     <div className="mt-50">
