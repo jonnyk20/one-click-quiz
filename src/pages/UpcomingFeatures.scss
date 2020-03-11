@@ -1,0 +1,22 @@
+.upcoming-features {
+  color: white;
+  padding: 50px;
+  max-width: 500px;
+  text-align: center;
+
+  &__feature-list {
+    padding: 0;
+
+    &__feature {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      list-style: none;
+      border: solid 1px;
+      padding: 5px;
+    }
+  }
+
+  &__form {
+    display: flex;
+  }
+}

@@ -37,3 +37,5 @@ export const parseQueryString = (s: any): any =>
 
       return query;
     }, {});
+
+export const isDev = window.location.host.includes("localhost");

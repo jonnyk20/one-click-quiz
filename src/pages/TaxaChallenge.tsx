@@ -19,6 +19,7 @@ import { FormattedQuiz } from "../utils/formatQuiz";
 
 import "./TaxaChallenge.scss";
 import { QUIZ_TAGS } from "../constants/quizProperties";
+import MoreFeaturesCTA from "../components/MoreFeaturesCTA";
 
 enum KINGDOMS {
   ANIMAL,
@@ -231,7 +232,12 @@ const TaxaChallenge = () => {
           </Link>
         </div>
       )}
-      <ProjectInfo />
+      {!isPlaceReady && (
+        <>
+          <MoreFeaturesCTA />
+          <ProjectInfo />
+        </>
+      )}
     </div>
   );
 };

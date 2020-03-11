@@ -1,0 +1,14 @@
+.mailing-list-signup {
+  &__form {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+
+    &__input {
+      height: 100%;
+      border: none;
+      box-sizing: border-box;
+      padding: 5px;
+    }
+  }
+}

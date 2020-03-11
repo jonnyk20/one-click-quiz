@@ -5,6 +5,8 @@ import Builder from "./pages/MainQuizBuilder";
 import Quiz from "./pages/Quiz";
 import TaxaChallenge from "./pages/TaxaChallenge";
 import MyObservations from "./pages/MyObservations";
+import ThankYou from "./pages/ThankYou";
+import UpcomingFeatures from "./pages/UpcomingFeatures";
 
 ReactGA.initialize("UA-33174971-5");
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -22,6 +24,12 @@ const App = () => (
         </Route>
         <Route path="/my-observations">
           <MyObservations />
+        </Route>
+        <Route path="/upcoming-features">
+          <UpcomingFeatures />
+        </Route>
+        <Route path="/thank-you">
+          <ThankYou />
         </Route>
         <Route path="/">
           <Builder />

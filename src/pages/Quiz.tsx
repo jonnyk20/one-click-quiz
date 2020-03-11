@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useParams, useLocation, Link, useHistory } from "react-router-dom";
 import { isEmpty } from "ramda";
 import Question from "../components/Question";
 import formatQuiz, { FormattedQuiz } from "../utils/formatQuiz";
@@ -8,7 +8,7 @@ import testQuiz from "../utils/testQuiz";
 import { QUIZ_TYPES, QUIZ_TAGS } from "../constants/quizProperties";
 
 import "./Quiz.scss";
-import Button from "../components/Button";
+import MoreFeaturesCTA from "../components/MoreFeaturesCTA";
 import ProjectInfo from "../components/ProjectInfo";
 
 const fetchQuiz = async (slug: string) => {
@@ -42,6 +42,7 @@ const Quiz = () => {
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const location: Location = useLocation();
   const user = location?.state?.user || "";
+  const history = useHistory();
 
   const isTesting = slug === "testing";
 
@@ -52,6 +53,8 @@ const Quiz = () => {
         const formattedQuiz = formatQuiz(data.quiz);
         setQuiz(formattedQuiz);
         setmaxCorrectAnswers(formattedQuiz.questions.length);
+      } else {
+        history.push("/");
       }
     };
 
@@ -111,68 +114,58 @@ const Quiz = () => {
             <span className="text-light-color">{score}</span>
             <div>
               {isMyObservationQuiz && !isNilOrEmpty(user) && (
-                <>
-                  <div className="mv-20 text-medium">
+                <div className="mv-50">
+                  <Link
+                    className="text-medium text-underline mb-10 mt-20 text-white text-underline flex"
+                    to={{
+                      pathname: "/my-observations",
+                      search: encodeQueryString({ user })
+                    }}
+                  >
                     Try again with more of your observations
-                  </div>
-                  <Button onClick={() => {}}>
-                    <Link
-                      className="text-link text-medium"
-                      to={{
-                        pathname: "/my-observations",
-                        search: encodeQueryString({ user })
-                      }}
-                    >
-                      My Observations
-                    </Link>
-                  </Button>
-                  <div className="mv-20 text-medium">-OR-</div>
-                  <div className="mv-20 text-medium">
+                  </Link>
+                  <div className="mt-5 text-medium">-OR-</div>
+
+                  <Link
+                    className="text-medium text-underline mv-5 text-white text-underline flex"
+                    to="/taxa-challenge"
+                  >
                     Test how well you know your local wildlife
-                  </div>
-                  <Button onClick={() => {}}>
-                    <Link
-                      className="text-link text-medium"
-                      to="/taxa-challenge"
-                    >
-                      Taxa Challenge
-                    </Link>
-                  </Button>
-                </>
+                  </Link>
+                </div>
               )}
               {isTaxaChallengeQuiz && (
-                <>
-                  <div className="mv-20 text-medium">
+                <div className="mv-50">
+                  <Link
+                    to="/taxa-challenge"
+                    className="text-medium text-white mv-20 flex"
+                  >
                     Try again and we'll show you different animals!
-                  </div>
-                  <Button onClick={() => {}}>
-                    <Link
-                      to="/taxa-challenge"
-                      className="text-link text-medium"
-                    >
-                      Let's go
-                    </Link>
-                  </Button>
-                  <div className="mv-20">OR</div>
+                  </Link>
+                  <div className="mv-20 text-medium">OR</div>
                   <div className="mv-20 text-medium">
                     <div>
                       Are you an{" "}
-                      <a href="https://www.inaturalist.org/">iNaturalist</a>{" "}
-                      user?
+                      <a
+                        href="https://www.inaturalist.org/"
+                        className="text-white"
+                      >
+                        iNaturalist
+                      </a>
+                      &nbsp;user?
                     </div>
-                    Quiz yourself on the animals you've found
                   </div>
-                  <Button onClick={() => {}}>
-                    <Link
-                      to="/my-observations"
-                      className="text-link text-medium"
-                    >
-                      My Observations
-                    </Link>
-                  </Button>
-                </>
+                  <Link
+                    to="/my-observations"
+                    className="text-medium text-white flex"
+                  >
+                    Quiz yourself on the animals you've found!
+                  </Link>
+                </div>
               )}
-
+              <div className="mv-50">
+                <MoreFeaturesCTA />
+              </div>
               {isInaturalistQuiz && <ProjectInfo />}
             </div>
           </div>

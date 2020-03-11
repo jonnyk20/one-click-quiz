@@ -76,7 +76,8 @@ const Builder = () => {
   return (
     <div className="main-quiz-builder container">
       <div className="main-quiz-builder__examples">
-        <Link to="/taxa-challenge">Try an animal Quiz</Link>
+        <Link to="/taxa-challenge">Taxa Challenge (Animal Quiz)</Link>
+        <Link to="/upcoming-features">Project Info</Link>
       </div>
       <div>
         <h1>1 Click Quiz</h1>

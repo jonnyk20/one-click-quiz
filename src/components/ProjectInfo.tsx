@@ -1,8 +1,8 @@
 import React from "react";
-import "./ProjectInfo.scss";
+import { Link } from "react-router-dom";
 
 const ProjectInfo = () => (
-  <div className="project-info text-small">
+  <div className="project-info text-x-small">
     <p>
       Built by <a href="https://twitter.com/jonnykalambay">Jonny Kalambay</a>
       &nbsp;using data from&nbsp;

@@ -9,6 +9,7 @@ import "./MyObservations.scss";
 import ProgressBar from "../components/ProgressBar";
 import { QUIZ_TAGS } from "../constants/quizProperties";
 import ProjectInfo from "../components/ProjectInfo";
+import MoreFeaturesCTA from "../components/MoreFeaturesCTA";
 
 enum QuizBuildingState {
   INITIAL,
@@ -122,6 +123,7 @@ const MyObservations = () => {
           </Link>
         </div>
       )}
+      <MoreFeaturesCTA />
       <ProjectInfo />
     </div>
   );

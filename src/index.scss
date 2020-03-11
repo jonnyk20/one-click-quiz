@@ -49,10 +49,12 @@ code {
 .text-link {
   color: inherit;
   text-decoration: inherit;
+  display: flex;
+  justify-content: center;
 }
 
 a {
-  color: $light-color;
+  color: white;
 
   // &:visited {
   //   color: white;

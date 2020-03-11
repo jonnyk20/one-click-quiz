@@ -1,6 +1,10 @@
 import { splitEvery, range, groupWith, flatten } from "ramda";
 import { FormattedQuiz, FormattedChoice } from "./formatQuiz";
 import { QUIZ_TYPES, QUIZ_TAGS } from "../constants/quizProperties";
+import { isNilOrEmpty } from "./utils";
+
+const filterOutEmptyNames = (taxa: Taxon[]): Taxon[] =>
+  taxa.filter(taxon => !isNilOrEmpty(taxon.taxon.preferred_common_name));
 
 type Taxon = {
   taxon: {
@@ -42,7 +46,7 @@ const buildTaxaQuiz = (
   quizName: string,
   tags: QUIZ_TAGS[] = []
 ): FormattedQuiz => {
-  const sortedTaxa = sortByAncestry(taxa);
+  const sortedTaxa = filterOutEmptyNames(sortByAncestry(taxa));
   const groupedChoices = splitEvery(CHOICE_COUNT, sortedTaxa);
   const shuffledGroups = shuffle(groupedChoices).slice(0, MAX_QUESTION_COUNT);
   const questionCount = Math.min(shuffledGroups.length, MAX_QUESTION_COUNT);
