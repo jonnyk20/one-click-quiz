@@ -16,7 +16,7 @@ type Taxon = {
   };
 };
 
-const CHOICE_COUNT = 4;
+const MAX_CHOICE_COUNT = 4;
 const MAX_QUESTION_COUNT = 10;
 
 const shuffle = (a: Taxon[][]): Taxon[][] => {
@@ -47,14 +47,17 @@ const buildTaxaQuiz = (
   tags: QUIZ_TAGS[] = []
 ): FormattedQuiz => {
   const sortedTaxa = filterOutEmptyNames(sortByAncestry(taxa));
-  const groupedChoices = splitEvery(CHOICE_COUNT, sortedTaxa);
+  const groupedChoices = splitEvery(MAX_CHOICE_COUNT, sortedTaxa);
   const shuffledGroups = shuffle(groupedChoices).slice(0, MAX_QUESTION_COUNT);
   const questionCount = Math.min(shuffledGroups.length, MAX_QUESTION_COUNT);
 
   const questions = range(0, questionCount).map((i: number) => {
+    const choices = shuffledGroups[i];
+    const choiceCount = choices.length;
+
     return {
-      correctAnswerIndex: Math.floor(Math.random() * CHOICE_COUNT),
-      choices: shuffledGroups[i].map(
+      correctAnswerIndex: Math.floor(Math.random() * choiceCount),
+      choices: choices.map(
         (taxon: Taxon): FormattedChoice => ({
           name: taxon.taxon.preferred_common_name,
           image_url: taxon.taxon.default_photo.medium_url
