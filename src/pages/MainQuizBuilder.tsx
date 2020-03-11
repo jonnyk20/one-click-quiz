@@ -15,7 +15,16 @@ const convertItemsToInput = (arr: string[]): string => arr.join("\n");
 const convertInputToItems = (input: string): string[] =>
   input.split("\n").slice(0, 40);
 
-const defaultItems = ["jade", "amethyst", "topaz", "sapphire", "turquoise"];
+const defaultItems = [
+  "jade",
+  "amethyst",
+  "topaz",
+  "ruby",
+  "onyx",
+  "sapphire",
+  "turquoise",
+  "quartz"
+];
 
 type CompletedQuizPayload = {
   url: string;
