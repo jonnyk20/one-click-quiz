@@ -21,7 +21,7 @@ const UpcomingFeatures = () => (
         Public scoreboards
       </li>
       <li className="upcoming-features__feature-list__feature">
-        More based on your&nbsp;
+        And more, based on&nbsp;
         <a
           className="text-light-color"
           href={`mailto:jonnyk_78@hotmail.com?subject=${EMAIL_SUBJECT}`}
