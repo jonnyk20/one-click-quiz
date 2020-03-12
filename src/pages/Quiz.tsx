@@ -3,7 +3,11 @@ import { useParams, useLocation, Link, useHistory } from "react-router-dom";
 import { isEmpty } from "ramda";
 import Question from "../components/Question";
 import formatQuiz, { FormattedQuiz } from "../utils/formatQuiz";
-import { isNilOrEmpty, encodeQueryString } from "../utils/utils";
+import {
+  isNilOrEmpty,
+  encodeQueryString,
+  isNotNilOrEmpty
+} from "../utils/utils";
 import testQuiz from "../utils/testQuiz";
 import { QUIZ_TYPES, QUIZ_TAGS } from "../constants/quizProperties";
 
@@ -74,7 +78,7 @@ const Quiz = () => {
     if (!isEmpty(slug)) {
       prepareQuiz();
     }
-  }, [location, slug]);
+  }, [history, isTesting, location, slug]);
 
   const incrementCorrectAnswers = () => setCorrectAnswerrs(correctAnswers + 1);
   const incrementScore = (addedScore: number) => setScore(score + addedScore);
@@ -87,13 +91,31 @@ const Quiz = () => {
     setIsFinished(true);
   };
 
+  const isEmptyQuiz = isNotNilOrEmpty(quiz) && isNilOrEmpty(quiz.questions);
+
   const currentQuestion = quiz?.questions[currentQuestionIndex];
   const isMyObservationQuiz = quiz.tags.includes(QUIZ_TAGS.MY_OBSERVATIONS);
   const isTaxaChallengeQuiz = quiz.tags.includes(QUIZ_TAGS.TAXA_CHALLENGE);
-  const isInaturalistQuiz = isMyObservationQuiz || isTaxaChallengeQuiz;
+  const isINaturalistQuiz = isMyObservationQuiz || isTaxaChallengeQuiz;
+  const isEmptyINaturalistQuiz = isINaturalistQuiz && isEmptyQuiz;
 
   return (
     <div className="quiz container">
+      {isEmptyQuiz && (
+        <h4 className="text-large">Looks like there are no questions</h4>
+      )}
+      {isEmptyINaturalistQuiz && (
+        <div>
+          <div className="mb-20">
+            There might not be any wildlife registered to this location
+          </div>
+          <div className="mv-20">
+            <Link to="/taxa-challenge" className="text-light-color">
+              Try a different one!
+            </Link>
+          </div>
+        </div>
+      )}
       {!isNilOrEmpty(quiz.questions) && !isFinished && (
         <Question
           correctAnswers={correctAnswers}
@@ -169,7 +191,7 @@ const Quiz = () => {
               <div className="mt-50 text-medium">
                 <Link to="/">Home</Link>
               </div>
-              {isInaturalistQuiz && <ProjectInfo />}
+              {isINaturalistQuiz && <ProjectInfo />}
             </div>
           </div>
         </div>

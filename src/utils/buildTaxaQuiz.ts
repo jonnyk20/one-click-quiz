@@ -9,6 +9,7 @@ const filterOutEmptyNames = (taxa: Taxon[]): Taxon[] =>
 type Taxon = {
   taxon: {
     preferred_common_name: string;
+    name: string;
     default_photo: {
       medium_url: string;
     };
@@ -60,7 +61,8 @@ const buildTaxaQuiz = (
       choices: choices.map(
         (taxon: Taxon): FormattedChoice => ({
           name: taxon.taxon.preferred_common_name,
-          image_url: taxon.taxon.default_photo.medium_url
+          image_url: taxon.taxon.default_photo.medium_url,
+          details: taxon.taxon.name
         })
       )
     };

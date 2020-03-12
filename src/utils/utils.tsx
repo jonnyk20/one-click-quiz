@@ -1,8 +1,8 @@
-import { isNil, isEmpty, either, pipe, not } from "ramda";
+import { isNil, isEmpty, either } from "ramda";
 
 export const isNilOrEmpty = either(isNil, isEmpty);
 
-export const isNotNilOrEmpty = pipe(isNilOrEmpty, not);
+export const isNotNilOrEmpty = (arg: any) => !isNilOrEmpty(arg);
 
 export const wait = async (delay: number) => {
   return new Promise(function(resolve) {

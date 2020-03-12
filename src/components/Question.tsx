@@ -5,6 +5,7 @@ import { FormattedQuestion } from "../utils/formatQuiz";
 import "./Question.scss";
 import Button from "./Button";
 import ProgressBar from "./ProgressBar";
+import { isNotNilOrEmpty } from "../utils/utils";
 
 const states = {
   UNANSWERED: "UNANSWERED",
@@ -96,6 +97,41 @@ const Question: React.SFC<PropTypes> = ({
           <ProgressBar progress={multiplier / MULTIPLIER_START} transparent />
         </div>
       </div>
+      <div className="question__prompt mb-20">
+        {!isAnswered ? (
+          <>
+            <div className="mr-10 text-large">Find the...&nbsp;</div>
+            <div>
+              <div>
+                <b className="text-light-color">
+                  {choices[correctAnswerIndex].name}
+                </b>
+              </div>
+              {isNotNilOrEmpty(choices[correctAnswerIndex].details) && (
+                <div>
+                  <b className="text-light-color">
+                    ({choices[correctAnswerIndex].details})
+                  </b>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="mr-10">
+              {answerFeedback}
+              {isAnsweredCorrectly && (
+                <span className="question__scoreboard__added-score">
+                  <b>&nbsp;+{addedScore}</b>
+                </span>
+              )}
+            </div>
+            <div>
+              <Button onClick={moveToNexQuestion}>Next</Button>
+            </div>
+          </>
+        )}
+      </div>
       <div className="question__image-container">
         {choices.map(({ image_url, name }, i) => (
           <Image
@@ -108,30 +144,6 @@ const Question: React.SFC<PropTypes> = ({
             isAnswered={isAnswered}
           />
         ))}
-      </div>
-      <div className="question__prompt mv-20">
-        {!isAnswered ? (
-          <span>
-            Find the{" "}
-            <b className="text-light-color">
-              {choices[correctAnswerIndex].name}
-            </b>
-          </span>
-        ) : (
-          <>
-            <span>
-              {answerFeedback}
-              {isAnsweredCorrectly && (
-                <span className="question__scoreboard__added-score">
-                  <b>&nbsp;+{addedScore}</b>
-                </span>
-              )}
-            </span>
-            <div>
-              <Button onClick={moveToNexQuestion}>Next</Button>
-            </div>
-          </>
-        )}
       </div>
     </div>
   );
