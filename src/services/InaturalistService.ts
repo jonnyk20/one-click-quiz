@@ -68,6 +68,8 @@ type iNatParams = {
   place_id?: number;
   taxon_id?: string;
   user_login?: string;
+  native?: boolean;
+  quality_grade?: "research";
 };
 
 export const fetchSpeciesData = async (
@@ -89,6 +91,9 @@ export const fetchSpeciesData = async (
 
     if (user) {
       params.user_login = user;
+    } else {
+      params.native = true;
+      params.quality_grade = "research";
     }
     const querystring = encodeQueryString(params);
     const res: Response = await fetch(
