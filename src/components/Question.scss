@@ -1,19 +1,20 @@
-@import "../utils/variables.scss";
+@import '../utils/variables.scss';
 
 .question {
   &__prompt {
-    height: 50px;
-    height: 50px;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
 
-    button {
-      background: rgb(65, 65, 172);
-      color: white;
-      border: none;
-      padding: 10px;
-      width: 100px;
+    &__correct-choice-info {
+      display: inline;
+    }
+
+    &__feedback {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      font-size: 36px;
     }
   }
 
@@ -23,9 +24,9 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
+    padding: 0 10px;
 
     &__added-score {
-      font-size: 36px;
       color: $medium-color;
     }
 
@@ -53,7 +54,7 @@
       box-sizing: border-box;
 
       &:before {
-        content: "";
+        content: '';
         display: block;
         padding-top: 100%;
       }

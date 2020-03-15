@@ -1,4 +1,4 @@
-@import "../utils/variables.scss";
+@import '../utils/variables.scss';
 
 $animation-duration: 1s;
 $animation-bg-width: 980px;
@@ -23,11 +23,27 @@ $animation-bg-width: 980px;
   }
 }
 
+.progress-bar--rounded .progress-bar__filler {
+  border-radius: 20px;
+}
+
 .progress-bar {
   position: relative;
   height: 20px;
   width: 175px;
   background: #e3f2fd;
+
+  &--full-width {
+    width: 100%;
+  }
+
+  &--height-small {
+    height: 10px;
+  }
+
+  &--rounded {
+    border-radius: 20px;
+  }
 
   @include background-image-shine;
   animation: shine-line $animation-duration linear infinite;
@@ -55,7 +71,7 @@ $animation-bg-width: 980px;
   font-size: 14px;
   background: #d14836;
   color: white;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   cursor: pointer;
   outline: 0;
 }

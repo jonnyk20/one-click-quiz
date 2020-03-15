@@ -1,18 +1,33 @@
-import React from "react";
-import "./ProgressBar.scss";
-import classNames from "classnames";
+import React from 'react';
+import './ProgressBar.scss';
+import classNames from 'classnames';
 
-const ProgressBar = ({
-  progress,
-  transparent = false
-}: {
+export enum Height {
+  SMALL
+}
+
+type PropTypes = {
   progress: number;
   transparent?: boolean;
+  fullWidth?: boolean;
+  height?: Height;
+  rounded?: false;
+};
+
+const ProgressBar: React.SFC<PropTypes> = ({
+  progress,
+  transparent = false,
+  fullWidth = false,
+  height,
+  rounded = false
 }) => {
-  const baseClass = "progress-bar";
+  const baseClass = 'progress-bar';
 
   const className = classNames(baseClass, {
-    [`${baseClass}--transparent`]: transparent
+    [`${baseClass}--transparent`]: transparent,
+    [`${baseClass}--full-width`]: fullWidth,
+    [`${baseClass}--height-small`]: height === Height.SMALL,
+    [`${baseClass}--rounded`]: rounded
   });
 
   return (

@@ -8,6 +8,7 @@ import { QUIZ_TYPES, QUIZ_TAGS } from "../constants/quizProperties";
 
 const makeChoice = (i: number): FormattedChoice => ({
   name: `shark-${i}`,
+  details: 'Scientific Name',
   image_url:
     "https://static.scientificamerican.com/blogs/cache/file/2ADE5D5E-8489-4BC6-8AABF71C66ACB9B4_source.jpg"
 });

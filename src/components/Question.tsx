@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import Image from "./Image";
-import { FormattedQuestion } from "../utils/formatQuiz";
+import React, { useState, useEffect } from 'react';
+import Image from './Image';
+import { FormattedQuestion } from '../utils/formatQuiz';
 
-import "./Question.scss";
-import Button from "./Button";
-import ProgressBar from "./ProgressBar";
-import { isNotNilOrEmpty } from "../utils/utils";
+import './Question.scss';
+import Button from './Button';
+import MedoosaProgress from './MedoosaProgress';
+import { isNotNilOrEmpty } from '../utils/utils';
 
 const states = {
-  UNANSWERED: "UNANSWERED",
-  CORRECT: "CORRECT",
-  INCORRECT: "INCORRECT"
+  UNANSWERED: 'UNANSWERED',
+  CORRECT: 'CORRECT',
+  INCORRECT: 'INCORRECT'
 };
 
 type PropTypes = {
@@ -84,49 +84,63 @@ const Question: React.SFC<PropTypes> = ({
   const isAnswered = state !== states.UNANSWERED;
   const isAnsweredCorrectly = state === states.CORRECT;
 
-  const answerFeedback = isAnsweredCorrectly ? "Correct!" : "So Close!";
+  const answerFeedback = isAnsweredCorrectly ? 'Correct!' : 'So Close!';
 
   return (
     <div className="question">
-      <div className="question__scoreboard">
+      <div className="question__scoreboard mv-50">
+        <MedoosaProgress
+          correctAnswers={correctAnswers}
+          maxCorrectAnswers={maxCorrectAnswers}
+        />
         <div className="mv-20">
-          {`Correct: ${correctAnswers}/${maxCorrectAnswers} - Score: ${score}`}
+          <div>
+            questions:&nbsp;
+            <span className="text-light-color">{maxCorrectAnswers}</span>
+          </div>
+          <div>
+            correct:&nbsp;
+            <span className="text-light-color">{correctAnswers}</span>
+          </div>
+          <div>
+            score:&nbsp;<span className="text-light-color">{score}</span>
+          </div>
         </div>
-        <div className="question__scoreboard__indicator">
+        {/* <div className="question__scoreboard__indicator">
           <div className="border padding-5">Multiplier</div>
           <ProgressBar progress={multiplier / MULTIPLIER_START} transparent />
-        </div>
+        </div> */}
       </div>
       <div className="question__prompt mb-20">
         {!isAnswered ? (
-          <>
-            <div className="mr-10 text-large">Find the...&nbsp;</div>
-            <div>
-              <div>
+          <div className="question__instructions mb-20">
+            <div className="mb-20">Find the...&nbsp;</div>
+            <div className="question__prompt__correct-choice-info">
+              <span>
                 <b className="text-light-color">
                   {choices[correctAnswerIndex].name}
                 </b>
-              </div>
+              </span>
               {isNotNilOrEmpty(choices[correctAnswerIndex].details) && (
-                <div>
+                <span>
                   <b className="text-light-color">
-                    ({choices[correctAnswerIndex].details})
+                    &nbsp;({choices[correctAnswerIndex].details})
                   </b>
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="mr-10">
-              {answerFeedback}
-              {isAnsweredCorrectly && (
-                <span className="question__scoreboard__added-score">
-                  <b>&nbsp;+{addedScore}</b>
                 </span>
               )}
             </div>
-            <div>
+          </div>
+        ) : (
+          <>
+            <div className="question__prompt__feedback">
+              <div className="mr-10">{answerFeedback}</div>
+              {isAnsweredCorrectly && (
+                <div className="question__scoreboard__added-score">
+                  <b>&nbsp;+{addedScore}</b>
+                </div>
+              )}
+            </div>
+            <div className="mv-20">
               <Button onClick={moveToNexQuestion}>Next</Button>
             </div>
           </>

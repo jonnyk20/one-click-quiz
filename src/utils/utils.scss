@@ -1,4 +1,4 @@
-@import "./variables.scss";
+@import './variables.scss';
 
 .full-row {
   grid-column: 1 / -1;
@@ -154,4 +154,8 @@
 
 .text-white {
   color: white;
+}
+
+.hidden {
+  visibility: hidden;
 }
