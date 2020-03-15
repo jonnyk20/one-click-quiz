@@ -47,7 +47,7 @@ const MyObservations = () => {
 
   const onSearch = async (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
-    buildQuiz(inputValue.toLowerCase());
+    buildQuiz(inputValue);
   };
 
   const params = parseQueryString(location.search);
@@ -58,7 +58,7 @@ const MyObservations = () => {
       setUserName(user);
       buildQuiz(user);
     }
-  }, []);
+  }, [user]);
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>): void => {
     const element = event.currentTarget as HTMLInputElement;
