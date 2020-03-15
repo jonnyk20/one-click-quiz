@@ -80,7 +80,7 @@ const MyObservations = () => {
         <form onSubmit={onSearch} className="my-observations__search mv-20">
           <input
             className="my-observations__search__input"
-            placeholder="Enter your Inaturalist login..."
+            placeholder="Your iNaturalist login..."
             value={inputValue}
             onChange={handleChange}
           />
@@ -95,8 +95,9 @@ const MyObservations = () => {
       )}
       {showQuizBuildingError && (
         <div>
-          We can't find any wildlife observed by this user, <br /> Please try a
-          different one
+          We can't find any wildlife observed by this user. <br />
+          Please make sure the casing matches. If your login is 'myuser123', 'Myuser123' will not work. <br /> 
+          Also, please makse sure you have observations under this account.
         </div>
       )}
       {!isNilOrEmpty(quiz) && (
