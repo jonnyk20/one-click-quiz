@@ -6,6 +6,7 @@ import './Question.scss';
 import Button from './Button';
 import MedoosaProgress from './MedoosaProgress';
 import { isNotNilOrEmpty } from '../utils/utils';
+import modSelections from '../utils/modSelections';
 
 const states = {
   UNANSWERED: 'UNANSWERED',
@@ -92,8 +93,9 @@ const Question: React.SFC<PropTypes> = ({
         <MedoosaProgress
           correctAnswers={correctAnswers}
           maxCorrectAnswers={maxCorrectAnswers}
+          modSelections={modSelections}
         />
-        <div className="mv-20">
+        <div className="question__scoreboard__scores">
           <div>
             questions:&nbsp;
             <span className="text-light-color">{maxCorrectAnswers}</span>
@@ -135,7 +137,7 @@ const Question: React.SFC<PropTypes> = ({
             <div className="question__prompt__feedback">
               <div className="mr-10">{answerFeedback}</div>
               {isAnsweredCorrectly && (
-                <div className="question__scoreboard__added-score">
+                <div className="question__scoreboard__added-score mr-10">
                   <b>&nbsp;+{addedScore}</b>
                 </div>
               )}

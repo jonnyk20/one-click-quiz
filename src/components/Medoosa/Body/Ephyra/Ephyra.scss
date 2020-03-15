@@ -1,0 +1,47 @@
+.ephyra {
+  width: 150px;
+  height: 150px;
+  animation: float 6s ease-in-out infinite;
+
+  &__eyes {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 38%;
+    width: 25%;
+    margin: auto;
+
+    .eyes {
+      margin: auto;
+    }
+  }
+
+  &__mouth {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 46%;
+    width: 10%;
+
+    .mouth {
+      margin: auto;
+      display: block;
+    }
+  }
+}
+
+
+@keyframes float {
+  0% {
+    transform: translatey(0px);
+  }
+
+  50% {
+    transform: translatey(-20px);
+  }
+
+  100% {
+    transform: translatey(0px);
+  }
+}

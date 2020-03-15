@@ -1,0 +1,74 @@
+.final-form {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  animation: float 6s ease-in-out infinite;
+
+  &__head {
+    position: absolute;
+    top: 3%;
+    width: 100%;
+    z-index: 0;
+
+    .head {
+      margin: auto;
+      display: block;
+    }
+  }
+
+  &__eyes {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 44%;
+    width: 25%;
+    margin: auto;
+
+    .eyes {
+      margin: auto;
+    }
+  }
+
+  &__mouth {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 52%;
+    width: 10%;
+
+    .mouth {
+      margin: auto;
+      display: block;
+    }
+  }
+
+  &__arms {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 65%;
+    width: 50%;
+    z-index: -1;
+
+    .arms {
+      margin: auto;
+      display: block;
+    }
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translatey(0px);
+  }
+
+  50% {
+    transform: translatey(-20px);
+  }
+
+  100% {
+    transform: translatey(0px);
+  }
+}

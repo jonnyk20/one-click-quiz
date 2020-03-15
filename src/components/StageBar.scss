@@ -2,7 +2,7 @@
 
 .stage-bar {
   display: table;
-  width: 100%;
+  width: 80%;
   // TODO: Add Max Width
   position: relative;
   max-width: 1000px;
@@ -12,7 +12,7 @@
   display: flex;
 
   &__bar {
-    width: 80%;
+    width: 100%;
     margin: auto;
 
     .progress-bar {
@@ -33,7 +33,7 @@
     bottom: 0;
     display: flex;
     justify-content: space-between;
-    width: 80%;
+    width: 100%;
     margin: auto;
     align-items: center;
 
@@ -64,16 +64,6 @@
         color: black;
       }
     }
-  }
-
-  &__avatar {
-    position: absolute;
-    height: 50px;
-    top: 5px;
-    width: 50px;
-    background: black;
-    border-radius: 50%;
-    border: solid;
   }
 }
 

@@ -1,0 +1,39 @@
+.aura {
+  z-index: -1;
+  background-image:
+    radial-gradient(circle closest-side,
+      rgba(82, 223, 255, 0.5),
+      transparent);
+  position: absolute;
+  border-radius: 50%;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  left: 0;
+  right: 0;
+
+  &__pulse {
+    height: 1px;
+    width: 1px;
+    animation: 1s aura-pulse infinite;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+
+  }
+}
+
+
+@keyframes aura-pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(82, 223, 255, 1);
+  }
+
+  100% {
+    box-shadow: 0 0 0 100px rgba(82, 223, 255, 0);
+  }
+}

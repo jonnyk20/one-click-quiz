@@ -1,15 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCrown } from '@fortawesome/free-solid-svg-icons';
+
 import ProgressBar, { Height } from './ProgressBar';
 import './StageBar.scss';
 
-const StageBar = ({ stage, levelUpPending, onStartLevelUp, isLevelingUp }) => {
-  const [currentStage, setCurrentStage] = useState(stage);
-  const [isPulsing, setIsPulsing] = useState(stage);
+type PropTypes = {
+  stage: number;
+  levelUpPending: boolean;
+  isLevelingUp: boolean;
+  onStart?: () => void;
+  onStartLevelUp: () => void;
+};
+
+const StageBar: React.SFC<PropTypes> = ({
+  stage,
+  levelUpPending,
+  onStartLevelUp,
+  isLevelingUp
+}) => {
+  const [currentStage, setCurrentStage] = useState<number>(stage);
+  const [isPulsing, setIsPulsing] = useState<boolean>(false);
   const nextStage = currentStage + 1;
 
-  const handleClick = num => {
+  const handleClick = (num: number) => {
     if (num === stage + 1 && levelUpPending) {
       onStartLevelUp();
     }
@@ -19,7 +33,7 @@ const StageBar = ({ stage, levelUpPending, onStartLevelUp, isLevelingUp }) => {
     if (!isLevelingUp && !levelUpPending) {
       setCurrentStage(stage);
     }
-  }, [stage, isLevelingUp]);
+  }, [stage, isLevelingUp, levelUpPending]);
 
   useEffect(() => {
     if (levelUpPending) {
@@ -31,7 +45,7 @@ const StageBar = ({ stage, levelUpPending, onStartLevelUp, isLevelingUp }) => {
     }
   }, [levelUpPending]);
 
-  const renderStageIcon = num => {
+  const renderStageIcon = (num: number) => {
     let modifierClass = '';
 
     if (num <= currentStage) {
@@ -80,7 +94,6 @@ const StageBar = ({ stage, levelUpPending, onStartLevelUp, isLevelingUp }) => {
       <div className="stage-bar__icons">
         {[0, 1, 2, 3, 4, 5].map(renderStageIcon)}
       </div>
-      <div className="stage-bar__avatar" />
     </div>
   );
 };

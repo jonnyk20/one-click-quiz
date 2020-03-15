@@ -1,0 +1,32 @@
+.polyp {
+  height: 100px;
+  width: 100px;
+  animation: sway 16s infinite;
+  transform-origin: 50% 100% 0;
+
+  &__eyes {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 47%;
+    width: 30%;
+    margin: auto;
+
+    .eyes {
+      margin: auto;
+    }
+  }
+}
+
+
+@keyframes sway {
+
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+
+  50% {
+    transform: rotate(5deg);
+  }
+}

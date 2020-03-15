@@ -1,0 +1,41 @@
+/* http://waitanimate.wstone.io/#!/ */
+.egg {
+  animation: shake-animation 2s ease infinite;
+  transform-origin: 50% 100%;
+  height: 150px;
+  width: 150px;
+}
+
+@keyframes shake-animation {
+  0% {
+    transform: rotate(0deg)
+  }
+
+  5% {
+    transform: rotate(-5deg)
+  }
+
+  10% {
+    transform: rotate(10deg)
+  }
+
+  15% {
+    transform: rotate(-10deg)
+  }
+
+  20% {
+    transform: rotate(5deg)
+  }
+
+  25% {
+    transform: rotate(-2.5deg)
+  }
+
+  30% {
+    transform: rotate(0deg)
+  }
+
+  100% {
+    transform: rotate(0deg)
+  }
+}

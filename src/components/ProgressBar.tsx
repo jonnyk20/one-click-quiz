@@ -11,7 +11,7 @@ type PropTypes = {
   transparent?: boolean;
   fullWidth?: boolean;
   height?: Height;
-  rounded?: false;
+  rounded?: boolean;
 };
 
 const ProgressBar: React.SFC<PropTypes> = ({
