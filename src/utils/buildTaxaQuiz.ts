@@ -6,7 +6,7 @@ import { isNilOrEmpty } from "./utils";
 const filterOutEmptyNames = (taxa: Taxon[]): Taxon[] =>
   taxa.filter(taxon => !isNilOrEmpty(taxon.taxon.preferred_common_name));
 
-type Taxon = {
+export type Taxon = {
   taxon: {
     preferred_common_name: string;
     name: string;

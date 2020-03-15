@@ -1,9 +1,12 @@
 import { isNilOrEmpty, encodeQueryString } from "../utils/utils";
-import buildTaxaQuiz from "../utils/buildTaxaQuiz";
+import buildTaxaQuiz, { Taxon } from "../utils/buildTaxaQuiz";
 import { FormattedQuiz } from "../utils/formatQuiz";
 import { QUIZ_TAGS } from "../constants/quizProperties";
+import { range } from "ramda";
 
 const baseUrl = "https://api.inaturalist.org/v1";
+const TAXON_FETCH_LIMIT = 2500;
+const TAXA_PER_REQUEST = 500;
 
 export type SuggestedPlace = {
   ancestor_place_ids: number;
@@ -71,7 +74,47 @@ type iNatParams = {
   native?: boolean;
   quality_grade?: "research";
   project_id?: string;
+  page?: number;
 };
+
+type SpeciesCountResonse  = {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: Taxon[]
+}
+
+const fetchTaxa = async (params: iNatParams): Promise<SpeciesCountResonse> => {
+  const querystring = encodeQueryString(params);
+  const response: Response = await fetch(
+    `${baseUrl}/observations/species_counts${querystring}`
+  );
+  const json: SpeciesCountResonse = await response.json();
+  
+  return json;
+
+}
+
+const fetchPaginatedTaxa = async (params: iNatParams): Promise<Taxon[]> => {
+  const firsResponse = await fetchTaxa(params);
+
+  const taxa = firsResponse.results;
+
+  const availableTaxaCount = firsResponse.total_results;
+  const fetchedTaxaCount = taxa.length;
+  const remaingTaxaCount = availableTaxaCount - fetchedTaxaCount;
+  const remainingTaxaToFetch = Math.min(TAXON_FETCH_LIMIT, remaingTaxaCount);
+
+  const remainingRequests = Math.ceil(remainingTaxaToFetch / TAXA_PER_REQUEST);
+
+  const remainingResults = await Promise.all(range(2, remainingRequests + 2).map(
+    page => fetchTaxa({ ...params, page })
+  ))
+
+  const remainingTaxa = remainingResults.map(r => r.results).flat();
+
+  return [...taxa, ...remainingTaxa]
+}
 
 export const fetchTaxaAndBuildQuiz = async (
   place: SuggestedPlace | null,
@@ -101,13 +144,9 @@ export const fetchTaxaAndBuildQuiz = async (
       params.project_id = projectId;
     }
 
-    const querystring = encodeQueryString(params);
-    const res: Response = await fetch(
-      `${baseUrl}/observations/species_counts${querystring}`
-    );
+    const taxa = await fetchPaginatedTaxa(params);
 
-    const taxa = await res.json();
-    const quiz = buildTaxaQuiz(taxa.results, quizName, quizTags);
+    const quiz = buildTaxaQuiz(taxa, quizName, quizTags);
 
     return quiz;
   } catch (err) {

@@ -74,6 +74,10 @@ const Builder = () => {
     });
     socket.on("update", (update: any) => console.log("UPDATE", update));
     setSocket(socket);
+
+    return () => {
+      socket.close()
+    }
   }, []);
 
   const isInputting = builderState === BuilderState.INPUTTING;
