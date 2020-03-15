@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { parseQueryString, isNilOrEmpty } from "../utils/utils";
 import { FormattedQuiz } from "../utils/formatQuiz";
-import { fetchSpeciesData } from "../services/InaturalistService";
+import { fetchTaxaAndBuildQuiz } from "../services/InaturalistService";
 import Button from "../components/Button";
 
 import "./MyObservations.scss";
@@ -30,7 +30,7 @@ const MyObservations = () => {
   const buildQuiz = async (userLogin: string) => {
     setUserName(userLogin);
     setQuizBuildingState(QuizBuildingState.BUILDING);
-    const quiz: FormattedQuiz | null = await fetchSpeciesData(
+    const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz(
       null,
       [],
       userLogin,

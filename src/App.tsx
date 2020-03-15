@@ -7,6 +7,7 @@ import TaxaChallenge from "./pages/TaxaChallenge";
 import MyObservations from "./pages/MyObservations";
 import ThankYou from "./pages/ThankYou";
 import UpcomingFeatures from "./pages/UpcomingFeatures";
+import MarineLifeQuiz from "./pages/MarineLifeQuiz";
 
 ReactGA.initialize("UA-33174971-5");
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -21,6 +22,9 @@ const App = () => (
         </Route>
         <Route path="/taxa-challenge">
           <TaxaChallenge />
+        </Route>
+        <Route path="/marine-life">
+          <MarineLifeQuiz />
         </Route>
         <Route path="/my-observations">
           <MyObservations />

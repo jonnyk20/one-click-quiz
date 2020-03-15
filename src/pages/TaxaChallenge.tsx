@@ -3,7 +3,7 @@ import { Link, useLocation, Redirect } from "react-router-dom";
 import {
   getSuggestedPlaces,
   SuggestedPlace,
-  fetchSpeciesData,
+  fetchTaxaAndBuildQuiz,
   getNearestPlace
 } from "../services/InaturalistService";
 import {
@@ -117,7 +117,7 @@ const TaxaChallenge = () => {
   const buildQuiz = async (kingdom: KINGDOMS) => {
     setQuizBuildingState(QuizBuildingState.BUILDING);
     const kingdomIds: number[] = [taxonIDs[kingdom]];
-    const quiz: FormattedQuiz | null = await fetchSpeciesData(
+    const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz(
       place,
       kingdomIds,
       "",

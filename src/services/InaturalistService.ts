@@ -70,19 +70,23 @@ type iNatParams = {
   user_login?: string;
   native?: boolean;
   quality_grade?: "research";
+  project_id?: string;
 };
 
-export const fetchSpeciesData = async (
+export const fetchTaxaAndBuildQuiz = async (
   place: SuggestedPlace | null,
   kingdomIds: number[],
   user: string,
   quizName: string,
-  quizTags?: QUIZ_TAGS[]
+  quizTags?: QUIZ_TAGS[],
+  projectId?: string
 ): Promise<FormattedQuiz | null> => {
   try {
     const params: iNatParams = {};
     if (place?.id) {
       params.place_id = place.id;
+      params.native = true;
+      params.quality_grade = "research";
     }
 
     if (!isNilOrEmpty(kingdomIds)) {
@@ -91,10 +95,12 @@ export const fetchSpeciesData = async (
 
     if (user) {
       params.user_login = user;
-    } else {
-      params.native = true;
-      params.quality_grade = "research";
+    } 
+
+    if (projectId) {
+      params.project_id = projectId;
     }
+
     const querystring = encodeQueryString(params);
     const res: Response = await fetch(
       `${baseUrl}/observations/species_counts${querystring}`
