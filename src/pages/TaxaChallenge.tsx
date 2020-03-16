@@ -1,25 +1,25 @@
-import React, { useState } from "react";
-import { Link, useLocation, Redirect } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link, useLocation, Redirect } from 'react-router-dom';
 import {
   getSuggestedPlaces,
   SuggestedPlace,
   fetchTaxaAndBuildQuiz,
   getNearestPlace
-} from "../services/InaturalistService";
+} from '../services/InaturalistService';
 import {
   isNilOrEmpty,
   parseQueryString,
   encodeQueryString
-} from "../utils/utils";
-import Button from "../components/Button";
-import ProgressBar from "../components/ProgressBar";
-import ProjectInfo from "../components/ProjectInfo";
+} from '../utils/utils';
+import Button from '../components/Button';
+import ProgressBar from '../components/ProgressBar';
+import ProjectInfo from '../components/ProjectInfo';
 
-import { FormattedQuiz } from "../utils/formatQuiz";
+import { FormattedQuiz } from '../utils/formatQuiz';
 
-import "./TaxaChallenge.scss";
-import { QUIZ_TAGS } from "../constants/quizProperties";
-import MoreFeaturesCTA from "../components/MoreFeaturesCTA";
+import './TaxaChallenge.scss';
+import { QUIZ_TAGS } from '../constants/quizProperties';
+import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
 
 enum KINGDOMS {
   ANIMAL,
@@ -31,6 +31,12 @@ const taxonIDs = {
   [KINGDOMS.ANIMAL]: 1,
   [KINGDOMS.FUNGI]: 47170,
   [KINGDOMS.PLANTS]: 47126
+};
+
+const taxonNames = {
+  [KINGDOMS.ANIMAL]: 'Animals',
+  [KINGDOMS.FUNGI]: 'Fungi',
+  [KINGDOMS.PLANTS]: 'Plants'
 };
 
 enum LocationState {
@@ -46,10 +52,10 @@ enum QuizBuildingState {
 }
 
 const TaxaChallenge = () => {
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>('');
   const [suggestedPlaces, setSuggestedPlaces] = useState<SuggestedPlace[]>([]);
   const [noPlacesFound, setNoPlacesFound] = useState<boolean>(false);
-  const [searchedValue, setSearchedValue] = useState<string>("");
+  const [searchedValue, setSearchedValue] = useState<string>('');
   const [place, setPlace] = useState<SuggestedPlace | null>(null);
   const [locationState, setLocationState] = useState<LocationState>(
     LocationState.INITIAL
@@ -66,7 +72,7 @@ const TaxaChallenge = () => {
     return (
       <Redirect
         to={{
-          pathname: "/my-observations",
+          pathname: '/my-observations',
           search: encodeQueryString({ user })
         }}
       />
@@ -80,7 +86,7 @@ const TaxaChallenge = () => {
 
   const clearResuts = () => {
     setSuggestedPlaces([]);
-    setInputValue("");
+    setInputValue('');
   };
 
   const onSearch = async (e?: React.FormEvent<HTMLFormElement>) => {
@@ -120,8 +126,8 @@ const TaxaChallenge = () => {
     const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz(
       place,
       kingdomIds,
-      "",
-      "Taxa Challange",
+      '',
+      `${taxonNames[kingdom]} of ${place?.display_name}`,
       [QUIZ_TAGS.TAXA_CHALLENGE]
     );
 
@@ -194,7 +200,7 @@ const TaxaChallenge = () => {
       {showQuizChoices && (
         <>
           <div className="mv-20">
-            What kinds of wildlife do you know best around{" "}
+            What kinds of wildlife do you know best around{' '}
             <span>
               <b>{place?.display_name}</b>
             </span>
@@ -227,7 +233,7 @@ const TaxaChallenge = () => {
             <b>Start the Quiz!</b> - Tip: answering faster gets you a higher
             score
           </div>
-          <Link to={{ pathname: "/quiz/taxa-challenge", state: { quiz } }}>
+          <Link to={{ pathname: '/quiz/taxa-challenge', state: { quiz } }}>
             <Button onClick={() => {}}> Start</Button>
           </Link>
         </div>

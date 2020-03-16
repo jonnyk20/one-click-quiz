@@ -43,6 +43,9 @@
 
       &__details {
         grid-column: 2 / -1;
+        padding: 10px;
+        word-break: break-all;
+        text-align: left;
       }
     }
   }

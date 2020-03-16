@@ -1,27 +1,26 @@
-import fs from "fs";
-import path from "path";
-import { Sequelize } from "sequelize-typescript";
-import configs from "./config/config";
-import QuizType from "./models/QuizType";
-import Quiz from "./models/Quiz";
-import ItemType from "./models/ItemType";
-import Question from "./models/Question";
-import Choice from "./models/Choice";
-import Item from "./models/Item";
+import fs from 'fs';
+import path from 'path';
+import { Sequelize } from 'sequelize-typescript';
+import configs from './config/config';
+import QuizType from './models/QuizType';
+import Quiz from './models/Quiz';
+import ItemType from './models/ItemType';
+import Question from './models/Question';
+import Choice from './models/Choice';
+import Item from './models/Item';
+import TaxaChallengeScore from './models/TaxaChallengeScore';
 
-const basename = path.basename(__filename);
+type environmentType = 'development' | 'test' | 'production';
+const env: string = process.env.NODE_ENV || 'development';
 
-type environmentType = "development" | "test" | "production";
-const env: string = process.env.NODE_ENV || "development";
-
-let envType: environmentType = "development";
+let envType: environmentType = 'development';
 
 switch (env) {
-  case "test":
-    envType = "test";
+  case 'test':
+    envType = 'test';
     break;
-  case "production":
-    envType = "production";
+  case 'production':
+    envType = 'production';
     break;
   default:
     break;
@@ -46,7 +45,15 @@ if (config.use_env_variable) {
   );
 }
 
-sequelize.addModels([QuizType, Quiz, ItemType, Item, Question, Choice]);
+sequelize.addModels([
+  QuizType,
+  Quiz,
+  ItemType,
+  Item,
+  Question,
+  Choice,
+  TaxaChallengeScore
+]);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

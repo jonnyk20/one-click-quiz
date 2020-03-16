@@ -1,25 +1,23 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { encodeQueryString, isNilOrEmpty } from '../utils/utils';
-import ProjectInfo from '../components/ProjectInfo';
 
-interface State {
+import './SubmissionConfirmation.scss';
+
+type PropTypes = {
   isMyObservationQuiz: boolean;
   isTaxaChallengeQuiz: boolean;
   user: string;
-}
-
-type Location = {
-  state: State;
 };
 
-const INaturalistNextStepsPage = () => {
-  const location: Location = useLocation();
-
-  const { isMyObservationQuiz, user, isTaxaChallengeQuiz } = location.state;
+const SubmissionConfirmation: React.SFC<PropTypes> = props => {
+  const { isMyObservationQuiz, user, isTaxaChallengeQuiz } = props;
 
   return (
-    <>
+    <div className="submission-confirmation">
+      <div>
+        <h1>Score Submitted</h1>
+      </div>
       {isMyObservationQuiz && !isNilOrEmpty(user) && (
         <div className="mv-50">
           <Link
@@ -46,7 +44,7 @@ const INaturalistNextStepsPage = () => {
         <div className="mv-50">
           <Link
             to="/taxa-challenge"
-            className="text-medium text-white mv-20 flex"
+            className="text-medium text-light-color mv-20 flex"
           >
             Try again and we'll show you different animals!
           </Link>
@@ -60,14 +58,16 @@ const INaturalistNextStepsPage = () => {
               &nbsp;user?
             </div>
           </div>
-          <Link to="/my-observations" className="text-medium text-white flex">
+          <Link
+            to="/my-observations"
+            className="text-medium text-light-color flex"
+          >
             Quiz yourself on the animals you've found!
           </Link>
         </div>
       )}
-      <ProjectInfo />
-    </>
+    </div>
   );
 };
 
-export default INaturalistNextStepsPage;
+export default SubmissionConfirmation;

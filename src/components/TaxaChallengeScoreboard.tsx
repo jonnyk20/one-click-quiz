@@ -1,50 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Body from '../components/Medoosa/Body';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { formatScore } from '../utils/utils';
+import { formatScore, isNotNilOrEmpty } from '../utils/utils';
 
 import './TaxaChallengeScoreboard.scss';
 
-const scoreRecord = {
-  name: 'Jonny',
-  quizName: 'Sharks of the Pacific',
-  correctAnswers: 5,
-  score: 12323,
-  modSelections: [
-    {
-      name: 'color',
-      value: 1
-    },
-    {
-      name: 'eyes',
-      value: 6
-    },
-    {
-      name: 'mouth',
-      value: 7
-    },
-    {
-      name: 'arms',
-      value: 4
-    },
-    {
-      name: 'head',
-      value: 5
-    }
-  ]
+const fetchScores = async () => {
+  const response = await fetch(
+    `${window.location.origin}/api/taxa-challenge-scores`
+  );
+  const json = await response.json();
+
+  return json;
 };
 
-const scoreRecords = [scoreRecord, scoreRecord, scoreRecord, scoreRecord];
+type PropTypes = {
+  isScoreSubmitted: boolean;
+};
 
-const TaxaChallengeScoreboard = () => {
-  return (
+const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
+  const [scoreRecords, setScoreRecords] = useState<any>([]);
+  const [hasInitialized, setHasInitialized] = useState<boolean>(false);
+
+  const { isScoreSubmitted } = props;
+
+  useEffect(() => {
+    const fetchScoreRecords = async () => {
+      const records = await fetchScores();
+
+      if (records) {
+        const formattedRecords = records
+          .map(({ data }: { data: any }) => data)
+          .sort((a: any, b: any) => b.score - a.score);
+        setScoreRecords(formattedRecords);
+      }
+    };
+
+    const needsToUpdate = hasInitialized && isScoreSubmitted;
+
+    if (!hasInitialized || needsToUpdate) {
+      fetchScoreRecords();
+      setHasInitialized(true);
+    }
+  }, [isScoreSubmitted, hasInitialized]);
+
+  return isNotNilOrEmpty(scoreRecords) ? (
     <div className="taxa-challenge-scoreboard">
       <div className="taxa-challenge-scoreboard__title mt-10 border-bottom pb-10">
         ScoreBoard
       </div>
       <div className="taxa-challenge-scoreboard__records">
-        {scoreRecords.map((record, i) => {
+        {scoreRecords.map((record: any, i: number) => {
           return (
             <div
               className="taxa-challenge-scoreboard__records__record"
@@ -73,7 +80,7 @@ const TaxaChallengeScoreboard = () => {
         <FontAwesomeIcon icon={faChevronDown} size="xs" />
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default TaxaChallengeScoreboard;

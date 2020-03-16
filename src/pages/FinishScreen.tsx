@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
-import ProjectInfo from '../components/ProjectInfo';
 import { FormattedQuiz } from '../utils/formatQuiz';
-import { useLocation, Link } from 'react-router-dom';
-import { isNilOrEmpty, encodeQueryString } from '../utils/utils';
+import { useLocation, Link, useHistory } from 'react-router-dom';
+import { isNotNilOrEmpty } from '../utils/utils';
 import { QUIZ_TAGS } from '../constants/quizProperties';
 import Body from '../components/Medoosa/Body';
 
@@ -12,6 +11,25 @@ import './FinishScreen.scss';
 import Button from '../components/Button';
 import TaxaChallengeScoreboard from '../components/TaxaChallengeScoreboard';
 import ColorSelector from '../components/ColorSelector';
+import ProgressBar from '../components/ProgressBar';
+import ProjectInfo from '../components/ProjectInfo';
+import SubmissionConfirmation from '../components/SubmissionConfirmation';
+
+const submitScore = async (scoreRecord: any) => {
+  const response = await fetch(
+    `${window.location.origin}/api/taxa-challenge-scores`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(scoreRecord)
+    }
+  );
+  const json = await response.json();
+
+  return json;
+};
 
 interface State {
   quiz: FormattedQuiz;
@@ -26,8 +44,19 @@ type Location = {
   state: State;
 };
 
+enum ScoreSubmissionstate {
+  INITIAL,
+  SUBMITTING,
+  SUBMITTED
+}
+
 const FinishScreen: React.SFC = () => {
   const location: Location = useLocation();
+  const history = useHistory();
+
+  const [state, setState] = useState<ScoreSubmissionstate>(
+    ScoreSubmissionstate.INITIAL
+  );
 
   const {
     quiz,
@@ -41,9 +70,14 @@ const FinishScreen: React.SFC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [modSelections, setModSelectons] = useState(initialModSelections);
 
-  if (!quiz) return null;
+  const hasNotSubmitted = state === ScoreSubmissionstate.INITIAL;
+  const isSubmitting = state === ScoreSubmissionstate.SUBMITTING;
+  const isSubmitted = state === ScoreSubmissionstate.SUBMITTED;
 
   const isTaxaChallengeQuiz = quiz.tags.includes(QUIZ_TAGS.TAXA_CHALLENGE);
+  const isMyObservationQuiz = quiz.tags.includes(QUIZ_TAGS.MY_OBSERVATIONS);
+
+  if (!quiz) return null;
 
   const selectColor = (value: number) => {
     const newColorMod = { name: 'color', value };
@@ -58,13 +92,26 @@ const FinishScreen: React.SFC = () => {
     setInputValue(element.value);
   };
 
-  const submitScore = (e?: React.FormEvent<HTMLFormElement>) => {
-    e?.preventDefault();
+  const onSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    const scoreRecord = {
+      modSelections,
+      correctAnswers,
+      name: inputValue,
+      quizName: quiz.name,
+      score
+    };
+
+    if (isNotNilOrEmpty(inputValue.trim())) {
+      setState(ScoreSubmissionstate.SUBMITTING);
+      await submitScore(scoreRecord);
+      setState(ScoreSubmissionstate.SUBMITTED);
+    }
   };
 
-  return (
-    <div className="finish-screen container">
-      {isTaxaChallengeQuiz && <TaxaChallengeScoreboard />}
+  const renderScoreSubmissionContent = () => (
+    <>
       <div>
         <Body stage={5} modSelections={modSelections} />
         <ColorSelector
@@ -81,19 +128,36 @@ const FinishScreen: React.SFC = () => {
         <span className="text-light-color">{score}</span>
       </div>
 
-      {isTaxaChallengeQuiz && (
-        <form
-          onSubmit={submitScore}
-          className="finish-screen__form mb-50 mt-20"
-        >
+      {isTaxaChallengeQuiz && hasNotSubmitted && (
+        <form onSubmit={onSubmit} className="finish-screen__form mb-50 mt-20">
           <input
             value={inputValue}
             placeholder="Your name..."
             className="finish-screen__form__input"
             onChange={handleChange}
           />
-          <Button onClick={() => {}}>Submit Score</Button>
+          <Button onClick={onSubmit}>Submit Score</Button>
         </form>
+      )}
+
+      {isSubmitting && <ProgressBar progress={0} />}
+    </>
+  );
+
+  return (
+    <div className="finish-screen container">
+      {isTaxaChallengeQuiz && (
+        <TaxaChallengeScoreboard isScoreSubmitted={isSubmitted} />
+      )}
+
+      {hasNotSubmitted && renderScoreSubmissionContent()}
+
+      {isSubmitted && (
+        <SubmissionConfirmation
+          isMyObservationQuiz={isMyObservationQuiz}
+          user={user}
+          isTaxaChallengeQuiz={isTaxaChallengeQuiz}
+        />
       )}
 
       <div className="mt-50 text-medium">
@@ -103,6 +167,12 @@ const FinishScreen: React.SFC = () => {
       <div className="mt-20 text-medium">
         <Link to="/">Home</Link>
       </div>
+
+      {isSubmitted && (
+        <div className="mt-50">
+          <ProjectInfo />
+        </div>
+      )}
     </div>
   );
 };

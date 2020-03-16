@@ -10,7 +10,6 @@ import UpcomingFeatures from './pages/UpcomingFeatures';
 import MarineLifeQuiz from './pages/MarineLifeQuiz';
 import MedoosaTest from './pages/MedoosaTest';
 import FinishScreen from './pages/FinishScreen';
-import INaturalistNextStepsPage from './pages/INaturalistNextStepsPage';
 
 ReactGA.initialize('UA-33174971-5');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -31,9 +30,6 @@ const App = () => (
         </Route>
         <Route path="/finish">
           <FinishScreen />
-        </Route>
-        <Route path="/more-taxa">
-          <INaturalistNextStepsPage />
         </Route>
         <Route path="/marine-life">
           <MarineLifeQuiz />
