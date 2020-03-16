@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from "react";
-import socketIOClient from "socket.io-client";
-import { uniq } from "ramda";
-import { isNotNilOrEmpty } from "../utils/utils";
+import React, { useState, useEffect } from 'react';
+import socketIOClient from 'socket.io-client';
+import { uniq } from 'ramda';
+import { isNotNilOrEmpty } from '../utils/utils';
 import ProgressIndicator, {
   BuilderProgress
-} from "../components/ProgressIndicator";
-import Button from "../components/Button";
-import { BuilderState } from "../constants/states";
+} from '../components/ProgressIndicator';
+import Button from '../components/Button';
+import { BuilderState } from '../constants/states';
 
-import "./MainQuizBuilder.scss";
-import { Link } from "react-router-dom";
+import './MainQuizBuilder.scss';
+import { Link } from 'react-router-dom';
 
-const convertItemsToInput = (arr: string[]): string => arr.join("\n");
+const convertItemsToInput = (arr: string[]): string => arr.join('\n');
 const convertInputToItems = (input: string): string[] =>
-  input.split("\n").slice(0, 40);
+  input.split('\n').slice(0, 40);
 
 const defaultItems = [
-  "jade",
-  "amethyst",
-  "topaz",
-  "ruby",
-  "onyx",
-  "sapphire",
-  "turquoise",
-  "quartz"
+  'jade',
+  'amethyst',
+  'topaz',
+  'ruby',
+  'onyx',
+  'sapphire',
+  'turquoise',
+  'quartz'
 ];
 
 type CompletedQuizPayload = {
@@ -33,7 +33,7 @@ type CompletedQuizPayload = {
 const Builder = () => {
   const [items, setItems] = useState<string[]>(defaultItems);
   const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
-  const [quizUrl, setQuizUrl] = useState<string>("my-quiz");
+  const [quizUrl, setQuizUrl] = useState<string>('my-quiz');
   const [progress, setProgress] = useState<BuilderProgress>({
     completed: 0,
     total: 0
@@ -50,7 +50,7 @@ const Builder = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    socket?.emit("submit-quiz", uniq(validItems));
+    socket?.emit('submit-quiz', uniq(validItems));
     setBuilderState(BuilderState.PREPARING);
   };
 
@@ -60,24 +60,24 @@ const Builder = () => {
   };
 
   useEffect(() => {
-    const socket = socketIOClient({ reconnectionAttempts: 0 });
+    const socket = socketIOClient({ reconnectionAttempts: 1 });
     socket.on(
-      "main-quiz-builder-progress-update",
+      'main-quiz-builder-progress-update',
       (progress: BuilderProgress) => {
-        console.log("progress update received", progress);
+        console.log('progress update received', progress);
         setProgress(progress);
       }
     );
-    socket.on("completed", (payload: CompletedQuizPayload) => {
-      console.log("Quiz comleted", payload);
+    socket.on('completed', (payload: CompletedQuizPayload) => {
+      console.log('Quiz comleted', payload);
       handleComplete(payload);
     });
-    socket.on("update", (update: any) => console.log("UPDATE", update));
+    socket.on('update', (update: any) => console.log('UPDATE', update));
     setSocket(socket);
 
     return () => {
-      socket.close()
-    }
+      socket.close();
+    };
   }, []);
 
   const isInputting = builderState === BuilderState.INPUTTING;

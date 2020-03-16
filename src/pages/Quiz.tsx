@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useLocation, Link, useHistory } from "react-router-dom";
-import { isEmpty } from "ramda";
-import Question from "../components/Question";
-import formatQuiz, { FormattedQuiz } from "../utils/formatQuiz";
+import React, { useState, useEffect } from 'react';
+import { useParams, useLocation, Link, useHistory } from 'react-router-dom';
+import { isEmpty } from 'ramda';
+import Question from '../components/Question';
+import formatQuiz, { FormattedQuiz } from '../utils/formatQuiz';
 import {
   isNilOrEmpty,
   encodeQueryString,
   isNotNilOrEmpty
-} from "../utils/utils";
-import testQuiz from "../utils/testQuiz";
-import { QUIZ_TYPES, QUIZ_TAGS } from "../constants/quizProperties";
+} from '../utils/utils';
+import testQuiz from '../utils/testQuiz';
+import { QUIZ_TYPES, QUIZ_TAGS } from '../constants/quizProperties';
+import initializeModSelections from '../utils/initializeModSelections';
 
-import "./Quiz.scss";
-import MoreFeaturesCTA from "../components/MoreFeaturesCTA";
-import ProjectInfo from "../components/ProjectInfo";
+import './Quiz.scss';
 
 const fetchQuiz = async (slug: string) => {
   const response = await fetch(`${window.location.origin}/api/quiz/${slug}`);
@@ -32,9 +31,9 @@ type Location = {
 };
 
 const Quiz = () => {
-  const { slug = "" } = useParams();
+  const { slug = '' } = useParams();
   const [quiz, setQuiz] = useState<FormattedQuiz>({
-    name: "",
+    name: '',
     quizType: QUIZ_TYPES.IMAGE_QUIZ,
     questions: [],
     tags: []
@@ -44,11 +43,14 @@ const Quiz = () => {
   const [score, setScore] = useState<number>(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [isFinished, setIsFinished] = useState<boolean>(false);
+  const [modSelections, setModSelections] = useState<any>(
+    initializeModSelections()
+  );
   const location: Location = useLocation();
-  const user = location?.state?.user || "";
+  const user = location?.state?.user || '';
   const history = useHistory();
 
-  const isTesting = slug === "testing";
+  const isTesting = slug === 'testing';
 
   useEffect(() => {
     const prepareQuiz = async () => {
@@ -58,7 +60,7 @@ const Quiz = () => {
         setQuiz(formattedQuiz);
         setmaxCorrectAnswers(formattedQuiz.questions.length);
       } else {
-        history.push("/");
+        history.push('/');
       }
     };
 
@@ -80,7 +82,41 @@ const Quiz = () => {
     }
   }, [history, isTesting, location, slug]);
 
-  const incrementCorrectAnswers = () => setCorrectAnswerrs(correctAnswers + 1);
+  useEffect(() => {
+    if (isFinished) {
+      history.push({
+        pathname: '/finish',
+        state: { quiz, modSelections, score, correctAnswers, maxCorrectAnswers }
+      });
+    }
+  }, [
+    correctAnswers,
+    history,
+    isFinished,
+    maxCorrectAnswers,
+    modSelections,
+    quiz,
+    score
+  ]);
+
+  const updateModsSelection = () => {
+    const newHeadMod = {
+      name: 'head',
+      value: 5
+    };
+    const newModSelections = [...modSelections.slice(0, 4), newHeadMod];
+
+    setModSelections(newModSelections);
+  };
+
+  const incrementCorrectAnswers = () => {
+    const newCorrectAnswersCount = correctAnswers + 1;
+    setCorrectAnswerrs(newCorrectAnswersCount);
+
+    if (newCorrectAnswersCount === maxCorrectAnswers) {
+      updateModsSelection();
+    }
+  };
   const incrementScore = (addedScore: number) => setScore(score + addedScore);
 
   const incrementQuestion = () => {
@@ -125,76 +161,8 @@ const Quiz = () => {
           incrementCorrectAnswers={incrementCorrectAnswers}
           incrementScore={incrementScore}
           incrementQuestion={incrementQuestion}
+          modSelections={modSelections}
         />
-      )}
-      {isFinished && (
-        <div className="quiz__results">
-          <div className="mv-20">
-            Correct:&nbsp;
-            <span className="text-light-color">{`${correctAnswers}/${maxCorrectAnswers}`}</span>
-            <span>&nbsp;-&nbsp;Score:&nbsp;</span>
-            <span className="text-light-color">{score}</span>
-            <div>
-              {isMyObservationQuiz && !isNilOrEmpty(user) && (
-                <div className="mv-50">
-                  <Link
-                    className="text-medium text-underline mb-10 mt-20 text-white text-underline flex"
-                    to={{
-                      pathname: "/my-observations",
-                      search: encodeQueryString({ user })
-                    }}
-                  >
-                    Try again with more of your observations
-                  </Link>
-                  <div className="mt-5 text-medium">-OR-</div>
-
-                  <Link
-                    className="text-medium text-underline mv-5 text-white text-underline flex"
-                    to="/taxa-challenge"
-                  >
-                    Test how well you know your local wildlife
-                  </Link>
-                </div>
-              )}
-              {isTaxaChallengeQuiz && (
-                <div className="mv-50">
-                  <Link
-                    to="/taxa-challenge"
-                    className="text-medium text-white mv-20 flex"
-                  >
-                    Try again and we'll show you different animals!
-                  </Link>
-                  <div className="mv-20 text-medium">OR</div>
-                  <div className="mv-20 text-medium">
-                    <div>
-                      Are you an{" "}
-                      <a
-                        href="https://www.inaturalist.org/"
-                        className="text-white"
-                      >
-                        iNaturalist
-                      </a>
-                      &nbsp;user?
-                    </div>
-                  </div>
-                  <Link
-                    to="/my-observations"
-                    className="text-medium text-white flex"
-                  >
-                    Quiz yourself on the animals you've found!
-                  </Link>
-                </div>
-              )}
-              <div className="mv-50">
-                <MoreFeaturesCTA />
-              </div>
-              <div className="mt-50 text-medium">
-                <Link to="/">Home</Link>
-              </div>
-              {isINaturalistQuiz && <ProjectInfo />}
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );

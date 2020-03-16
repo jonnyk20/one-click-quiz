@@ -1,4 +1,4 @@
-import { isNil, isEmpty, either } from "ramda";
+import { isNil, isEmpty, either } from 'ramda';
 
 export const isNilOrEmpty = either(isNil, isEmpty);
 
@@ -16,20 +16,20 @@ export const encodeQueryString = (params: any) => {
   if (!isNilOrEmpty(keys)) {
     var esc = encodeURIComponent;
     const paramsString = Object.keys(params)
-      .map(k => esc(k) + "=" + esc(params[k]))
-      .join("&");
+      .map(k => esc(k) + '=' + esc(params[k]))
+      .join('&');
     return `?${paramsString}`;
   }
 
-  return "";
+  return '';
 };
 
 export const parseQueryString = (s: any): any =>
   s
     .slice(1)
-    .split("&")
+    .split('&')
     .map((queryParam: string) => {
-      let pair = queryParam.split("=");
+      let pair = queryParam.split('=');
       return { key: pair[0], value: pair[1] };
     })
     .reduce((query: any, pair: any) => {
@@ -38,4 +38,10 @@ export const parseQueryString = (s: any): any =>
       return query;
     }, {});
 
-export const isDev = window.location.host.includes("localhost");
+export const isDev = window.location.host.includes('localhost');
+
+export const getRandomIndex = (length: number) =>
+  Math.floor(Math.random() * length);
+
+export const formatScore = (score: number) =>
+  String(score).replace(/\B(?=(\d{3})+(?!\d))/g, ',');

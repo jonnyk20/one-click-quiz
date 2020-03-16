@@ -6,7 +6,6 @@ import './Question.scss';
 import Button from './Button';
 import MedoosaProgress from './MedoosaProgress';
 import { isNotNilOrEmpty } from '../utils/utils';
-import modSelections from '../utils/modSelections';
 
 const states = {
   UNANSWERED: 'UNANSWERED',
@@ -22,6 +21,7 @@ type PropTypes = {
   score: number;
   correctAnswers: number;
   maxCorrectAnswers: number;
+  modSelections: any;
 };
 
 const MULTIPLIER_START = 50;
@@ -37,7 +37,8 @@ const Question: React.SFC<PropTypes> = ({
   correctAnswers,
   maxCorrectAnswers,
   score,
-  incrementScore
+  incrementScore,
+  modSelections
 }) => {
   const { choices, correctAnswerIndex } = question;
   const [state, setState] = useState(states.UNANSWERED);

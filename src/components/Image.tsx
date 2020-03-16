@@ -1,9 +1,9 @@
-import React from "react";
-import classNames from "classnames";
+import React from 'react';
+import classNames from 'classnames';
 
-import "./Image.scss";
+import './Image.scss';
 
-const labelBaseClass = "image__label";
+const labelBaseClass = 'image__label';
 
 type PropTypes = {
   i: number;
@@ -23,12 +23,12 @@ const Image: React.SFC<PropTypes> = ({
   name
 }) => {
   const className = classNames(labelBaseClass, {
-    [`${labelBaseClass}--${isCorrect ? "correct" : "incorrect"}`]: isAnswered
+    [`${labelBaseClass}--${isCorrect ? 'correct' : 'incorrect'}`]: isAnswered
   });
 
   return (
     <div className="image" onClick={() => answerQuestion(i)}>
-      <img key={image_url} src={image_url} />
+      <img key={image_url} src={image_url} alt="question-choice" />
       <div className={className}>
         <div>{isAnswered && name}</div>
       </div>

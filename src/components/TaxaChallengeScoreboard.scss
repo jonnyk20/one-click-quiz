@@ -1,0 +1,55 @@
+@import '../utils/variables.scss';
+
+.taxa-challenge-scoreboard {
+  border: solid 1px;
+  background: $dark-color;
+  position: relative;
+
+  &__title {
+    background-color: black;
+  }
+
+  &__records {
+    max-height: 225px;
+    overflow: scroll;
+
+    &__record {
+      justify-content: center;
+      align-items: center;
+      height: 75px;
+      font-size: 12px;
+
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      justify-items: start;
+
+      &:not(:last-child) {
+        border-bottom: solid 1px;
+      }
+
+      &__avatar-container {
+        position: relative;
+        width: 75px;
+        height: 75px;
+        justify-self: end;
+
+        &__avatar {
+          transform: scale(0.5);
+          position: absolute;
+          left: -37.5px;
+          top: -37.5px;
+        }
+      }
+
+      &__details {
+        grid-column: 2 / -1;
+      }
+    }
+  }
+
+  &__scroll-inidicator {
+    position: absolute;
+    bottom: 0;
+    right: 50%;
+  }
+}
