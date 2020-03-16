@@ -1,10 +1,10 @@
-import { isNilOrEmpty, encodeQueryString } from "../utils/utils";
-import buildTaxaQuiz, { Taxon } from "../utils/buildTaxaQuiz";
-import { FormattedQuiz } from "../utils/formatQuiz";
-import { QUIZ_TAGS } from "../constants/quizProperties";
-import { range } from "ramda";
+import { isNilOrEmpty, encodeQueryString } from '../utils/utils';
+import buildTaxaQuiz, { Taxon } from '../utils/buildTaxaQuiz';
+import { FormattedQuiz } from '../utils/formatQuiz';
+import { QUIZ_TAGS } from '../constants/quizProperties';
+import { range } from 'ramda';
 
-const baseUrl = "https://api.inaturalist.org/v1";
+const baseUrl = 'https://api.inaturalist.org/v1';
 const TAXON_FETCH_LIMIT = 2500;
 const TAXA_PER_REQUEST = 500;
 
@@ -72,17 +72,17 @@ type iNatParams = {
   taxon_id?: string;
   user_login?: string;
   native?: boolean;
-  quality_grade?: "research";
+  quality_grade?: 'research';
   project_id?: string;
   page?: number;
 };
 
-type SpeciesCountResonse  = {
+type SpeciesCountResonse = {
   total_results: number;
   page: number;
   per_page: number;
-  results: Taxon[]
-}
+  results: Taxon[];
+};
 
 const fetchTaxa = async (params: iNatParams): Promise<SpeciesCountResonse> => {
   const querystring = encodeQueryString(params);
@@ -90,10 +90,9 @@ const fetchTaxa = async (params: iNatParams): Promise<SpeciesCountResonse> => {
     `${baseUrl}/observations/species_counts${querystring}`
   );
   const json: SpeciesCountResonse = await response.json();
-  
-  return json;
 
-}
+  return json;
+};
 
 const fetchPaginatedTaxa = async (params: iNatParams): Promise<Taxon[]> => {
   const firsResponse = await fetchTaxa(params);
@@ -107,14 +106,14 @@ const fetchPaginatedTaxa = async (params: iNatParams): Promise<Taxon[]> => {
 
   const remainingRequests = Math.ceil(remainingTaxaToFetch / TAXA_PER_REQUEST);
 
-  const remainingResults = await Promise.all(range(2, remainingRequests + 2).map(
-    page => fetchTaxa({ ...params, page })
-  ))
+  const remainingResults = await Promise.all(
+    range(2, remainingRequests + 2).map(page => fetchTaxa({ ...params, page }))
+  );
 
   const remainingTaxa = remainingResults.map(r => r.results).flat();
 
-  return [...taxa, ...remainingTaxa]
-}
+  return [...taxa, ...remainingTaxa];
+};
 
 export const fetchTaxaAndBuildQuiz = async (
   place: SuggestedPlace | null,
@@ -122,23 +121,23 @@ export const fetchTaxaAndBuildQuiz = async (
   user: string,
   quizName: string,
   quizTags?: QUIZ_TAGS[],
-  projectId?: string
+  projectId?: string,
+  uniqueTaxonomyRank?: number
 ): Promise<FormattedQuiz | null> => {
   try {
     const params: iNatParams = {};
     if (place?.id) {
       params.place_id = place.id;
-      params.native = true;
-      params.quality_grade = "research";
+      params.quality_grade = 'research';
     }
 
     if (!isNilOrEmpty(kingdomIds)) {
-      params.taxon_id = kingdomIds.join(",");
+      params.taxon_id = kingdomIds.join(',');
     }
 
     if (user) {
       params.user_login = user;
-    } 
+    }
 
     if (projectId) {
       params.project_id = projectId;
@@ -146,7 +145,7 @@ export const fetchTaxaAndBuildQuiz = async (
 
     const taxa = await fetchPaginatedTaxa(params);
 
-    const quiz = buildTaxaQuiz(taxa, quizName, quizTags);
+    const quiz = buildTaxaQuiz(taxa, quizName, quizTags, uniqueTaxonomyRank);
 
     return quiz;
   } catch (err) {

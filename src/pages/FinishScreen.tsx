@@ -76,6 +76,9 @@ const FinishScreen: React.SFC = () => {
 
   const isTaxaChallengeQuiz = quiz.tags.includes(QUIZ_TAGS.TAXA_CHALLENGE);
   const isMyObservationQuiz = quiz.tags.includes(QUIZ_TAGS.MY_OBSERVATIONS);
+  const isMarineLifeQuiz = quiz.tags.includes(QUIZ_TAGS.MARINE_LIFE);
+  const isINaturalistQuiz =
+    isTaxaChallengeQuiz || isMyObservationQuiz || isMarineLifeQuiz;
 
   if (!quiz) return null;
 
@@ -160,13 +163,24 @@ const FinishScreen: React.SFC = () => {
         />
       )}
 
-      <div className="mt-50 text-medium">
-        <MoreFeaturesCTA />
-      </div>
+      {!isMarineLifeQuiz && (
+        <>
+          <div className="mt-50 text-medium">
+            <MoreFeaturesCTA />
+          </div>
+          <div className="mt-20 text-medium">
+            <Link to="/">Home</Link>
+          </div>
+        </>
+      )}
 
-      <div className="mt-20 text-medium">
-        <Link to="/">Home</Link>
-      </div>
+      {isMarineLifeQuiz && (
+        <div className="mt-20">
+          <Link to="/marine-life">
+            <Button onClick={() => {}}>Try Again</Button>
+          </Link>
+        </div>
+      )}
 
       {isSubmitted && (
         <div className="mt-50">

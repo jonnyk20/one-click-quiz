@@ -1,7 +1,7 @@
-import { splitEvery, range } from "ramda";
-import { FormattedQuiz, FormattedChoice } from "./formatQuiz";
-import { QUIZ_TYPES, QUIZ_TAGS } from "../constants/quizProperties";
-import { isNilOrEmpty } from "./utils";
+import { splitEvery, range } from 'ramda';
+import { FormattedQuiz, FormattedChoice } from './formatQuiz';
+import { QUIZ_TYPES, QUIZ_TAGS } from '../constants/quizProperties';
+import { isNilOrEmpty } from './utils';
 
 const filterOutEmptyNames = (taxa: Taxon[]): Taxon[] =>
   taxa.filter(taxon => !isNilOrEmpty(taxon.taxon.preferred_common_name));
@@ -57,6 +57,15 @@ const formatChoiceGroup = (group: Taxon[]): TaxonChoiceGroup => {
   let score = 0;
   let ancestorIndex = 0;
   const matchingAncestorIds = [];
+
+  if (group.length === 1) {
+    return {
+      score: 0,
+      matchingAncestorIds: [],
+      taxa: group
+    };
+  }
+
   while (!differenceFound) {
     const groupAncestorId =
       group.reduce(
@@ -94,12 +103,15 @@ interface TaxonCountIndex {
   [id: number]: number;
 }
 
-const limitByTaxonomy = (groups: TaxonChoiceGroup[]) => {
+const limitByTaxonomy = (
+  groups: TaxonChoiceGroup[],
+  uniqueTaxonomyRank: number
+) => {
   const results: TaxonChoiceGroup[] = [];
   const taxonCountIndex: TaxonCountIndex = {};
 
   groups.forEach(group => {
-    const limitingTaxonId = group.matchingAncestorIds[UNIQUE_TAXONOMY_RANK];
+    const limitingTaxonId = group.matchingAncestorIds[uniqueTaxonomyRank];
 
     // If it's the first
     if (isNilOrEmpty(taxonCountIndex[limitingTaxonId])) {
@@ -119,7 +131,10 @@ const limitByTaxonomy = (groups: TaxonChoiceGroup[]) => {
   return results;
 };
 
-const rankAndFilterTaxaGroups = (groups: Taxon[][]): Taxon[][] => {
+const rankAndFilterTaxaGroups = (
+  groups: Taxon[][],
+  uniqueTaxonomyRank: number
+): Taxon[][] => {
   const formattedChoiceGroups: TaxonChoiceGroup[] = groups.map(taxa => {
     const { score, matchingAncestorIds } = formatChoiceGroup(taxa);
 
@@ -134,19 +149,33 @@ const rankAndFilterTaxaGroups = (groups: Taxon[][]): Taxon[][] => {
     group => group.score >= MATCHING_SCORE_THRESHOLD
   );
 
-  const unique = limitByTaxonomy(filtered);
+  let outputGroup = limitByTaxonomy(filtered, uniqueTaxonomyRank);
 
-  return unique.map(group => group.taxa);
+  console.log('outputGroup', outputGroup);
+
+  // if the strict filtering gets us too few questions
+  // ignore it and just use what is available
+  if (outputGroup.length < 10) {
+    outputGroup = formattedChoiceGroups
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 10);
+  }
+
+  return outputGroup.map(group => group.taxa);
 };
 
 const buildTaxaQuiz = (
   taxa: Taxon[],
   quizName: string,
-  tags: QUIZ_TAGS[] = []
+  tags: QUIZ_TAGS[] = [],
+  uniqueTaxonomyRank: number = UNIQUE_TAXONOMY_RANK
 ): FormattedQuiz => {
   const sortedTaxa = filterOutEmptyNames(sortByAncestry(taxa));
   const groupedChoices = splitEvery(MAX_CHOICE_COUNT, sortedTaxa);
-  const filteredGroupChoices = rankAndFilterTaxaGroups(groupedChoices);
+  const filteredGroupChoices = rankAndFilterTaxaGroups(
+    groupedChoices,
+    uniqueTaxonomyRank
+  );
   const shuffledGroups = shuffle(filteredGroupChoices).slice(
     0,
     MAX_QUESTION_COUNT
