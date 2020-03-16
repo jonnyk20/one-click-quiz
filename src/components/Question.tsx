@@ -90,7 +90,7 @@ const Question: React.SFC<PropTypes> = ({
 
   return (
     <div className="question">
-      <div className="question__scoreboard mv-50">
+      <div className="question__scoreboard mb-20">
         <MedoosaProgress
           correctAnswers={correctAnswers}
           maxCorrectAnswers={maxCorrectAnswers}
@@ -116,8 +116,8 @@ const Question: React.SFC<PropTypes> = ({
       </div>
       <div className="question__prompt mb-20">
         {!isAnswered ? (
-          <div className="question__instructions mb-20">
-            <div className="mb-20">Find the...&nbsp;</div>
+          <div className="question__instructions mb-10">
+            <div className="mb-10">Find the...&nbsp;</div>
             <div className="question__prompt__correct-choice-info">
               <span>
                 <b className="text-light-color">
