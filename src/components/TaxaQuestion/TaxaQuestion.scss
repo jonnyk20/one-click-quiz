@@ -1,6 +1,8 @@
 @import '../../utils/variables.scss';
 
 .taxa-question {
+  width: 100%;
+
   &__prompt {
     display: flex;
     justify-content: center;
@@ -66,11 +68,18 @@
 
   &__choices {
     display: grid;
-    grid-template-columns: calc(min(50vmin, 250px)) calc(min(50vmin, 250px));
-    grid-template-rows: calc(min(50vmin, 250px)) calc(min(50vmin, 250px));
-    width: calc(min(100vmin, 500px));
-    height: calc(min(100vmin, 500px));
+    grid-template-columns: 250px 250px;
+    grid-template-rows: 250px 250px;
+    width: 500px;
+    height: 500px;
     margin: auto;
+
+    @media screen and (max-width: 500px) {
+      width: 100vw;
+      height: 100vw;
+      grid-template-columns: 50vw 50vw;
+      grid-template-rows: 50vw 50vw;
+    }
 
     &--hide {
       display: none;

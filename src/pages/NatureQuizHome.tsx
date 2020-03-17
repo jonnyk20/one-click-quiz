@@ -10,13 +10,20 @@ const NatrueQuizHome = () => (
       <div>Test yourself and compare your score with others</div>
       <Link
         to="/taxa-challenge"
-        className="text-medium text-light-color mv-20 flex"
+        className="text-medium text-link text-light-color mv-20 flex"
       >
         <Button onClick={() => {}}>Taxa Challenge</Button>
       </Link>
       <div className="mv-20 text-medium">
-        <div>There's also a quiz available for Marine Life in B.C.</div>
-        <Button onClick={() => {}}>B.C Marine Life</Button>
+        <div className="mb-20">
+          There's also a quiz available for Marine Life in B.C.
+        </div>
+        <Link
+          to="/marine-life"
+          className="text-medium text-link text-light-color mv-20 flex"
+        >
+          <Button onClick={() => {}}>B.C. Marine Life</Button>
+        </Link>
       </div>
       <div className="mv-20 text-medium">
         <div>

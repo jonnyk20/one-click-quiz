@@ -62,9 +62,7 @@ const MarineLifeQuiz = () => {
       )}
       {!isNilOrEmpty(quiz) && (
         <>
-          <p className="text-medium text-light-color">
-            <h3>Your Quz is Ready</h3>
-          </p>
+          <h3 className="text-medium text-light-color">Your Quz is Ready</h3>
 
           <div className="mv-20 text-medium">
             <b>Tips</b>
