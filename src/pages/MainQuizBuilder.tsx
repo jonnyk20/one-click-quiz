@@ -92,12 +92,16 @@ const Builder = () => {
         <Link to="/nature-quiz">Nature Quiz</Link>
         <Link to="/upcoming-features">Project Info</Link>
       </div>
-      <div>
+      <div className="padding-20">
         <h1>1 Click Quiz</h1>
-        <p className="text-medium">Create an image quiz on anything you want</p>
-        <p className="text-medium">
-          Then test yourself and share it with others for free
+        <p className="text-medium text-light-color">
+          Automatically finds images and generates a quiz on anything you want
         </p>
+        <p className="text-medium">1. Add words to the box below</p>
+        <p className="text-medium">
+          2. Click&nbsp;<span className="text-light-color">'Create Quiz'</span>
+        </p>
+        <p className="text-medium">3. Test yourself or share it with others</p>
       </div>
       {isInputting && (
         <div className="main-quiz-builder__form">
