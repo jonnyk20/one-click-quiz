@@ -87,7 +87,7 @@ const TaxaChoice: React.SFC<PropTypes> = ({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <div className={`${BASE_CLASS}__photo-details__user-info`}>
+          <div className={`${BASE_CLASS}__photo-details__user-info text-small`}>
             <FontAwesomeIcon icon={faCamera} size="xs" />
             <span>&nbsp;{photo.user}</span>
           </div>
