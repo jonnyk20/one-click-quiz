@@ -95,7 +95,7 @@ const MyObservations = () => {
       )}
       {showQuizBuildingError && (
         <div>
-          We can't find any wildlife observed by this user. <br />
+          We can't find any taxa observed by this user. <br />
           Please make sure the casing matches. If your login is 'myuser123',
           'Myuser123' will not work. <br />
           Also, please makse sure you have observations under this account.

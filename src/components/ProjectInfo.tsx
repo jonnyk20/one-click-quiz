@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const ProjectInfo = () => (
   <div className="project-info text-small">
@@ -7,7 +7,7 @@ const ProjectInfo = () => (
       Built by <a href="https://twitter.com/jonnykalambay">Jonny Kalambay</a>
     </p>
     <p>
-      The <Link to="/taxa-challenge">wildlife quiz</Link> on this site uses data
+      The <Link to="/taxa-challenge">nature quiz</Link> on this site uses data
       from&nbsp;
       <a href="https://www.inaturalist.org/">iNaturalist</a>
     </p>

@@ -149,7 +149,7 @@ const TaxaChallenge = () => {
     <div className="taxa-challange container">
       <div>
         <h3>Taxa Challenge</h3>
-        <div>Test how well you know the wildlife around you</div>
+        <div>Test how well you know the plants and animals around you</div>
       </div>
       {!isPlaceReady && (
         <div className="taxa-challange__search mv-20">
@@ -200,7 +200,7 @@ const TaxaChallenge = () => {
       {showQuizChoices && (
         <>
           <div className="mv-20">
-            What kinds of wildlife do you know best around{' '}
+            What do you know best around{' '}
             <span>
               <b>{place?.display_name}</b>
             </span>

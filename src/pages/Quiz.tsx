@@ -143,7 +143,7 @@ const Quiz = () => {
       {isEmptyINaturalistQuiz && (
         <div>
           <div className="mb-20">
-            There might not be any wildlife registered to this location
+            There might not be wildlife observed in this location
           </div>
           <div className="mv-20">
             <Link to="/taxa-challenge" className="text-light-color">

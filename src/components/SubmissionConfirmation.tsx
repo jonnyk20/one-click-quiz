@@ -35,7 +35,7 @@ const SubmissionConfirmation: React.SFC<PropTypes> = props => {
             className="text-medium text-underline mv-5 text-white text-underline flex"
             to="/taxa-challenge"
           >
-            Test how well you know your local wildlife
+            Test how well you know your local plants and animals
           </Link>
         </div>
       )}
