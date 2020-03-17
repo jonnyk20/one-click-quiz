@@ -130,13 +130,21 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
 
   return (
     <div className={BASE_CLASS}>
-      <div className={`${BASE_CLASS}__scoreboard mb-20`}>
+      <div className={`${BASE_CLASS}__hud mb-20`}>
         <MedoosaProgress
           correctAnswers={correctAnswers}
           maxCorrectAnswers={maxCorrectAnswers}
           modSelections={modSelections}
         />
-        <div className={`${BASE_CLASS}__scoreboard__scores`}>
+
+        <div className={`${BASE_CLASS}__hud__tip text-small `}>
+          Click&nbsp;
+          <span className="text-light-color">
+            <FontAwesomeIcon icon={faSyncAlt} size="sm" />
+          </span>
+          &nbsp;to change photos
+        </div>
+        <div className={`${BASE_CLASS}__hud__scores`}>
           <div>
             questions:&nbsp;
             <span className="text-light-color">{maxCorrectAnswers}</span>
@@ -150,6 +158,7 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
           </div>
         </div>
       </div>
+
       <div className={`${BASE_CLASS}__prompt mb-20`}>
         {!isAnswered && isReady && (
           <div className={`${BASE_CLASS}__instructions`}>
@@ -168,13 +177,6 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
                   </b>
                 </span>
               )}
-            </div>
-            <div className="text-medium mt-10">
-              Click&nbsp;
-              <span className="text-light-color">
-                <FontAwesomeIcon icon={faSyncAlt} size="sm" />
-              </span>
-              &nbsp;to change photos
             </div>
           </div>
         )}

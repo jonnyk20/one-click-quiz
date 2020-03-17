@@ -18,7 +18,7 @@
     }
   }
 
-  &__scoreboard {
+  &__hud {
     display: flex;
     padding-bottom: 10px;
     justify-content: space-between;
@@ -26,6 +26,17 @@
     position: relative;
     padding: 0 20px;
     flex-direction: column;
+
+    &__tip {
+      position: absolute;
+      top: 60px;
+      right: 10px;
+      padding-right: 10px;
+      color: white;
+      background: #015201;
+      padding: 5px;
+      border: solid 0.5px;
+    }
 
     &__added-score {
       color: $medium-color;
@@ -35,7 +46,7 @@
       display: flex;
       width: 100%;
       justify-content: space-around;
-      margin-top: 10px;
+      margin-top: 20px;
     }
 
     &__indicator {
