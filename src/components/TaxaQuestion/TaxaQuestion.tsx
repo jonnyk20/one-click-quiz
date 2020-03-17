@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
 import TaxaChoice from '../TaxaChoice/TaxaChoice';
 import { FormattedQuestion, FormattedChoice } from '../../utils/formatQuiz';
@@ -137,13 +135,6 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
           modSelections={modSelections}
         />
 
-        <div className={`${BASE_CLASS}__hud__tip text-small `}>
-          Click&nbsp;
-          <span className="text-light-color">
-            <FontAwesomeIcon icon={faSyncAlt} size="sm" />
-          </span>
-          &nbsp;to change photos
-        </div>
         <div className={`${BASE_CLASS}__hud__scores`}>
           <div>
             questions:&nbsp;

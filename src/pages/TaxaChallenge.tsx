@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation, Redirect } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+
 import {
   getSuggestedPlaces,
   SuggestedPlace,
@@ -11,15 +14,14 @@ import {
   parseQueryString,
   encodeQueryString
 } from '../utils/utils';
+import { FormattedQuiz } from '../utils/formatQuiz';
 import Button from '../components/Button';
 import ProgressBar from '../components/ProgressBar';
 import ProjectInfo from '../components/ProjectInfo';
-
-import { FormattedQuiz } from '../utils/formatQuiz';
-
-import './TaxaChallenge.scss';
 import { QUIZ_TAGS } from '../constants/quizProperties';
 import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
+
+import './TaxaChallenge.scss';
 
 enum KINGDOMS {
   ANIMAL,
@@ -228,15 +230,34 @@ const TaxaChallenge = () => {
         </div>
       )}
       {!isNilOrEmpty(quiz) && (
-        <div>
-          <div className="mv-20">
-            <b>Start the Quiz!</b> - Tip: answering faster gets you a higher
-            score
+        <>
+          <p className="text-medium text-light-color">
+            <h3>Your Quz is Ready</h3>
+          </p>
+
+          <div className="mv-20 text-medium">
+            <b>Tips</b>
           </div>
-          <Link to={{ pathname: '/taxa-quiz', state: { quiz } }}>
+
+          <ul className="marine-life-quiz__tips mv-20">
+            <li className="marine-life-quiz__tips__tip">
+              Answering faster gets you a higher score
+            </li>
+            <li className="marine-life-quiz__tips__tip">
+              You can click&nbsp;
+              <span className="text-light-color">
+                <FontAwesomeIcon icon={faSyncAlt} size="sm" />
+              </span>
+              &nbsp;to see different photos
+            </li>
+          </ul>
+          <Link
+            to={{ pathname: '/taxa-quiz', state: { quiz } }}
+            className="text-link"
+          >
             <Button onClick={() => {}}> Start</Button>
           </Link>
-        </div>
+        </>
       )}
       {!isPlaceReady && (
         <>

@@ -14,7 +14,10 @@ const NatrueQuizHome = () => (
       >
         <Button onClick={() => {}}>Taxa Challenge</Button>
       </Link>
-      <div className="mv-20 text-medium">OR</div>
+      <div className="mv-20 text-medium">
+        <div>There's also a quiz available for Marine Life in B.C.</div>
+        <Button onClick={() => {}}>B.C Marine Life</Button>
+      </div>
       <div className="mv-20 text-medium">
         <div>
           Are you an{' '}

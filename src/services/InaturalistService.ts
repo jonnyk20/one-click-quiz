@@ -1,4 +1,9 @@
-import { isNilOrEmpty, encodeQueryString, shuffle } from '../utils/utils';
+import {
+  isNilOrEmpty,
+  encodeQueryString,
+  shuffle,
+  isNotNilOrEmpty
+} from '../utils/utils';
 import buildTaxaQuiz, { Taxon } from '../utils/buildTaxaQuiz';
 import { FormattedQuiz } from '../utils/formatQuiz';
 import { QUIZ_TAGS } from '../constants/quizProperties';
@@ -97,10 +102,12 @@ const combineObservationPhotosForTaxon = (
   return shuffle(
     response.results
       .map(o =>
-        o.photos.map(p => ({
-          url: p.url.replace('square.', 'medium.'),
-          user: o.user.login
-        }))
+        o.photos
+          .filter(p => isNotNilOrEmpty(p.url))
+          .map(p => ({
+            url: p.url.replace('square.', 'medium.'),
+            user: o.user.login
+          }))
       )
       .flat()
   );

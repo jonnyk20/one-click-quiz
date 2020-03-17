@@ -131,7 +131,7 @@ const FinishScreen: React.SFC = () => {
         <span className="text-light-color">{score}</span>
       </div>
 
-      {isTaxaChallengeQuiz && hasNotSubmitted && (
+      {isINaturalistQuiz && hasNotSubmitted && (
         <form onSubmit={onSubmit} className="finish-screen__form mb-50 mt-20">
           <input
             value={inputValue}
@@ -149,7 +149,7 @@ const FinishScreen: React.SFC = () => {
 
   return (
     <div className="finish-screen container">
-      {isTaxaChallengeQuiz && (
+      {isINaturalistQuiz && (
         <TaxaChallengeScoreboard isScoreSubmitted={isSubmitted} />
       )}
 

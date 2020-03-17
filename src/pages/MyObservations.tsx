@@ -10,6 +10,8 @@ import ProgressBar from '../components/ProgressBar';
 import { QUIZ_TAGS } from '../constants/quizProperties';
 import ProjectInfo from '../components/ProjectInfo';
 import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
 enum QuizBuildingState {
   INITIAL,
@@ -102,28 +104,34 @@ const MyObservations = () => {
         </div>
       )}
       {!isNilOrEmpty(quiz) && (
-        <div>
-          <div className="mv-20">
-            <div className="text-large">
+        <>
+          <p className="text-medium text-light-color">
+            <h3>Your Quz is Ready</h3>
+          </p>
+
+          <div className="mv-20 text-medium">
+            <b>Tips</b>
+          </div>
+
+          <ul className="marine-life-quiz__tips mv-20">
+            <li className="marine-life-quiz__tips__tip">
+              Answering faster gets you a higher score
+            </li>
+            <li className="marine-life-quiz__tips__tip">
+              You can click&nbsp;
               <span className="text-light-color">
-                <b>{userName}</b>
+                <FontAwesomeIcon icon={faSyncAlt} size="sm" />
               </span>
-              , your quiz is ready
-            </div>
-          </div>
-          <div className="mv-20">
-            Tip: answering faster gets you a higher score
-          </div>
+              &nbsp;to see different photos
+            </li>
+          </ul>
           <Link
+            to={{ pathname: '/taxa-quiz', state: { quiz } }}
             className="text-link"
-            to={{
-              pathname: '/taxa-quiz',
-              state: { quiz, user: userName }
-            }}
           >
             <Button onClick={() => {}}> Start</Button>
           </Link>
-        </div>
+        </>
       )}
       <MoreFeaturesCTA />
       <ProjectInfo />
