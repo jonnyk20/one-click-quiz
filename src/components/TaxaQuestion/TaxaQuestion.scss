@@ -1,0 +1,68 @@
+@import '../../utils/variables.scss';
+
+.taxa-question {
+  &__prompt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__correct-choice-info {
+      display: inline;
+    }
+
+    &__feedback {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      font-size: 36px;
+    }
+  }
+
+  &__scoreboard {
+    display: flex;
+    padding-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 0 20px;
+    flex-direction: column;
+
+    &__added-score {
+      color: $medium-color;
+    }
+
+    &__scores {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+    &__indicator {
+      border: solid 1px;
+      display: flex;
+      margin: 10px;
+    }
+  }
+
+  &__loading {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  &__choices {
+    display: grid;
+    grid-template-columns: calc(min(50vmin, 250px)) calc(min(50vmin, 250px));
+    grid-template-rows: calc(min(50vmin, 250px)) calc(min(50vmin, 250px));
+    width: calc(min(100vmin, 500px));
+    height: calc(min(100vmin, 500px));
+    margin: auto;
+
+    &--hide {
+      display: none;
+    }
+  }
+}

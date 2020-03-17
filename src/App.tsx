@@ -10,6 +10,8 @@ import UpcomingFeatures from './pages/UpcomingFeatures';
 import MarineLifeQuiz from './pages/MarineLifeQuiz';
 import MedoosaTest from './pages/MedoosaTest';
 import FinishScreen from './pages/FinishScreen';
+import TaxaQuiz from './pages/TaxaQuiz';
+import NatrueQuizHome from './pages/NatureQuizHome';
 
 ReactGA.initialize('UA-33174971-5');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -27,6 +29,12 @@ const App = () => (
         </Route>
         <Route path="/taxa-challenge">
           <TaxaChallenge />
+        </Route>
+        <Route path="/nature-quiz">
+          <NatrueQuizHome />
+        </Route>
+        <Route path="/taxa-quiz">
+          <TaxaQuiz />
         </Route>
         <Route path="/finish">
           <FinishScreen />

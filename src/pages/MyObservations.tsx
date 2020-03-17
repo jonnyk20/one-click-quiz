@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
-import { parseQueryString, isNilOrEmpty } from "../utils/utils";
-import { FormattedQuiz } from "../utils/formatQuiz";
-import { fetchTaxaAndBuildQuiz } from "../services/InaturalistService";
-import Button from "../components/Button";
+import React, { useState, useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom';
+import { parseQueryString, isNilOrEmpty } from '../utils/utils';
+import { FormattedQuiz } from '../utils/formatQuiz';
+import { fetchTaxaAndBuildQuiz } from '../services/InaturalistService';
+import Button from '../components/Button';
 
-import "./MyObservations.scss";
-import ProgressBar from "../components/ProgressBar";
-import { QUIZ_TAGS } from "../constants/quizProperties";
-import ProjectInfo from "../components/ProjectInfo";
-import MoreFeaturesCTA from "../components/MoreFeaturesCTA";
+import './MyObservations.scss';
+import ProgressBar from '../components/ProgressBar';
+import { QUIZ_TAGS } from '../constants/quizProperties';
+import ProjectInfo from '../components/ProjectInfo';
+import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
 
 enum QuizBuildingState {
   INITIAL,
@@ -20,8 +20,8 @@ enum QuizBuildingState {
 
 const MyObservations = () => {
   const location = useLocation();
-  const [userName, setUserName] = useState<string>("");
-  const [inputValue, setInputValue] = useState<string>("");
+  const [userName, setUserName] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>('');
   const [quizBuildingState, setQuizBuildingState] = useState<QuizBuildingState>(
     QuizBuildingState.INITIAL
   );
@@ -96,7 +96,8 @@ const MyObservations = () => {
       {showQuizBuildingError && (
         <div>
           We can't find any wildlife observed by this user. <br />
-          Please make sure the casing matches. If your login is 'myuser123', 'Myuser123' will not work. <br /> 
+          Please make sure the casing matches. If your login is 'myuser123',
+          'Myuser123' will not work. <br />
           Also, please makse sure you have observations under this account.
         </div>
       )}
@@ -116,7 +117,7 @@ const MyObservations = () => {
           <Link
             className="text-link"
             to={{
-              pathname: "/quiz/my-observations",
+              pathname: '/taxa-quiz',
               state: { quiz, user: userName }
             }}
           >

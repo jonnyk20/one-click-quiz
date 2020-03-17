@@ -89,7 +89,7 @@ const Builder = () => {
   return (
     <div className="main-quiz-builder container">
       <div className="main-quiz-builder__examples">
-        <Link to="/taxa-challenge">Wildlife Quiz</Link>
+        <Link to="/nature-quiz">Nature Quiz</Link>
         <Link to="/upcoming-features">Project Info</Link>
       </div>
       <div>

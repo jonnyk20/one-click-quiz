@@ -1,9 +1,10 @@
-import { QUIZ_TAGS, QUIZ_TYPES } from "../constants/quizProperties";
+import { QUIZ_TAGS, QUIZ_TYPES } from '../constants/quizProperties';
 
 export type FormattedChoice = {
   name: string;
-  details?: string;
   image_url: string;
+  details?: string;
+  id?: number;
 };
 
 export type FormattedQuestion = {

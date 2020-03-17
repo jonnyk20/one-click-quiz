@@ -1,4 +1,4 @@
-import { isNilOrEmpty, encodeQueryString } from '../utils/utils';
+import { isNilOrEmpty, encodeQueryString, shuffle } from '../utils/utils';
 import buildTaxaQuiz, { Taxon } from '../utils/buildTaxaQuiz';
 import { FormattedQuiz } from '../utils/formatQuiz';
 import { QUIZ_TAGS } from '../constants/quizProperties';
@@ -43,7 +43,7 @@ export const getNearestPlace = async (
 
   const querystring = encodeQueryString(params);
 
-  const res = await fetch(`${baseUrl}/places/nearby/${querystring}`);
+  const res = await fetch(`${baseUrl}/places/nearby${querystring}`);
   const results: NearestPlacesResults = await res.json();
 
   const places = results.results.standard;
@@ -51,6 +51,72 @@ export const getNearestPlace = async (
   const nearestPlace = places[places.length - 1];
 
   return nearestPlace;
+};
+
+type ObservationPhoto = {
+  url: string;
+};
+
+type Observation = {
+  id: number;
+  photos: ObservationPhoto[];
+  user: {
+    login: string;
+  };
+};
+
+type ObservationPhotosResponse = {
+  results: Observation[];
+};
+
+export type FormattedObservationPhoto = {
+  user: string;
+  url: string;
+};
+
+export const getObservationPhotosForTaxon = async (
+  taxonId: number
+): Promise<any> => {
+  const params = {
+    per_page: 200,
+    order_by: 'votes',
+    quality_grade: 'research',
+    taxon_id: taxonId
+  };
+
+  const querystring = encodeQueryString(params);
+  const res = await fetch(`${baseUrl}/observations${querystring}`);
+  const json: ObservationPhotosResponse = await res.json();
+
+  return json;
+};
+
+const combineObservationPhotosForTaxon = (
+  response: ObservationPhotosResponse
+): FormattedObservationPhoto[] => {
+  return shuffle(
+    response.results
+      .map(o =>
+        o.photos.map(p => ({
+          url: p.url.replace('square.', 'medium.'),
+          user: o.user.login
+        }))
+      )
+      .flat()
+  );
+};
+
+export const getObservationPhotosForTaxa = async (
+  taxonIds: number[]
+): Promise<FormattedObservationPhoto[][]> => {
+  const observationsResponses: ObservationPhotosResponse[] = await Promise.all(
+    taxonIds.map(getObservationPhotosForTaxon)
+  );
+  const photosForTaxa = observationsResponses.map(
+    combineObservationPhotosForTaxon
+  );
+
+  return photosForTaxa;
 };
 
 export const getSuggestedPlaces = async (
@@ -67,7 +133,7 @@ export const getSuggestedPlaces = async (
   return results.results;
 };
 
-type iNatParams = {
+type SpeciesCountParams = {
   place_id?: number;
   taxon_id?: string;
   user_login?: string;
@@ -84,7 +150,9 @@ type SpeciesCountResonse = {
   results: Taxon[];
 };
 
-const fetchTaxa = async (params: iNatParams): Promise<SpeciesCountResonse> => {
+const fetchTaxa = async (
+  params: SpeciesCountParams
+): Promise<SpeciesCountResonse> => {
   const querystring = encodeQueryString(params);
   const response: Response = await fetch(
     `${baseUrl}/observations/species_counts${querystring}`
@@ -94,7 +162,9 @@ const fetchTaxa = async (params: iNatParams): Promise<SpeciesCountResonse> => {
   return json;
 };
 
-const fetchPaginatedTaxa = async (params: iNatParams): Promise<Taxon[]> => {
+const fetchPaginatedTaxa = async (
+  params: SpeciesCountParams
+): Promise<Taxon[]> => {
   const firsResponse = await fetchTaxa(params);
 
   const taxa = firsResponse.results;
@@ -125,7 +195,7 @@ export const fetchTaxaAndBuildQuiz = async (
   uniqueTaxonomyRank?: number
 ): Promise<FormattedQuiz | null> => {
   try {
-    const params: iNatParams = {};
+    const params: SpeciesCountParams = {};
     if (place?.id) {
       params.place_id = place.id;
       params.quality_grade = 'research';

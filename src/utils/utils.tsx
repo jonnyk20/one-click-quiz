@@ -43,5 +43,17 @@ export const isDev = window.location.host.includes('localhost');
 export const getRandomIndex = (length: number) =>
   Math.floor(Math.random() * length);
 
+export const getRandomItem = (arr: Array<any>) =>
+  arr[getRandomIndex(arr.length)];
+
 export const formatScore = (score: number) =>
   String(score).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+export const shuffle = (a: Array<any>): Array<any> => {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+
+  return a;
+};

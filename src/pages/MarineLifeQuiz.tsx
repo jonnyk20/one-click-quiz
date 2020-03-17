@@ -29,7 +29,7 @@ const MarineLifeQuiz = () => {
         null,
         [],
         '',
-        'Marine Life',
+        'Marine Life of B.C',
         [QUIZ_TAGS.MARINE_LIFE],
         projectId,
         5
@@ -61,7 +61,7 @@ const MarineLifeQuiz = () => {
             <b>Start the Quiz!</b> - Tip: answering faster gets you a higher
             score
           </div>
-          <Link to={{ pathname: '/quiz/taxa-challenge', state: { quiz } }}>
+          <Link to={{ pathname: '/taxa-quiz', state: { quiz } }}>
             <Button onClick={() => {}}> Start</Button>
           </Link>
         </div>

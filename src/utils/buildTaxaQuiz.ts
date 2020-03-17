@@ -1,7 +1,7 @@
 import { splitEvery, range } from 'ramda';
 import { FormattedQuiz, FormattedChoice } from './formatQuiz';
 import { QUIZ_TYPES, QUIZ_TAGS } from '../constants/quizProperties';
-import { isNilOrEmpty } from './utils';
+import { isNilOrEmpty, shuffle } from './utils';
 
 const filterOutEmptyNames = (taxa: Taxon[]): Taxon[] =>
   taxa.filter(taxon => !isNilOrEmpty(taxon.taxon.preferred_common_name));
@@ -13,6 +13,7 @@ export type Taxon = {
     default_photo: {
       medium_url: string;
     };
+    id: number;
     ancestor_ids: number[];
   };
 };
@@ -29,15 +30,6 @@ const MATCHING_SCORE_THRESHOLD = 7;
 
 const MAX_CHOICE_COUNT = 4;
 const MAX_QUESTION_COUNT = 10;
-
-const shuffle = (a: Taxon[][]): Taxon[][] => {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-
-  return a;
-};
 
 const sortByAncestry = (arr: Taxon[]) => {
   let sorted = [...arr];
@@ -151,8 +143,6 @@ const rankAndFilterTaxaGroups = (
 
   let outputGroup = limitByTaxonomy(filtered, uniqueTaxonomyRank);
 
-  console.log('outputGroup', outputGroup);
-
   // if the strict filtering gets us too few questions
   // ignore it and just use what is available
   if (outputGroup.length < 10) {
@@ -192,7 +182,8 @@ const buildTaxaQuiz = (
         (taxon: Taxon): FormattedChoice => ({
           name: taxon.taxon.preferred_common_name,
           image_url: taxon.taxon.default_photo.medium_url,
-          details: taxon.taxon.name
+          details: taxon.taxon.name,
+          id: taxon.taxon.id
         })
       )
     };
