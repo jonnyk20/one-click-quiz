@@ -45,7 +45,7 @@ const TaxaChoice: React.SFC<PropTypes> = ({
   const cycleImage = (event: MouseEvent) => {
     event.stopPropagation();
 
-    const nextIndex = imageIndex < photos.length - 1 ? imageIndex + 1 : 0;
+    const nextIndex = imageIndex < photos.length - 2 ? imageIndex + 1 : 0;
     setImageIndex(nextIndex);
   };
 
@@ -65,7 +65,7 @@ const TaxaChoice: React.SFC<PropTypes> = ({
     onImageFetched();
   };
 
-  const photo = photos[imageIndex] || {};
+  const photo = photos[imageIndex] || { url: image_url, user: '' };
 
   return (
     <div className={BASE_CLASS} onClick={() => answerQuestion(i)}>
@@ -89,7 +89,7 @@ const TaxaChoice: React.SFC<PropTypes> = ({
         >
           <div className={`${BASE_CLASS}__photo-details__user-info text-small`}>
             <FontAwesomeIcon icon={faCamera} size="xs" />
-            <span>&nbsp;{photo.user}</span>
+            <span>&nbsp;{photo.user || 'inaturalist'}</span>
           </div>
         </a>
         <div
