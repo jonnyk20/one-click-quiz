@@ -65,7 +65,7 @@ const TaxaChoice: React.SFC<PropTypes> = ({
     onImageFetched();
   };
 
-  const photo = photos[imageIndex];
+  const photo = photos[imageIndex] || {};
 
   return (
     <div className={BASE_CLASS} onClick={() => answerQuestion(i)}>
