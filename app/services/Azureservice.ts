@@ -1,5 +1,5 @@
 import request, { RequestPromiseOptions } from 'request-promise';
-import { isNotNilOrEmpty } from '../utils/utils';
+import { isNotNilOrEmpty, isNilOrEmpty } from '../utils/utils';
 
 const BASE_URL = 'https://api.cognitive.microsoft.com/bing/v7.0/images/search';
 const MAX_RESULTS = 1;
@@ -28,14 +28,11 @@ type ItemWithImage = {
 };
 
 const getImageUrl = (result: Result): string =>
-  result?.value?.[0].thumbnailUrl || '';
-
-const delay = (interval: number) =>
-  new Promise(resolve => setTimeout(resolve, interval));
+  result?.value?.[0]?.thumbnailUrl || '';
 
 const getImage = async (searchQuery: string): Promise<string | null> => {
   const encodedQuery = encodeURI(searchQuery);
-  const url = `${BASE_URL}?q=${encodedQuery}&count=${MAX_RESULTS}`;
+  const url = `${BASE_URL}?q=${encodedQuery}&safeSearch=Strict&count=${MAX_RESULTS}`;
 
   const res = await request(url, options);
   const json = JSON.parse(res);
@@ -91,16 +88,13 @@ export const getBingImages = async (
     return itemWithImage;
   };
 
-  const itemsWithImage: ItemWithImage[] = [];
+  const itemsWithImage: ItemWithImage[] = await Promise.all(
+    items.map(getImageAndUpdateCount)
+  );
 
-  for (let item in items) {
-    await delay(1000);
-    const itemWithImage = await getImageAndUpdateCount(item);
+  const filteredItemsWithImage = itemsWithImage.filter(i =>
+    isNotNilOrEmpty(i.data)
+  );
 
-    if (isNotNilOrEmpty(itemWithImage?.data)) {
-      itemsWithImage.push(itemWithImage);
-    }
-  }
-
-  return itemsWithImage;
+  return filteredItemsWithImage;
 };

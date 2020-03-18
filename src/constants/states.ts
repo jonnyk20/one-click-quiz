@@ -5,5 +5,6 @@
 export enum BuilderState {
   INPUTTING,
   PREPARING,
-  READY
+  READY,
+  FAILED
 }

@@ -6,10 +6,11 @@ import ItemType from './db/models/ItemType';
 import Item from './db/models/Item';
 import { splitEvery, range } from 'ramda';
 import words from './constants/words';
+import { isNilOrEmpty, isNotNilOrEmpty } from './utils/utils';
 
 const { animals, adjectives } = words;
 
-const getRandomItem = (items: any) =>
+const getRandomItem = (items: Array<any>) =>
   items[Math.floor(Math.random() * items.length)];
 
 const makeSlug = () =>
@@ -42,9 +43,14 @@ type ItemWithImage = {
 };
 
 const buildTestQuiz = async (
-  rawItemData: ItemWithImage[]
+  rawItemData: ItemWithImage[],
+  socket: SocketIO.Socket
 ): Promise<Quiz | null> => {
   try {
+    if (isNilOrEmpty(rawItemData)) {
+      socket.emit('builder-fail', {});
+      return null;
+    }
     // make quiz
     const quizType = await QuizType.findOne({ where: { name: 'image-quiz' } });
     const quizTypeId = quizType?.id;
@@ -95,15 +101,17 @@ const buildTestQuiz = async (
 };
 
 type CompletedQuizPayload = {
-  url: string;
+  url?: string;
 };
 
 const buildQuiz = async (data: string[], socket: SocketIO.Socket) => {
   const items = data;
   const formattedItems: ItemWithImage[] = await getBingImages(items, socket);
-  const quiz: Quiz | null = await buildTestQuiz(formattedItems);
-  const payload: CompletedQuizPayload = { url: quiz?.url || '' };
-  socket.emit('completed', payload);
+  const quiz: Quiz | null = await buildTestQuiz(formattedItems, socket);
+  if (isNotNilOrEmpty(quiz)) {
+    const payload: CompletedQuizPayload = { url: quiz?.url };
+    socket.emit('completed', payload);
+  }
 };
 
 export default buildQuiz;

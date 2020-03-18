@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 const convertItemsToInput = (arr: string[]): string => arr.join('\n');
 const convertInputToItems = (input: string): string[] =>
-  input.split('\n').slice(0, 40);
+  input.split('\n').slice(0, 12);
 
 const defaultItems = [
   'jade',
@@ -54,9 +54,18 @@ const Builder = () => {
     setBuilderState(BuilderState.PREPARING);
   };
 
+  const handleFail = () => {
+    setBuilderState(BuilderState.FAILED);
+  };
+
   const handleComplete = (payload: CompletedQuizPayload) => {
     setQuizUrl(payload.url);
     setBuilderState(BuilderState.READY);
+  };
+
+  const reset = () => {
+    setItems(defaultItems);
+    setBuilderState(BuilderState.INPUTTING);
   };
 
   useEffect(() => {
@@ -64,6 +73,10 @@ const Builder = () => {
     socket.on('builder-progress-update', (progress: BuilderProgress) => {
       console.log('progress update received', progress);
       setProgress(progress);
+    });
+    socket.on('builder-fail', (error: string) => {
+      console.log('Quiz Building Failed', error);
+      handleFail();
     });
     socket.on('completed', (payload: CompletedQuizPayload) => {
       console.log('Quiz comleted', payload);
@@ -80,6 +93,7 @@ const Builder = () => {
   const isInputting = builderState === BuilderState.INPUTTING;
   const isPreparing = builderState === BuilderState.PREPARING;
   const isComplete = builderState === BuilderState.READY;
+  const isFailed = builderState === BuilderState.FAILED;
   const formattedQuizUrl = `${window.location.origin}/quiz/${quizUrl}`;
   const inputValue = convertItemsToInput(items);
 
@@ -94,7 +108,9 @@ const Builder = () => {
         <p className="text-medium text-light-color">
           Automatically finds images and generates a quiz on anything you want
         </p>
-        <p className="text-medium">1. Add words to the box below</p>
+        <p className="text-medium">
+          1. Add words to the box below (up to 12 for now)
+        </p>
         <p className="text-medium">
           2. Click&nbsp;<span className="text-light-color">'Create Quiz'</span>
         </p>
@@ -136,6 +152,12 @@ const Builder = () => {
               {formattedQuizUrl}
             </a>
           </div>
+        </div>
+      )}
+      {isFailed && (
+        <div className="mv-20">
+          <div className="mb-20">Failed to create Quiz</div>
+          <Button onClick={reset}>Try again</Button>
         </div>
       )}
     </div>
