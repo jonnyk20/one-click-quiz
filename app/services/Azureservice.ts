@@ -1,11 +1,12 @@
-import request, { RequestPromiseOptions } from "request-promise";
+import request, { RequestPromiseOptions } from 'request-promise';
+import { isNotNilOrEmpty } from '../utils/utils';
 
-const BASE_URL = "https://api.cognitive.microsoft.com/bing/v7.0/images/search";
+const BASE_URL = 'https://api.cognitive.microsoft.com/bing/v7.0/images/search';
 const MAX_RESULTS = 1;
 
 const options: RequestPromiseOptions = {
   headers: {
-    "Ocp-Apim-Subscription-Key": process.env.AZURE_API_KEY
+    'Ocp-Apim-Subscription-Key': process.env.AZURE_API_KEY
   },
   family: 4
 };
@@ -19,23 +20,22 @@ type Result = {
   value: Value[];
 };
 
-type RawItemData = {
-  data: {
+type ItemWithImage = {
+  data?: {
     image_url: string;
     name: string;
   };
 };
 
-const getImageUrl = (result: Result) => result?.value?.[0].thumbnailUrl || "";
+const getImageUrl = (result: Result): string =>
+  result?.value?.[0].thumbnailUrl || '';
 
 const delay = (interval: number) =>
   new Promise(resolve => setTimeout(resolve, interval));
 
-const getImage = async (searchQuery: string) => {
+const getImage = async (searchQuery: string): Promise<string | null> => {
   const encodedQuery = encodeURI(searchQuery);
   const url = `${BASE_URL}?q=${encodedQuery}&count=${MAX_RESULTS}`;
-
-  await delay(1000);
 
   const res = await request(url, options);
   const json = JSON.parse(res);
@@ -45,19 +45,27 @@ const getImage = async (searchQuery: string) => {
   return decodedUrl || null;
 };
 
-type GetImageOrReturnNull = (item: string) => RawItemData;
+const addImageToItem = async (item: string): Promise<ItemWithImage> => {
+  let itemWithImage = {};
 
-const getImageOrReturnNull = async (item: string) => {
-  let image = null;
   try {
-    image = await getImage(item);
+    const imageUrl = await getImage(item);
+
+    if (isNotNilOrEmpty(imageUrl)) {
+      itemWithImage = {
+        data: {
+          name: item,
+          image_url: imageUrl
+        }
+      };
+    }
   } catch (error) {
-    console.log("ERR", error);
+    console.log('ERR', error);
   }
-  return { data: { name: item, image_url: image } };
+
+  return itemWithImage;
 };
 
-type GetBingImages = (items: string[], socket: SocketIO.Socket) => RawItemData;
 type BuilderProgress = {
   completed: number;
   total: number;
@@ -70,18 +78,29 @@ export const getBingImages = async (
   const itemCount = items.length;
   let completed = 0;
 
-  const getImageAndUpdateCount = async (item: string) => {
-    const value: any = await getImageOrReturnNull(item);
+  const getImageAndUpdateCount = async (
+    item: string
+  ): Promise<ItemWithImage> => {
+    const itemWithImage: any = await addImageToItem(item);
 
+    // TODO: Sent update for failed images
+    completed += 1;
     const update: BuilderProgress = { total: itemCount, completed };
-    if (value.data.image_url) {
-      completed += 1;
-      socket.emit("builder-progress-update", update);
-    }
-    return value;
+    socket.emit('builder-progress-update', update);
+
+    return itemWithImage;
   };
 
-  const values = await Promise.all(items.map(getImageAndUpdateCount));
+  const itemsWithImage: ItemWithImage[] = [];
 
-  return values;
+  for (let item in items) {
+    await delay(1000);
+    const itemWithImage = await getImageAndUpdateCount(item);
+
+    if (isNotNilOrEmpty(itemWithImage?.data)) {
+      itemsWithImage.push(itemWithImage);
+    }
+  }
+
+  return itemsWithImage;
 };

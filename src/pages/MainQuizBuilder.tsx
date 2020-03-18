@@ -60,14 +60,11 @@ const Builder = () => {
   };
 
   useEffect(() => {
-    const socket = socketIOClient({ reconnectionAttempts: 1 });
-    socket.on(
-      'main-quiz-builder-progress-update',
-      (progress: BuilderProgress) => {
-        console.log('progress update received', progress);
-        setProgress(progress);
-      }
-    );
+    const socket = socketIOClient();
+    socket.on('builder-progress-update', (progress: BuilderProgress) => {
+      console.log('progress update received', progress);
+      setProgress(progress);
+    });
     socket.on('completed', (payload: CompletedQuizPayload) => {
       console.log('Quiz comleted', payload);
       handleComplete(payload);
@@ -131,7 +128,11 @@ const Builder = () => {
           Your Quiz is ready at
           <br />
           <div className="main-quiz-builder__quiz-link">
-            <a href={formattedQuizUrl} target="_blank">
+            <a
+              href={formattedQuizUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {formattedQuizUrl}
             </a>
           </div>

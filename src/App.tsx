@@ -52,7 +52,8 @@ const App = () => (
           <ThankYou />
         </Route>
         <Route path="/">
-          <Builder />
+          {/* <Builder /> */}
+          <TaxaChallenge />
         </Route>
       </Switch>
     </div>
