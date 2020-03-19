@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './ErrorBoundary.scss';
-
 const EMAIL_SUBJECT = encodeURI('1 Click Quiz - Error');
 
 type PropTypes = any;
