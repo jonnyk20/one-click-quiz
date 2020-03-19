@@ -1,22 +1,22 @@
 import React from 'react';
-import Body from '../components/Medoosa/Body';
+import Body from '../components/Medoosa/Body/Body';
 
 const modSelections = [
   {
     name: 'color',
-    value: 0
+    value: 3
   },
   {
     name: 'eyes',
-    value: 0
+    value: 6
   },
   {
     name: 'mouth',
-    value: 0
+    value: 7
   },
   {
     name: 'arms',
-    value: 0
+    value: 4
   },
   {
     name: 'head',
@@ -27,7 +27,7 @@ const modSelections = [
 const MedoosaTest = () => {
   return (
     <div>
-      <Body stage={5} modSelections={modSelections} />
+      <Body stage={2} modSelections={modSelections} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 .polyp {
-  height: 100px;
-  width: 100px;
-  animation: sway 16s infinite;
+  height: 150px;
+  width: 150px;
+  position: relative;
   transform-origin: 50% 100% 0;
 
   &__eyes {
@@ -14,19 +14,7 @@
 
     .eyes {
       margin: auto;
+      width: 80%;
     }
-  }
-}
-
-
-@keyframes sway {
-
-  0%,
-  100% {
-    transform: rotate(-5deg);
-  }
-
-  50% {
-    transform: rotate(5deg);
   }
 }

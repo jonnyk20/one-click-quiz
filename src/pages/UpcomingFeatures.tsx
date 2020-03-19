@@ -1,11 +1,11 @@
-import React from "react";
-import MailingListSignup from "../components/MailingListSignup";
+import React from 'react';
+import MailingListSignup from '../components/MailingListSignup';
 
-import "./UpcomingFeatures.scss";
-import ProjectInfo from "../components/ProjectInfo";
-import { Link } from "react-router-dom";
+import './UpcomingFeatures.scss';
+import ProjectInfo from '../components/ProjectInfo';
+import { Link } from 'react-router-dom';
 
-const EMAIL_SUBJECT = encodeURI("1 Click Quiz - Feedback and Feature Requests");
+const EMAIL_SUBJECT = encodeURI('1 Click Quiz - Feedback and Feature Requests');
 
 const UpcomingFeatures = () => (
   <div className="upcoming-features container">
@@ -26,6 +26,7 @@ const UpcomingFeatures = () => (
           className="text-light-color"
           href={`mailto:jonnyk_78@hotmail.com?subject=${EMAIL_SUBJECT}`}
           target="_blank"
+          rel="noopener noreferrer"
         >
           your feedback
         </a>

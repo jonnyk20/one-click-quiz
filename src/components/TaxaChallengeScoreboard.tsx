@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Body from '../components/Medoosa/Body';
+import Body from './Medoosa/Body/Body';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { formatScore, isNotNilOrEmpty } from '../utils/utils';
@@ -52,6 +52,10 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
       </div>
       <div className="taxa-challenge-scoreboard__records">
         {scoreRecords.map((record: any, i: number) => {
+          const questionCount = record.questionCount || 10;
+          const stage = (record.correctAnswers / questionCount) * 5;
+          const medoosaStage = Math.floor(stage);
+
           return (
             <div
               className="taxa-challenge-scoreboard__records__record"
@@ -59,7 +63,10 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
             >
               <div className="taxa-challenge-scoreboard__records__record__avatar-container">
                 <div className="taxa-challenge-scoreboard__records__record__avatar-container__avatar">
-                  <Body stage={5} modSelections={record.modSelections} />
+                  <Body
+                    stage={medoosaStage}
+                    modSelections={record.modSelections}
+                  />
                 </div>
               </div>
               <div className="taxa-challenge-scoreboard__records__record__details">
@@ -69,7 +76,9 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
                   <span className="text-light-color">
                     <b>{formatScore(record.score)}&nbsp;-&nbsp;</b>
                   </span>
-                  <span>({record.correctAnswers}/10)</span>
+                  <span>
+                    ({record.correctAnswers}/{questionCount})
+                  </span>
                 </div>
               </div>
             </div>

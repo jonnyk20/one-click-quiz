@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
 import { FormattedQuiz } from '../utils/formatQuiz';
-import { useLocation, Link, useHistory } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { isNotNilOrEmpty } from '../utils/utils';
 import { QUIZ_TAGS } from '../constants/quizProperties';
-import Body from '../components/Medoosa/Body';
+import Body from '../components/Medoosa/Body/Body';
 
 import './FinishScreen.scss';
 import Button from '../components/Button';
@@ -52,7 +52,6 @@ enum ScoreSubmissionstate {
 
 const FinishScreen: React.SFC = () => {
   const location: Location = useLocation();
-  const history = useHistory();
 
   const [state, setState] = useState<ScoreSubmissionstate>(
     ScoreSubmissionstate.INITIAL
@@ -105,6 +104,7 @@ const FinishScreen: React.SFC = () => {
     const scoreRecord = {
       modSelections,
       correctAnswers,
+      questionCount: maxCorrectAnswers,
       name: inputValue,
       quizName: quiz.name,
       score
@@ -117,10 +117,14 @@ const FinishScreen: React.SFC = () => {
     }
   };
 
+  const stage = (correctAnswers / maxCorrectAnswers) * 5;
+
+  const medoosaStage = Math.floor(stage);
+
   const renderScoreSubmissionContent = () => (
     <>
       <div>
-        <Body stage={5} modSelections={modSelections} />
+        <Body stage={medoosaStage} modSelections={modSelections} />
         <ColorSelector
           selectedColorIndex={modSelections[0].value}
           selectColor={selectColor}

@@ -12,6 +12,7 @@ import MedoosaTest from './pages/MedoosaTest';
 import FinishScreen from './pages/FinishScreen';
 import TaxaQuiz from './pages/TaxaQuiz';
 import NatrueQuizHome from './pages/NatureQuizHome';
+import ErrorBoundary from './components/ErrorBoundary';
 
 ReactGA.initialize('UA-33174971-5');
 ReactGA.pageview(window.location.pathname + window.location.search);
@@ -19,42 +20,44 @@ ReactGA.pageview(window.location.pathname + window.location.search);
 const App = () => (
   <Router>
     <div className="app">
-      <div className="appp__bg-overlay"></div>
-      <Switch>
-        <Route path="/quiz/:slug">
-          <Quiz />
-        </Route>
-        <Route path="/medoosa">
-          <MedoosaTest />
-        </Route>
-        <Route path="/taxa-challenge">
-          <TaxaChallenge />
-        </Route>
-        <Route path="/nature-quiz">
-          <NatrueQuizHome />
-        </Route>
-        <Route path="/taxa-quiz">
-          <TaxaQuiz />
-        </Route>
-        <Route path="/finish">
-          <FinishScreen />
-        </Route>
-        <Route path="/marine-life">
-          <MarineLifeQuiz />
-        </Route>
-        <Route path="/my-observations">
-          <MyObservations />
-        </Route>
-        <Route path="/upcoming-features">
-          <UpcomingFeatures />
-        </Route>
-        <Route path="/thank-you">
-          <ThankYou />
-        </Route>
-        <Route path="/">
-          <Builder />
-        </Route>
-      </Switch>
+      <ErrorBoundary>
+        <div className="appp__bg-overlay"></div>
+        <Switch>
+          <Route path="/quiz/:slug">
+            <Quiz />
+          </Route>
+          <Route path="/medoosa">
+            <MedoosaTest />
+          </Route>
+          <Route path="/taxa-challenge">
+            <TaxaChallenge />
+          </Route>
+          <Route path="/nature-quiz">
+            <NatrueQuizHome />
+          </Route>
+          <Route path="/taxa-quiz">
+            <TaxaQuiz />
+          </Route>
+          <Route path="/finish">
+            <FinishScreen />
+          </Route>
+          <Route path="/marine-life">
+            <MarineLifeQuiz />
+          </Route>
+          <Route path="/my-observations">
+            <MyObservations />
+          </Route>
+          <Route path="/upcoming-features">
+            <UpcomingFeatures />
+          </Route>
+          <Route path="/thank-you">
+            <ThankYou />
+          </Route>
+          <Route path="/">
+            <Builder />
+          </Route>
+        </Switch>
+      </ErrorBoundary>
     </div>
   </Router>
 );
