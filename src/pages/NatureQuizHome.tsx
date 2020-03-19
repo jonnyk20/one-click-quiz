@@ -6,7 +6,7 @@ import Button from '../components/Button';
 const NatrueQuizHome = () => (
   <div className="nature-quiz-home container">
     <div className="mv-50">
-      <div>How well do you know your local plans and animals?</div>
+      <div>How well do you know your local plants and animals?</div>
       <div>Test yourself and compare your score with others</div>
       <Link
         to="/taxa-challenge"

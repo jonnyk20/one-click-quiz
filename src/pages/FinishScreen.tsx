@@ -80,15 +80,9 @@ const FinishScreen: React.SFC = () => {
   const isINaturalistQuiz =
     isTaxaChallengeQuiz || isMyObservationQuiz || isMarineLifeQuiz;
 
-  let iNaturalizeQuizPath = '/taxa-challenge';
-
-  if (isMarineLifeQuiz) {
-    iNaturalizeQuizPath = '/marine-life';
-  }
-
-  if (isMyObservationQuiz) {
-    iNaturalizeQuizPath = '/my-observations';
-  }
+  const iNaturalizeQuizPath = isMarineLifeQuiz
+    ? '/marine-life'
+    : '/nature-quiz';
 
   if (!quiz) return null;
 
