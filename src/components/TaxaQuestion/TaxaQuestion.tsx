@@ -153,7 +153,7 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
       <div className={`${BASE_CLASS}__prompt mb-20`}>
         {!isAnswered && isReady && (
           <div className={`${BASE_CLASS}__instructions`}>
-            <div className="mb-10">Find the...&nbsp;</div>
+            <div>Find the...&nbsp;</div>
 
             <div className={`${BASE_CLASS}__prompt__correct-choice-info`}>
               <span>

@@ -12,7 +12,7 @@ import { QUIZ_TAGS } from '../constants/quizProperties';
 
 import './MarineLifeQuiz.scss';
 
-const projectId = 'b-c-marine-life';
+const projectId = 'marine-life-meta';
 
 enum QuizBuildingState {
   INITIAL,

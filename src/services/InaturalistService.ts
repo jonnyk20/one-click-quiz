@@ -148,6 +148,7 @@ type SpeciesCountParams = {
   quality_grade?: 'research';
   project_id?: string;
   page?: number;
+  without_taxon_id?: string;
 };
 
 type SpeciesCountResonse = {
@@ -218,6 +219,7 @@ export const fetchTaxaAndBuildQuiz = async (
 
     if (projectId) {
       params.project_id = projectId;
+      params.without_taxon_id = '40151,3,47158';
     }
 
     const taxa = await fetchPaginatedTaxa(params);
