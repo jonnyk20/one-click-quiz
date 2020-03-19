@@ -36,7 +36,7 @@ const MyObservations = () => {
       null,
       [],
       userLogin,
-      `My Observations - ${userLogin}`,
+      `${userLogin}'s observations`,
       [QUIZ_TAGS.MY_OBSERVATIONS]
     );
     if (quiz && quiz.questions.length > 0) {
@@ -105,7 +105,7 @@ const MyObservations = () => {
       )}
       {!isNilOrEmpty(quiz) && (
         <>
-          <h3 className="text-medium text-light-color">Your Quz is Ready</h3>
+          <h3 className="text-medium text-light-color">Your Quiz is Ready</h3>
           <div className="mv-20 text-medium">
             <b>Tips</b>
           </div>

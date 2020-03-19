@@ -80,6 +80,16 @@ const FinishScreen: React.SFC = () => {
   const isINaturalistQuiz =
     isTaxaChallengeQuiz || isMyObservationQuiz || isMarineLifeQuiz;
 
+  let iNaturalizeQuizPath = '/taxa-challenge';
+
+  if (isMarineLifeQuiz) {
+    iNaturalizeQuizPath = '/marine-life';
+  }
+
+  if (isMyObservationQuiz) {
+    iNaturalizeQuizPath = '/my-observations';
+  }
+
   if (!quiz) return null;
 
   const selectColor = (value: number) => {
@@ -163,6 +173,14 @@ const FinishScreen: React.SFC = () => {
         />
       )}
 
+      {isINaturalistQuiz && (
+        <div className="mt-20">
+          <Link to={iNaturalizeQuizPath} className="text-link">
+            <Button onClick={() => {}}>Try Again</Button>
+          </Link>
+        </div>
+      )}
+
       {!isMarineLifeQuiz && (
         <>
           <div className="mt-50 text-medium">
@@ -172,14 +190,6 @@ const FinishScreen: React.SFC = () => {
             <Link to="/">Home</Link>
           </div>
         </>
-      )}
-
-      {isMarineLifeQuiz && (
-        <div className="mt-20">
-          <Link to="/marine-life">
-            <Button onClick={() => {}}>Try Again</Button>
-          </Link>
-        </div>
       )}
 
       {isSubmitted && (
