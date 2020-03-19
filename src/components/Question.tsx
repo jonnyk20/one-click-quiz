@@ -19,7 +19,7 @@ type PropTypes = {
   incrementQuestion: () => void;
   incrementScore: (addedScore: number) => void;
   score: number;
-  correctAnswers: number;
+  correctAnswerCount: number;
   maxCorrectAnswers: number;
   modSelections: any;
 };
@@ -34,7 +34,7 @@ const Question: React.SFC<PropTypes> = ({
   question,
   incrementCorrectAnswers,
   incrementQuestion,
-  correctAnswers,
+  correctAnswerCount,
   maxCorrectAnswers,
   score,
   incrementScore,
@@ -92,7 +92,7 @@ const Question: React.SFC<PropTypes> = ({
     <div className="question">
       <div className="question__scoreboard mb-20">
         <MedoosaProgress
-          correctAnswers={correctAnswers}
+          correctAnswerCount={correctAnswerCount}
           maxCorrectAnswers={maxCorrectAnswers}
           modSelections={modSelections}
         />
@@ -103,7 +103,7 @@ const Question: React.SFC<PropTypes> = ({
           </div>
           <div>
             correct:&nbsp;
-            <span className="text-light-color">{correctAnswers}</span>
+            <span className="text-light-color">{correctAnswerCount}</span>
           </div>
           <div>
             score:&nbsp;<span className="text-light-color">{score}</span>

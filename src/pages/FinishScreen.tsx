@@ -35,7 +35,7 @@ interface State {
   quiz: FormattedQuiz;
   user: string;
   modSelections: any;
-  correctAnswers: number;
+  correctAnswerCount: number;
   maxCorrectAnswers: number;
   score: number;
 }
@@ -61,7 +61,7 @@ const FinishScreen: React.SFC = () => {
     quiz,
     user,
     modSelections: initialModSelections,
-    correctAnswers,
+    correctAnswerCount,
     score,
     maxCorrectAnswers
   } = location.state;
@@ -103,7 +103,7 @@ const FinishScreen: React.SFC = () => {
 
     const scoreRecord = {
       modSelections,
-      correctAnswers,
+      correctAnswerCount,
       questionCount: maxCorrectAnswers,
       name: inputValue,
       quizName: quiz.name,
@@ -117,7 +117,7 @@ const FinishScreen: React.SFC = () => {
     }
   };
 
-  const stage = (correctAnswers / maxCorrectAnswers) * 5;
+  const stage = (correctAnswerCount / maxCorrectAnswers) * 5;
 
   const medoosaStage = Math.floor(stage);
 
@@ -134,7 +134,7 @@ const FinishScreen: React.SFC = () => {
       <div className="mv-10">{quiz.name}</div>
       <div>
         Correct:&nbsp;
-        <span className="text-light-color">{`${correctAnswers}/${maxCorrectAnswers}`}</span>
+        <span className="text-light-color">{`${correctAnswerCount}/${maxCorrectAnswers}`}</span>
         <span>&nbsp;-&nbsp;Score:&nbsp;</span>
         <span className="text-light-color">{score}</span>
       </div>

@@ -6,16 +6,16 @@ import Body from './Medoosa/Body/Body';
 import './MedoosaProgress.scss';
 
 type PropTypes = {
-  correctAnswers: number;
+  correctAnswerCount: number;
   maxCorrectAnswers: number;
   modSelections: any;
 };
 
 const MedoosaProgress: React.SFC<PropTypes> = props => {
-  const { correctAnswers, maxCorrectAnswers, modSelections } = props;
-  const hasScored = correctAnswers > 0;
+  const { correctAnswerCount, maxCorrectAnswers, modSelections } = props;
+  const hasScored = correctAnswerCount > 0;
 
-  const stage = (correctAnswers / maxCorrectAnswers) * 5;
+  const stage = (correctAnswerCount / maxCorrectAnswers) * 5;
 
   const medoosaStage = Math.floor(stage);
 

@@ -38,7 +38,7 @@ const Quiz = () => {
     questions: [],
     tags: []
   });
-  const [correctAnswers, setCorrectAnswerrs] = useState<number>(0);
+  const [correctAnswerCount, setCorrectAnswerrs] = useState<number>(0);
   const [maxCorrectAnswers, setmaxCorrectAnswers] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -86,11 +86,11 @@ const Quiz = () => {
     if (isFinished) {
       history.push({
         pathname: '/finish',
-        state: { quiz, modSelections, score, correctAnswers, maxCorrectAnswers }
+        state: { quiz, modSelections, score, correctAnswerCount, maxCorrectAnswers }
       });
     }
   }, [
-    correctAnswers,
+    correctAnswerCount,
     history,
     isFinished,
     maxCorrectAnswers,
@@ -110,7 +110,7 @@ const Quiz = () => {
   };
 
   const incrementCorrectAnswers = () => {
-    const newCorrectAnswersCount = correctAnswers + 1;
+    const newCorrectAnswersCount = correctAnswerCount + 1;
     setCorrectAnswerrs(newCorrectAnswersCount);
 
     if (newCorrectAnswersCount === maxCorrectAnswers) {
@@ -154,7 +154,7 @@ const Quiz = () => {
       )}
       {!isNilOrEmpty(quiz.questions) && !isFinished && (
         <Question
-          correctAnswers={correctAnswers}
+          correctAnswerCount={correctAnswerCount}
           maxCorrectAnswers={maxCorrectAnswers}
           score={score}
           question={currentQuestion}

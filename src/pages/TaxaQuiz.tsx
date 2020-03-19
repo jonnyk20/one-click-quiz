@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, Link, useHistory } from 'react-router-dom';
-import TaxaQuestion from '../components/TaxaQuestion/TaxaQuestion';
-import { FormattedQuiz } from '../utils/formatQuiz';
+import TaxaQuestion, {
+  ChoiceWithPhotos
+} from '../components/TaxaQuestion/TaxaQuestion';
+import { FormattedQuiz, FormattedQuestion } from '../utils/formatQuiz';
 import { isNilOrEmpty, isNotNilOrEmpty } from '../utils/utils';
 import testQuiz from '../utils/testQuiz';
 import { QUIZ_TYPES } from '../constants/quizProperties';
 import initializeModSelections from '../utils/initializeModSelections';
 
 import './Quiz.scss';
+import { getObservationPhotosForTaxa } from '../services/InaturalistService';
 
 interface State {
   quiz: FormattedQuiz;
@@ -18,6 +21,10 @@ type Location = {
   state: State;
 };
 
+export interface QuestionWithAdditionalPhotos extends FormattedQuestion {
+  choices: ChoiceWithPhotos[];
+}
+
 const TaxaQuiz = () => {
   const { slug = '' } = useParams();
   const [quiz, setQuiz] = useState<FormattedQuiz>({
@@ -26,7 +33,7 @@ const TaxaQuiz = () => {
     questions: [],
     tags: []
   });
-  const [correctAnswers, setCorrectAnswerrs] = useState<number>(0);
+  const [correctAnswerCount, setCorrectAnswerrs] = useState<number>(0);
   const [maxCorrectAnswers, setmaxCorrectAnswers] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -34,10 +41,57 @@ const TaxaQuiz = () => {
   const [modSelections, setModSelections] = useState<any>(
     initializeModSelections()
   );
+  const [
+    questionsWithAdditionalPhotos,
+    setQuestionsWithAdditionalPhotos
+  ] = useState<QuestionWithAdditionalPhotos[]>([]);
+
   const location: Location = useLocation();
   const history = useHistory();
 
   const isTesting = slug === 'testing';
+
+  const isEmptyQuiz = isNotNilOrEmpty(quiz) && isNilOrEmpty(quiz.questions);
+
+  const currentQuestion = quiz.questions[currentQuestionIndex];
+  const currentQuestionWithAdditionalPhotos =
+    questionsWithAdditionalPhotos[currentQuestionIndex];
+  const areAdditionalImagesFetched = isNotNilOrEmpty(
+    currentQuestionWithAdditionalPhotos
+  );
+
+  useEffect(() => {
+    const addPhotosToChoices = async (question: FormattedQuestion) => {
+      const taxonIds = question.choices.map(({ id }) => id || 0);
+      const observationPhotos = await getObservationPhotosForTaxa(taxonIds);
+      const taxaWithObservationPhotos = observationPhotos.map((photos, i) => ({
+        ...question.choices[i],
+        photos
+      }));
+      const questionWithAdditionalPhotos: QuestionWithAdditionalPhotos = {
+        ...question,
+        choices: taxaWithObservationPhotos
+      };
+      setQuestionsWithAdditionalPhotos([
+        ...questionsWithAdditionalPhotos,
+        questionWithAdditionalPhotos
+      ]);
+    };
+
+    const addPhotosToQuestions = async () => {
+      const { questions } = quiz;
+
+      for (let [i, question] of questions.entries()) {
+        if (questionsWithAdditionalPhotos.length === i) {
+          await addPhotosToChoices(question);
+        }
+      }
+    };
+
+    if (!isEmptyQuiz) {
+      addPhotosToQuestions();
+    }
+  }, [isEmptyQuiz, questionsWithAdditionalPhotos, quiz]);
 
   useEffect(() => {
     if (!isNilOrEmpty(location?.state?.quiz)) {
@@ -58,11 +112,17 @@ const TaxaQuiz = () => {
     if (isFinished) {
       history.push({
         pathname: '/finish',
-        state: { quiz, modSelections, score, correctAnswers, maxCorrectAnswers }
+        state: {
+          quiz,
+          modSelections,
+          score,
+          correctAnswerCount,
+          maxCorrectAnswers
+        }
       });
     }
   }, [
-    correctAnswers,
+    correctAnswerCount,
     history,
     isFinished,
     maxCorrectAnswers,
@@ -82,7 +142,7 @@ const TaxaQuiz = () => {
   };
 
   const incrementCorrectAnswers = () => {
-    const newCorrectAnswersCount = correctAnswers + 1;
+    const newCorrectAnswersCount = correctAnswerCount + 1;
     setCorrectAnswerrs(newCorrectAnswersCount);
 
     if (newCorrectAnswersCount === maxCorrectAnswers) {
@@ -98,10 +158,6 @@ const TaxaQuiz = () => {
     }
     setIsFinished(true);
   };
-
-  const isEmptyQuiz = isNotNilOrEmpty(quiz) && isNilOrEmpty(quiz.questions);
-
-  const currentQuestion = quiz?.questions[currentQuestionIndex];
 
   return (
     <div className="quiz container">
@@ -119,14 +175,16 @@ const TaxaQuiz = () => {
       )}
       {!isEmptyQuiz && !isFinished && (
         <TaxaQuestion
-          correctAnswers={correctAnswers}
+          correctAnswerCount={correctAnswerCount}
           maxCorrectAnswers={maxCorrectAnswers}
           score={score}
-          question={currentQuestion}
           incrementCorrectAnswers={incrementCorrectAnswers}
           incrementScore={incrementScore}
           incrementQuestion={incrementQuestion}
           modSelections={modSelections}
+          areAdditionalImagesFetched={areAdditionalImagesFetched}
+          correctAnswerIndex={currentQuestion.correctAnswerIndex}
+          choicesWithPhotos={currentQuestionWithAdditionalPhotos?.choices || []}
         />
       )}
     </div>

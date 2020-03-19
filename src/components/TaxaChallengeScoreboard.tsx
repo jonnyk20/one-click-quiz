@@ -53,7 +53,9 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
       <div className="taxa-challenge-scoreboard__records">
         {scoreRecords.map((record: any, i: number) => {
           const questionCount = record.questionCount || 10;
-          const stage = (record.correctAnswers / questionCount) * 5;
+          const correctAnswerCount =
+            record.correctAnswerCount || record.correctAnswers;
+          const stage = (correctAnswerCount / questionCount) * 5;
           const medoosaStage = Math.floor(stage);
 
           return (
@@ -77,7 +79,7 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
                     <b>{formatScore(record.score)}&nbsp;-&nbsp;</b>
                   </span>
                   <span>
-                    ({record.correctAnswers}/{questionCount})
+                    ({correctAnswerCount}/{questionCount})
                   </span>
                 </div>
               </div>

@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 import TaxaChoice from '../TaxaChoice/TaxaChoice';
-import { FormattedQuestion, FormattedChoice } from '../../utils/formatQuiz';
+import { FormattedChoice } from '../../utils/formatQuiz';
 import Button from '../Button';
 import MedoosaProgress from '../MedoosaProgress';
 import { isNotNilOrEmpty } from '../../utils/utils';
 import ProgressBar from '../ProgressBar';
-import {
-  getObservationPhotosForTaxa,
-  FormattedObservationPhoto
-} from '../../services/InaturalistService';
+import { FormattedObservationPhoto } from '../../services/InaturalistService';
 
 import './TaxaQuestion.scss';
 
@@ -20,14 +17,16 @@ enum states {
 }
 
 type PropTypes = {
-  question: FormattedQuestion;
   incrementCorrectAnswers: () => void;
   incrementQuestion: () => void;
   incrementScore: (addedScore: number) => void;
   score: number;
-  correctAnswers: number;
+  correctAnswerCount: number;
   maxCorrectAnswers: number;
   modSelections: any;
+  choicesWithPhotos: ChoiceWithPhotos[];
+  correctAnswerIndex: number;
+  areAdditionalImagesFetched: boolean;
 };
 
 const MULTIPLIER_START = 50;
@@ -38,45 +37,32 @@ const intervalTime = 100;
 
 const BASE_CLASS = 'taxa-question';
 
-interface ChoiceWithPhotos extends FormattedChoice {
+export interface ChoiceWithPhotos extends FormattedChoice {
   photos: FormattedObservationPhoto[];
 }
 
 const TaxaQuestion: React.SFC<PropTypes> = ({
-  question,
+  choicesWithPhotos,
   incrementCorrectAnswers,
   incrementQuestion,
-  correctAnswers,
+  correctAnswerCount,
   maxCorrectAnswers,
   score,
   incrementScore,
-  modSelections
+  modSelections,
+  areAdditionalImagesFetched,
+  correctAnswerIndex
 }) => {
-  const { choices, correctAnswerIndex } = question;
   const [state, setState] = useState<states>(states.UNANSWERED);
   const [multiplier, setMultiplier] = useState<number>(MULTIPLIER_START);
   const [addedScore, setAddedScore] = useState<number>(0);
   const [loadedImagesCount, setLoadedImagesCount] = useState<number>(0);
-  const [
-    choicesWithAdditionalPhotos,
-    setChoicesWithAdditionalPhotos
-  ] = useState<ChoiceWithPhotos[]>([]);
 
-  const isReady = loadedImagesCount === choices.length;
-
-  useEffect(() => {
-    const addPhotosToChoices = async () => {
-      const taxonIds = choices.map(({ id }) => id || 0);
-      const observationPhotos = await getObservationPhotosForTaxa(taxonIds);
-      const taxaWithObservationPhotos = observationPhotos.map((photos, i) => ({
-        ...choices[i],
-        photos
-      }));
-      setChoicesWithAdditionalPhotos(taxaWithObservationPhotos);
-    };
-
-    addPhotosToChoices();
-  }, [choices]);
+  const choiceCount = choicesWithPhotos.length;
+  const correctChoice = choicesWithPhotos[correctAnswerIndex];
+  const isReady =
+    areAdditionalImagesFetched &&
+    loadedImagesCount === choicesWithPhotos.length;
 
   useEffect(() => {
     if (state === states.UNANSWERED && isReady) {
@@ -130,7 +116,7 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
     <div className={BASE_CLASS}>
       <div className={`${BASE_CLASS}__hud mb-20`}>
         <MedoosaProgress
-          correctAnswers={correctAnswers}
+          correctAnswerCount={correctAnswerCount}
           maxCorrectAnswers={maxCorrectAnswers}
           modSelections={modSelections}
         />
@@ -142,7 +128,7 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
           </div>
           <div>
             correct:&nbsp;
-            <span className="text-light-color">{correctAnswers}</span>
+            <span className="text-light-color">{correctAnswerCount}</span>
           </div>
           <div>
             score:&nbsp;<span className="text-light-color">{score}</span>
@@ -158,13 +144,13 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
             <div className={`${BASE_CLASS}__prompt__correct-choice-info`}>
               <span>
                 <b className="text-light-color text-large">
-                  {choices[correctAnswerIndex].name}
+                  {correctChoice.name}
                 </b>
               </span>
-              {isNotNilOrEmpty(choices[correctAnswerIndex].details) && (
+              {isNotNilOrEmpty(correctChoice.details) && (
                 <span>
                   <b className="text-light-color">
-                    &nbsp;({choices[correctAnswerIndex].details})
+                    &nbsp;({correctChoice.details})
                   </b>
                 </span>
               )}
@@ -191,9 +177,9 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
       {!isReady && (
         <div className={`${BASE_CLASS}__loading`}>
           <div className="mb-20">
-            Loading Images... {`${loadedImagesCount}/${choices.length}`}
+            Loading Images... {`${loadedImagesCount}/${choiceCount}`}
           </div>
-          <ProgressBar progress={loadedImagesCount / choices.length} />
+          <ProgressBar progress={loadedImagesCount / choiceCount} />
         </div>
       )}
 
@@ -203,22 +189,20 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
             !isReady ? `${BASE_CLASS}__choices--hide` : ''
           }`}
         >
-          {choicesWithAdditionalPhotos.map(
-            ({ image_url, name, details, photos }, i) => (
-              <TaxaChoice
-                key={name}
-                answerQuestion={answerQuestion}
-                i={i}
-                image_url={image_url}
-                name={name}
-                isCorrect={i === correctAnswerIndex}
-                isAnswered={isAnswered}
-                details={details}
-                setImageFetched={setImageFetched}
-                photos={photos}
-              />
-            )
-          )}
+          {choicesWithPhotos.map(({ image_url, name, details, photos }, i) => (
+            <TaxaChoice
+              key={name}
+              answerQuestion={answerQuestion}
+              i={i}
+              image_url={image_url}
+              name={name}
+              isCorrect={i === correctAnswerIndex}
+              isAnswered={isAnswered}
+              details={details}
+              setImageFetched={setImageFetched}
+              photos={photos}
+            />
+          ))}
         </div>
       }
     </div>
