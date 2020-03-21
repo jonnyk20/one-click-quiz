@@ -144,11 +144,13 @@ type SpeciesCountParams = {
   place_id?: number;
   taxon_id?: string;
   user_login?: string;
-  native?: boolean;
   quality_grade?: 'research';
   project_id?: string;
   page?: number;
   without_taxon_id?: string;
+  lat?: number;
+  lng?: number;
+  radius?: number;
 };
 
 type SpeciesCountResonse = {
@@ -193,6 +195,21 @@ const fetchPaginatedTaxa = async (
   return [...taxa, ...remainingTaxa];
 };
 
+type Coordinates = {
+  radius: number;
+  lat: number;
+  lng: number;
+};
+
+const formatCoordinates = (place: SuggestedPlace): Coordinates => {
+  const [lat, lng] = place.location.split(',').map(Number);
+  return {
+    radius: 100,
+    lat,
+    lng
+  };
+};
+
 export const fetchTaxaAndBuildQuiz = async (
   place: SuggestedPlace | null,
   kingdomIds: number[],
@@ -203,10 +220,15 @@ export const fetchTaxaAndBuildQuiz = async (
   uniqueTaxonomyRank?: number
 ): Promise<FormattedQuiz | null> => {
   try {
-    const params: SpeciesCountParams = {};
-    if (place?.id) {
-      params.place_id = place.id;
-      params.quality_grade = 'research';
+    const params: SpeciesCountParams = {
+      quality_grade: 'research'
+    };
+
+    if (isNotNilOrEmpty(place)) {
+      const coords = formatCoordinates(place!);
+      params.lat = coords.lat;
+      params.lng = coords.lng;
+      params.radius = coords.radius;
     }
 
     if (!isNilOrEmpty(kingdomIds)) {
