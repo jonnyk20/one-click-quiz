@@ -7,6 +7,11 @@ import { range } from 'ramda';
 const baseUrl = 'https://api.inaturalist.org/v1';
 const TAXON_FETCH_LIMIT = 2500;
 const TAXA_PER_REQUEST = 500;
+const DEFAULT_LOCATION_RADIUS = 100;
+const DEFAULT_LOCATION_DIAMETER = 2 * DEFAULT_LOCATION_RADIUS;
+const DEFAULT_LOCATION_SQUARE_AREA = Math.pow(DEFAULT_LOCATION_DIAMETER, 2);
+const KM_TO_DEGREE_LENGTH_RATIO = 110;
+const KM_SQUARED_TO_DEGREE_AREA_RATIO = Math.pow(KM_TO_DEGREE_LENGTH_RATIO, 2);
 
 export type SuggestedPlace = {
   ancestor_place_ids: number;
@@ -205,6 +210,14 @@ const formatCoordinates = (place: SuggestedPlace): Coordinates => {
   };
 };
 
+const getShouldUseCoordinates = (place: SuggestedPlace): Boolean => {
+  const { bbox_area: degreeArea } = place;
+  const shouldUseCoordinates =
+    DEFAULT_LOCATION_SQUARE_AREA >=
+    degreeArea * KM_SQUARED_TO_DEGREE_AREA_RATIO;
+  return shouldUseCoordinates;
+};
+
 export type TaxaQuizOptions = {
   name: string;
   place?: SuggestedPlace | null;
@@ -232,10 +245,15 @@ export const fetchTaxaAndBuildQuiz = async ({
     };
 
     if (isNotNilOrEmpty(place)) {
-      const coords = formatCoordinates(place!);
-      params.lat = coords.lat;
-      params.lng = coords.lng;
-      params.radius = coords.radius;
+      const shouldUseCoordinates = getShouldUseCoordinates(place!);
+      if (shouldUseCoordinates) {
+        const coords = formatCoordinates(place!);
+        params.lat = coords.lat;
+        params.lng = coords.lng;
+        params.radius = coords.radius;
+      } else {
+        params.place_id = place?.id;
+      }
     }
 
     if (isNotNilOrEmpty(taxonIds)) {
