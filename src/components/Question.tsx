@@ -95,6 +95,7 @@ const Question: React.SFC<PropTypes> = ({
           correctAnswerCount={correctAnswerCount}
           maxCorrectAnswers={maxCorrectAnswers}
           modSelections={modSelections}
+          isAnswered={isAnswered}
         />
         <div className="question__scoreboard__scores">
           <div>

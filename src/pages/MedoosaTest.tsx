@@ -1,5 +1,6 @@
 import React from 'react';
 import Body from '../components/Medoosa/Body/Body';
+import EvolutionGlow from '../components/EvolutionGlow/EvolutionGlow';
 
 const modSelections = [
   {
@@ -26,8 +27,11 @@ const modSelections = [
 
 const MedoosaTest = () => {
   return (
-    <div>
-      <Body stage={2} modSelections={modSelections} />
+    <div className="container">
+      <div>
+        <Body stage={2} modSelections={modSelections} />
+        <EvolutionGlow />
+      </div>
     </div>
   );
 };

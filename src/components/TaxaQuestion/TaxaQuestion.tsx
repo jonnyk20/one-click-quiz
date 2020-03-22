@@ -119,6 +119,7 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
           correctAnswerCount={correctAnswerCount}
           maxCorrectAnswers={maxCorrectAnswers}
           modSelections={modSelections}
+          isAnswered={isAnswered}
         />
 
         <div className={`${BASE_CLASS}__hud__scores`}>
