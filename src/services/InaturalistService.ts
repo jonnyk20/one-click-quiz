@@ -1,9 +1,4 @@
-import {
-  isNilOrEmpty,
-  encodeQueryString,
-  shuffle,
-  isNotNilOrEmpty
-} from '../utils/utils';
+import { encodeQueryString, shuffle, isNotNilOrEmpty } from '../utils/utils';
 import buildTaxaQuiz, { Taxon } from '../utils/buildTaxaQuiz';
 import { FormattedQuiz } from '../utils/formatQuiz';
 import { QUIZ_TAGS } from '../constants/quizProperties';
@@ -210,15 +205,27 @@ const formatCoordinates = (place: SuggestedPlace): Coordinates => {
   };
 };
 
-export const fetchTaxaAndBuildQuiz = async (
-  place: SuggestedPlace | null,
-  kingdomIds: number[],
-  user: string,
-  quizName: string,
-  quizTags?: QUIZ_TAGS[],
-  projectId?: string,
-  uniqueTaxonomyRank?: number
-): Promise<FormattedQuiz | null> => {
+export type TaxaQuizOptions = {
+  name: string;
+  place?: SuggestedPlace | null;
+  taxonIds?: number[];
+  taxonIdsToExclude?: number[];
+  user?: string;
+  tags?: QUIZ_TAGS[];
+  projectId?: string;
+  uniqueTaxonomyRank?: number;
+};
+
+export const fetchTaxaAndBuildQuiz = async ({
+  place,
+  taxonIds,
+  user,
+  name,
+  tags,
+  projectId,
+  uniqueTaxonomyRank,
+  taxonIdsToExclude
+}: TaxaQuizOptions): Promise<FormattedQuiz | null> => {
   try {
     const params: SpeciesCountParams = {
       quality_grade: 'research'
@@ -231,8 +238,12 @@ export const fetchTaxaAndBuildQuiz = async (
       params.radius = coords.radius;
     }
 
-    if (!isNilOrEmpty(kingdomIds)) {
-      params.taxon_id = kingdomIds.join(',');
+    if (isNotNilOrEmpty(taxonIds)) {
+      params.taxon_id = taxonIds!.join(',');
+    }
+
+    if (isNotNilOrEmpty(taxonIdsToExclude)) {
+      params.without_taxon_id = taxonIdsToExclude!.join(',');
     }
 
     if (user) {
@@ -246,7 +257,7 @@ export const fetchTaxaAndBuildQuiz = async (
 
     const taxa = await fetchPaginatedTaxa(params);
 
-    const quiz = buildTaxaQuiz(taxa, quizName, quizTags, uniqueTaxonomyRank);
+    const quiz = buildTaxaQuiz(taxa, name, tags, uniqueTaxonomyRank);
 
     return quiz;
   } catch (err) {

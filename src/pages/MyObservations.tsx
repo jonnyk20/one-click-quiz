@@ -32,13 +32,12 @@ const MyObservations = () => {
   const buildQuiz = async (userLogin: string) => {
     setUserName(userLogin);
     setQuizBuildingState(QuizBuildingState.BUILDING);
-    const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz(
-      null,
-      [],
-      userLogin,
-      `${userLogin}'s observations`,
-      [QUIZ_TAGS.MY_OBSERVATIONS]
-    );
+    const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz({
+      user: userLogin,
+      name: `${userLogin}'s observations`,
+      tags: [QUIZ_TAGS.MY_OBSERVATIONS]
+    });
+
     if (quiz && quiz.questions.length > 0) {
       setQuiz(quiz);
       setQuizBuildingState(QuizBuildingState.COMPLETE);

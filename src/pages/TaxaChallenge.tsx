@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
@@ -7,39 +7,30 @@ import {
   getSuggestedPlaces,
   SuggestedPlace,
   fetchTaxaAndBuildQuiz,
-  getNearestPlace
+  getNearestPlace,
+  TaxaQuizOptions
 } from '../services/InaturalistService';
 import {
   isNilOrEmpty,
   parseQueryString,
-  encodeQueryString
+  encodeQueryString,
+  isNotNilOrEmpty
 } from '../utils/utils';
 import { FormattedQuiz } from '../utils/formatQuiz';
 import Button from '../components/Button';
+import SelectionList from '../components/SelectionList/SelectionList';
 import ProgressBar from '../components/ProgressBar';
 import ProjectInfo from '../components/ProjectInfo';
 import { QUIZ_TAGS } from '../constants/quizProperties';
 import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
+import {
+  taxaOptions,
+  TaxaOptionsType
+} from '../constants/taxaOptions/taxaOptions';
 
 import './TaxaChallenge.scss';
-
-enum KINGDOMS {
-  ANIMAL,
-  FUNGI,
-  PLANTS
-}
-
-const taxonIDs = {
-  [KINGDOMS.ANIMAL]: 1,
-  [KINGDOMS.FUNGI]: 47170,
-  [KINGDOMS.PLANTS]: 47126
-};
-
-const taxonNames = {
-  [KINGDOMS.ANIMAL]: 'Animals',
-  [KINGDOMS.FUNGI]: 'Fungi',
-  [KINGDOMS.PLANTS]: 'Plants'
-};
+import { filter, Dictionary } from 'ramda';
+import TAXA from '../constants/taxaOptions/taxa';
 
 enum LocationState {
   INITIAL,
@@ -66,11 +57,40 @@ const TaxaChallenge = () => {
     QuizBuildingState.INITIAL
   );
   const [quiz, setQuiz] = useState<FormattedQuiz | null>(null);
+  const [taxaOption, setTaxaOption] = useState<TaxaOptionsType | null>(null);
+
   const location = useLocation();
   const params = parseQueryString(location.search);
   const { user } = params;
 
-  if (!isNilOrEmpty(user)) {
+  useEffect(() => {
+    const buildQuiz = async () => {
+      setQuizBuildingState(QuizBuildingState.BUILDING);
+      const options: TaxaQuizOptions = {
+        place,
+        taxonIds: taxaOption?.include,
+        name: `${taxaOption?.label} of ${place?.display_name}`,
+        tags: [QUIZ_TAGS.TAXA_CHALLENGE]
+      };
+
+      if (isNilOrEmpty(taxaOption?.exclude)) {
+        options.taxonIdsToExclude = taxaOption?.exclude;
+      }
+
+      const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz(options);
+
+      if (quiz) {
+        setQuiz(quiz);
+        setQuizBuildingState(QuizBuildingState.COMPLETE);
+      }
+    };
+
+    if ((isNotNilOrEmpty(place), isNotNilOrEmpty(taxaOption))) {
+      buildQuiz();
+    }
+  }, [place, taxaOption]);
+
+  if (isNotNilOrEmpty(user)) {
     return (
       <Redirect
         to={{
@@ -96,7 +116,7 @@ const TaxaChallenge = () => {
 
     setSearchedValue(inputValue);
     const places: SuggestedPlace[] = await getSuggestedPlaces(inputValue);
-    if (!isNilOrEmpty(places)) {
+    if (isNotNilOrEmpty(places)) {
       setSuggestedPlaces(places);
       setNoPlacesFound(false);
     } else {
@@ -122,30 +142,29 @@ const TaxaChallenge = () => {
     );
   };
 
-  const buildQuiz = async (kingdom: KINGDOMS) => {
-    setQuizBuildingState(QuizBuildingState.BUILDING);
-    const kingdomIds: number[] = [taxonIDs[kingdom]];
-    const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz(
-      place,
-      kingdomIds,
-      '',
-      `${taxonNames[kingdom]} of ${place?.display_name}`,
-      [QUIZ_TAGS.TAXA_CHALLENGE]
-    );
-
-    if (quiz) {
-      setQuiz(quiz);
-      setQuizBuildingState(QuizBuildingState.COMPLETE);
-    }
-  };
-
   const showLocationPrompt = locationState === LocationState.INITIAL;
   const showLocationProgress = locationState === LocationState.LOADING;
   const showQuizBuildingProgress =
     quizBuildingState === QuizBuildingState.BUILDING;
   const showQuizChoices =
-    !isNilOrEmpty(place) && quizBuildingState === QuizBuildingState.INITIAL;
-  const isPlaceReady = !isNilOrEmpty(place);
+    isNotNilOrEmpty(place) && quizBuildingState === QuizBuildingState.INITIAL;
+  const isPlaceReady = isNotNilOrEmpty(place);
+
+  const specicOptions: Dictionary<TaxaOptionsType> = filter(
+    (tOption: TaxaOptionsType) => tOption.isSpecific || false,
+    taxaOptions
+  );
+
+  const formattedSpecificOptions = Object.entries(
+    specicOptions
+  ).map(([key, option]) => ({ key, label: option.label }));
+
+  const selectSpecificTaxa = (key: string) => {
+    const taxa = key as TAXA;
+    const option = taxaOptions[taxa];
+
+    setTaxaOption(option);
+  };
 
   return (
     <div className="taxa-challange container">
@@ -167,7 +186,7 @@ const TaxaChallenge = () => {
             />
             <Button onClick={onSearch}>Search</Button>
           </form>
-          {!isNilOrEmpty(suggestedPlaces) && (
+          {isNotNilOrEmpty(suggestedPlaces) && (
             <div className="taxa-challange__search__suggestions padding-10">
               {suggestedPlaces.map(place => (
                 <div
@@ -210,16 +229,30 @@ const TaxaChallenge = () => {
           </div>
           <div className="taxa-challange__quiz-choices mv-10">
             <div className="taxa-challange__build__quiz-choice padding-5">
-              <Button onClick={() => buildQuiz(KINGDOMS.ANIMAL)}>
-                Animals
+              <Button onClick={() => setTaxaOption(taxaOptions.animals)}>
+                {taxaOptions.animals.label}
               </Button>
             </div>
             <div className="taxa-challange__build__quiz-choice padding-5">
-              <Button onClick={() => buildQuiz(KINGDOMS.PLANTS)}>Plants</Button>
+              <Button onClick={() => setTaxaOption(taxaOptions.plants)}>
+                {taxaOptions.plants.label}
+              </Button>
             </div>
             <div className="taxa-challange__build__quiz-choice padding-5">
-              <Button onClick={() => buildQuiz(KINGDOMS.FUNGI)}>Fungi</Button>
+              <Button onClick={() => setTaxaOption(taxaOptions.fungi)}>
+                {taxaOptions.fungi.label}
+              </Button>
             </div>
+          </div>
+          <div className="mv-20 text-medium">
+            You can also pick something more specific:
+          </div>
+          <div className="mv-20">
+            <SelectionList
+              options={formattedSpecificOptions}
+              defaultText="e.g. Reptiles"
+              onChange={selectSpecificTaxa}
+            />
           </div>
         </>
       )}
@@ -229,7 +262,7 @@ const TaxaChallenge = () => {
           <ProgressBar progress={0} />
         </div>
       )}
-      {!isNilOrEmpty(quiz) && (
+      {isNotNilOrEmpty(quiz) && (
         <>
           <h3 className="text-medium text-light-color">Your Quiz is Ready</h3>
 

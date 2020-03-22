@@ -11,7 +11,8 @@ import MarineLifeQuiz from './pages/MarineLifeQuiz';
 import MedoosaTest from './pages/MedoosaTest';
 import FinishScreen from './pages/FinishScreen';
 import TaxaQuiz from './pages/TaxaQuiz';
-import NatrueQuizHome from './pages/NatureQuizHome';
+import NatureQuizHome from './pages/NatureQuizHome';
+import Sandbox from './pages/Sandbox';
 import ErrorBoundary from './components/ErrorBoundary';
 
 ReactGA.initialize('UA-33174971-5');
@@ -29,11 +30,14 @@ const App = () => (
           <Route path="/medoosa">
             <MedoosaTest />
           </Route>
+          <Route path="/sandbox">
+            <Sandbox />
+          </Route>
           <Route path="/taxa-challenge">
             <TaxaChallenge />
           </Route>
           <Route path="/nature-quiz">
-            <NatrueQuizHome />
+            <NatureQuizHome />
           </Route>
           <Route path="/taxa-quiz">
             <TaxaQuiz />

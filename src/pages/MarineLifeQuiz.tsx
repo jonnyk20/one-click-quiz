@@ -30,15 +30,11 @@ const MarineLifeQuiz = () => {
     const buildQuiz = async () => {
       setQuizBuildingState(QuizBuildingState.BUILDING);
 
-      const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz(
-        null,
-        [],
-        '',
-        'Marine Life of B.C.',
-        [QUIZ_TAGS.MARINE_LIFE],
-        projectId,
-        5
-      );
+      const quiz: FormattedQuiz | null = await fetchTaxaAndBuildQuiz({
+        name: 'Marine Life of B.C.',
+        tags: [QUIZ_TAGS.MARINE_LIFE],
+        projectId
+      });
 
       if (quiz) {
         setQuiz(quiz);
