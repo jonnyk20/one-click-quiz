@@ -15,7 +15,7 @@ const makeChoice = (i: number): FormattedChoice => ({
 
 const makeQuestion = (): FormattedQuestion => ({
   correctAnswerIndex: 0,
-  choices: range(0, 4).map(makeChoice)
+  choices: range(0, 1).map(makeChoice)
 });
 
 const testQuiz: FormattedQuiz = {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
 import { FormattedQuiz } from '../utils/formatQuiz';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, Redirect } from 'react-router-dom';
 import { isNotNilOrEmpty } from '../utils/utils';
 import { QUIZ_TAGS } from '../constants/quizProperties';
 import Body from '../components/Medoosa/Body/Body';
@@ -64,10 +64,12 @@ const FinishScreen: React.SFC = () => {
     correctAnswerCount,
     score,
     maxCorrectAnswers
-  } = location.state;
+  } = location?.state || {};
 
   const [inputValue, setInputValue] = useState<string>('');
   const [modSelections, setModSelectons] = useState(initialModSelections);
+
+  if (!quiz) return <Redirect to="/" />;
 
   const hasNotSubmitted = state === ScoreSubmissionstate.INITIAL;
   const isSubmitting = state === ScoreSubmissionstate.SUBMITTING;
@@ -82,8 +84,6 @@ const FinishScreen: React.SFC = () => {
   const iNaturalizeQuizPath = isMarineLifeQuiz
     ? '/marine-life'
     : '/nature-quiz';
-
-  if (!quiz) return null;
 
   const selectColor = (value: number) => {
     const newColorMod = { name: 'color', value };

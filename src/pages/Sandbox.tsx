@@ -1,24 +1,18 @@
 import React from 'react';
+import { FixedSizeList as List } from 'react-window';
 
-import SelectionList, {
-  SelectionOptionValueType,
-  SelecitonlistOptionType
-} from '../components/SelectionList/SelectionList';
+const Row = ({ index, style }: any) => <div style={style}>Row {index}</div>;
 
-const options: SelecitonlistOptionType[] = [];
+const Example = () => (
+  <List height={150} itemCount={1000} itemSize={35} width={300}>
+    {Row}
+  </List>
+);
 
 const Sandbox = () => {
-  const onChange = (value: SelectionOptionValueType) => {
-    console.log('Selected', value);
-  };
-
   return (
     <div className="sandbox container">
-      <SelectionList
-        options={options}
-        defaultText="e.g. cats"
-        onChange={onChange}
-      />
+      <Example />
     </div>
   );
 };
