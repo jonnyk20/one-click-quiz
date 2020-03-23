@@ -4,6 +4,7 @@ import { faCrown } from '@fortawesome/free-solid-svg-icons';
 
 import ProgressBar, { Height } from './ProgressBar';
 import './StageBar.scss';
+import Snail from '../icons/Snail';
 
 type PropTypes = {
   stage: number;
@@ -11,13 +12,15 @@ type PropTypes = {
   isLevelingUp: boolean;
   onStart?: () => void;
   onStartLevelUp: () => void;
+  isRedemptionRun: boolean;
 };
 
 const StageBar: React.SFC<PropTypes> = ({
   stage,
   levelUpPending,
   onStartLevelUp,
-  isLevelingUp
+  isLevelingUp,
+  isRedemptionRun
 }) => {
   const [currentStage, setCurrentStage] = useState<number>(stage);
   const [isPulsing, setIsPulsing] = useState<boolean>(false);
@@ -68,13 +71,19 @@ const StageBar: React.SFC<PropTypes> = ({
       modifierClass = 'hidden';
     }
 
+    const lastStageIcon = isRedemptionRun ? (
+      <Snail />
+    ) : (
+      <FontAwesomeIcon icon={faCrown} size="xs" />
+    );
+
     return (
       <div
         key={`stage-${num}`}
         className={`stage-icon ${modifierClass}`}
         onClick={() => handleClick(num)}
       >
-        {num === 5 && <FontAwesomeIcon icon={faCrown} size="xs" />}
+        {num === 5 && lastStageIcon}
       </div>
     );
   };

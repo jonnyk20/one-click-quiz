@@ -29,7 +29,7 @@ const UNIQUE_TAXONOMY_LIMIT = 2;
 const MATCHING_SCORE_THRESHOLD = 7;
 
 const MAX_CHOICE_COUNT = 4;
-const MAX_QUESTION_COUNT = 10;
+export const MAX_QUESTION_COUNT = 10;
 
 const sortByAncestry = (arr: Taxon[]) => {
   let sorted = [...arr];
@@ -145,10 +145,10 @@ const rankAndFilterTaxaGroups = (
 
   // if the strict filtering gets us too few questions
   // ignore it and just use what is available
-  if (outputGroup.length < 10) {
+  if (outputGroup.length < MAX_QUESTION_COUNT) {
     outputGroup = formattedChoiceGroups
       .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
+      .slice(0, MAX_QUESTION_COUNT);
   }
 
   return outputGroup.map(group => group.taxa);

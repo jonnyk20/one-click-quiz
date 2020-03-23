@@ -1,6 +1,5 @@
 import React from 'react';
 import Body from '../components/Medoosa/Body/Body';
-import EvolutionGlow from '../components/EvolutionGlow/EvolutionGlow';
 
 const modSelections = [
   {
@@ -29,8 +28,7 @@ const MedoosaTest = () => {
   return (
     <div className="container">
       <div>
-        <Body stage={2} modSelections={modSelections} />
-        <EvolutionGlow />
+        <Body stage={1} modSelections={modSelections} isLevelUpPending />
       </div>
     </div>
   );

@@ -53,6 +53,8 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
       record.correctAnswerCount || record.correctAnswers;
     const stage = (correctAnswerCount / questionCount) * 5;
     const medoosaStage = Math.floor(stage);
+    const isPerfectRun =
+      correctAnswerCount === questionCount && !record.usedRedemption;
 
     return (
       <div
@@ -62,7 +64,11 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
       >
         <div className="taxa-challenge-scoreboard__records__record__avatar-container">
           <div className="taxa-challenge-scoreboard__records__record__avatar-container__avatar">
-            <Body stage={medoosaStage} modSelections={record.modSelections} />
+            <Body
+              stage={medoosaStage}
+              modSelections={record.modSelections}
+              isLevelUpPending={isPerfectRun}
+            />
           </div>
         </div>
         <div className="taxa-challenge-scoreboard__records__record__details">
@@ -83,7 +89,7 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
 
   return isNotNilOrEmpty(scoreRecords) ? (
     <div className="taxa-challenge-scoreboard">
-      <div className="taxa-challenge-scoreboard__title mt-10 border-bottom pb-10">
+      <div className="taxa-challenge-scoreboard__title pt-10 border-bottom pb-10">
         ScoreBoard
       </div>
       <div className="taxa-challenge-scoreboard__records">
@@ -91,7 +97,7 @@ const TaxaChallengeScoreboard: React.SFC<PropTypes> = props => {
           height={300}
           itemCount={scoreRecords.length}
           itemSize={75}
-          width={500}
+          width={Math.min(window.innerWidth, 500)}
         >
           {Row}
         </List>

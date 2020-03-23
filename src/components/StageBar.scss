@@ -50,6 +50,10 @@
       &--current {
         background: $medium-color;
         color: gold;
+        .icon {
+          height: 75%;
+          width: 75%;
+        }
       }
 
       &--next {
@@ -62,6 +66,11 @@
 
       &--final {
         color: black;
+
+        .icon {
+          height: 75%;
+          width: 75%;
+        }
       }
     }
   }

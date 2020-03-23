@@ -38,6 +38,7 @@ interface State {
   correctAnswerCount: number;
   maxCorrectAnswers: number;
   score: number;
+  usedRedemption: boolean;
 }
 
 type Location = {
@@ -63,7 +64,8 @@ const FinishScreen: React.SFC = () => {
     modSelections: initialModSelections,
     correctAnswerCount,
     score,
-    maxCorrectAnswers
+    maxCorrectAnswers,
+    usedRedemption
   } = location?.state || {};
 
   const [inputValue, setInputValue] = useState<string>('');
@@ -107,7 +109,8 @@ const FinishScreen: React.SFC = () => {
       questionCount: maxCorrectAnswers,
       name: inputValue,
       quizName: quiz.name,
-      score
+      score,
+      usedRedemption
     };
 
     if (isNotNilOrEmpty(inputValue.trim())) {

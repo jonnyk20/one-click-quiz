@@ -27,6 +27,8 @@ type PropTypes = {
   choicesWithPhotos: ChoiceWithPhotos[];
   correctAnswerIndex: number;
   areAdditionalImagesFetched: boolean;
+  addCurrentQuestionToRedemption: () => void;
+  isRedemptionRun: boolean;
 };
 
 const MULTIPLIER_START = 50;
@@ -51,7 +53,9 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
   incrementScore,
   modSelections,
   areAdditionalImagesFetched,
-  correctAnswerIndex
+  correctAnswerIndex,
+  addCurrentQuestionToRedemption,
+  isRedemptionRun
 }) => {
   const [state, setState] = useState<states>(states.UNANSWERED);
   const [multiplier, setMultiplier] = useState<number>(MULTIPLIER_START);
@@ -86,11 +90,14 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
     if (i === correctAnswerIndex) {
       setState(states.CORRECT);
       incrementCorrectAnswers();
-      const addedScore = Math.trunc(MIN_ADDED_SCORE * multiplier);
+      let addedScore = Math.trunc(MIN_ADDED_SCORE * multiplier);
+      if (isRedemptionRun) addedScore = Math.floor(addedScore / 2);
+
       setAddedScore(addedScore);
       incrementScore(addedScore);
     } else {
       setState(states.INCORRECT);
+      addCurrentQuestionToRedemption();
     }
 
     setMultiplier(MULTIPLIER_START);
@@ -120,6 +127,7 @@ const TaxaQuestion: React.SFC<PropTypes> = ({
           maxCorrectAnswers={maxCorrectAnswers}
           modSelections={modSelections}
           isAnswered={isAnswered}
+          isRedemptionRun={isRedemptionRun}
         />
 
         <div className={`${BASE_CLASS}__hud__scores`}>

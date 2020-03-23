@@ -3,11 +3,7 @@ import { useParams, useLocation, Link, useHistory } from 'react-router-dom';
 import { isEmpty } from 'ramda';
 import Question from '../components/Question';
 import formatQuiz, { FormattedQuiz } from '../utils/formatQuiz';
-import {
-  isNilOrEmpty,
-  encodeQueryString,
-  isNotNilOrEmpty
-} from '../utils/utils';
+import { isNilOrEmpty, isNotNilOrEmpty } from '../utils/utils';
 import testQuiz from '../utils/testQuiz';
 import { QUIZ_TYPES, QUIZ_TAGS } from '../constants/quizProperties';
 import initializeModSelections from '../utils/initializeModSelections';
@@ -47,7 +43,6 @@ const Quiz = () => {
     initializeModSelections()
   );
   const location: Location = useLocation();
-  const user = location?.state?.user || '';
   const history = useHistory();
 
   const isTesting = slug === 'testing';
@@ -86,7 +81,13 @@ const Quiz = () => {
     if (isFinished) {
       history.push({
         pathname: '/finish',
-        state: { quiz, modSelections, score, correctAnswerCount, maxCorrectAnswers }
+        state: {
+          quiz,
+          modSelections,
+          score,
+          correctAnswerCount,
+          maxCorrectAnswers
+        }
       });
     }
   }, [

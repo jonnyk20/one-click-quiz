@@ -50,10 +50,17 @@ export const formatScore = (score: number) =>
   String(score).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 export const shuffle = (a: Array<any>): Array<any> => {
-  for (let i = a.length - 1; i > 0; i--) {
+  const shuffled = [...a];
+  for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
 
-  return a;
+  return shuffled;
 };
+
+export const pluralize = (
+  count: number,
+  singular: string,
+  plural: string
+): string => (count === 1 ? singular : plural);

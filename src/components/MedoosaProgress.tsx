@@ -11,6 +11,7 @@ type PropTypes = {
   maxCorrectAnswers: number;
   modSelections: any;
   isAnswered: boolean;
+  isRedemptionRun?: boolean;
 };
 
 const MedoosaProgress: React.SFC<PropTypes> = props => {
@@ -18,7 +19,8 @@ const MedoosaProgress: React.SFC<PropTypes> = props => {
     correctAnswerCount,
     maxCorrectAnswers,
     modSelections,
-    isAnswered
+    isAnswered,
+    isRedemptionRun = false
   } = props;
   const hasScored = correctAnswerCount > 0;
 
@@ -61,6 +63,7 @@ const MedoosaProgress: React.SFC<PropTypes> = props => {
           onStartLevelUp={() => {}}
           isLevelingUp={false}
           levelUpPending={false}
+          isRedemptionRun={isRedemptionRun}
         />
       </div>
     </div>

@@ -23,7 +23,7 @@ const initializeModSelections = () => {
     },
     {
       name: 'head',
-      value: 0
+      value: 5
     }
   ];
 };

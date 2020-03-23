@@ -1,9 +1,10 @@
 .aura {
   z-index: -1;
-  background-image:
-    radial-gradient(circle closest-side,
-      rgba(82, 223, 255, 0.5),
-      transparent);
+  background-image: radial-gradient(
+    circle closest-side,
+    rgba(82, 223, 255, 0.5),
+    transparent
+  );
   position: absolute;
   border-radius: 50%;
   top: 0;
@@ -23,10 +24,8 @@
     margin: auto;
     top: 0;
     bottom: 0;
-
   }
 }
-
 
 @keyframes aura-pulse {
   0% {
@@ -34,6 +33,6 @@
   }
 
   100% {
-    box-shadow: 0 0 0 100px rgba(82, 223, 255, 0);
+    box-shadow: 0 0 0 75px rgba(82, 223, 255, 0);
   }
 }
