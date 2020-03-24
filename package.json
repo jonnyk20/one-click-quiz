@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
     "@fortawesome/react-fontawesome": "^0.1.9",
-    "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/bluebird": "^3.5.29",
@@ -24,6 +25,8 @@
     "@types/socket.io": "^2.1.4",
     "@types/socket.io-client": "^1.4.32",
     "@types/validator": "^12.0.1",
+    "add": "^2.0.6",
+    "babel-jest": "^25.1.0",
     "body-parser": "^1.19.0",
     "classnames": "^2.2.6",
     "dotenv": "^8.2.0",
@@ -53,7 +56,7 @@
     "hello": "node app/server.js",
     "build": "npx tsc -p app/tsconfig.json && react-scripts build",
     "build-prod": "NODE_ENV=production npx tsc -p app/tsconfig.json && react-scripts build",
-    "test": "react-scripts test",
+    "test-front": "cd src && jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -72,8 +75,12 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.9.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "jest": "^25.1.0",
     "nodemon": "^2.0.2",
     "sequelize-cli": "^5.5.1",
+    "ts-jest": "^25.2.1",
     "tslint": "^6.0.0",
     "typescript": "^3.8.3"
   },
