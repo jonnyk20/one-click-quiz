@@ -22,11 +22,26 @@ export type SuggestedPlace = {
   display_name: string;
 };
 
+export type INaturalistProjectType = {
+  id: number;
+  slug: string;
+  icon: string;
+  description: string;
+  title: string;
+};
+
 export type SuggestedPlacesResponse = {
   total_results: number;
   page: number;
   per_page: number;
   results: SuggestedPlace[];
+};
+
+export type SuggestedProjectResponse = {
+  total_results: number;
+  page: number;
+  per_page: number;
+  results: INaturalistProjectType[];
 };
 
 type NearestPlacesResults = {
@@ -136,6 +151,20 @@ export const getSuggestedPlaces = async (
   );
 
   const results: SuggestedPlacesResponse = await res.json();
+
+  return results.results;
+};
+
+export const getSuggestedProjects = async (
+  query: string
+): Promise<INaturalistProjectType[]> => {
+  const querystring = encodeQueryString({ q: query });
+
+  const res: Response = await fetch(
+    `${baseUrl}/projects/autocomplete/${querystring}`
+  );
+
+  const results: SuggestedProjectResponse = await res.json();
 
   return results.results;
 };

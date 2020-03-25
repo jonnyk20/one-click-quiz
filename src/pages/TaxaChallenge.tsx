@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, Redirect } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import { filter, Dictionary } from 'ramda';
+import { useLocation, Redirect } from 'react-router-dom';
 
 import {
   getSuggestedPlaces,
@@ -28,9 +27,10 @@ import {
   TaxaOptionsType
 } from '../constants/taxaOptions/taxaOptions';
 
-import './TaxaChallenge.scss';
-import { filter, Dictionary } from 'ramda';
 import TAXA from '../constants/taxaOptions/taxa';
+import TaxaQuizInstructions from '../components/TaxaQuizInstructions/TaxaQuizInstructions';
+
+import './TaxaChallenge.scss';
 
 enum LocationState {
   INITIAL,
@@ -43,6 +43,8 @@ enum QuizBuildingState {
   BUILDING,
   COMPLETE
 }
+
+const BASE_CLASS = `taxa-challenge`;
 
 const TaxaChallenge = () => {
   const [inputValue, setInputValue] = useState<string>('');
@@ -167,32 +169,32 @@ const TaxaChallenge = () => {
   };
 
   return (
-    <div className="taxa-challange container">
+    <div className={`${BASE_CLASS} container`}>
       <div>
         <h3>Taxa Challenge</h3>
         <div>Test how well you know the plants and animals around you</div>
       </div>
       {!isPlaceReady && (
-        <div className="taxa-challange__search mv-20">
+        <div className={`${BASE_CLASS}__search mv-20`}>
           <form
             onSubmit={onSearch}
-            className="taxa-challange__search__form mt-10"
+            className={`${BASE_CLASS}__search__form mt-10`}
           >
             <input
               value={inputValue}
               onChange={handleChange}
               placeholder="Find a place"
-              className="taxa-challange__search__form__input"
+              className={`${BASE_CLASS}__search__form__input`}
             />
             <Button onClick={onSearch}>Search</Button>
           </form>
           {isNotNilOrEmpty(suggestedPlaces) && (
-            <div className="taxa-challange__search__suggestions padding-10">
+            <div className={`${BASE_CLASS}__search__suggestions padding-10`}>
               {suggestedPlaces.map(place => (
                 <div
                   key={place.id}
                   onClick={() => onSelectPlace(place)}
-                  className="taxa-challange__search__suggestions__suggestion"
+                  className={`${BASE_CLASS}__search__suggestions__suggestion`}
                 >
                   {place.display_name}
                 </div>
@@ -203,7 +205,7 @@ const TaxaChallenge = () => {
             </div>
           )}
           {showLocationPrompt && (
-            <div className="taxa-challange__search__location-prompt">
+            <div className={`${BASE_CLASS}__search__location-prompt`}>
               <div className="mv-20 text-large">
                 <b>- OR -</b>
               </div>
@@ -213,7 +215,7 @@ const TaxaChallenge = () => {
         </div>
       )}
       {showLocationProgress && (
-        <div className="taxa-challange__progress mv-10">
+        <div className={`${BASE_CLASS}__progress mv-10`}>
           <div className="mv-10">Getting Location...</div>
           <ProgressBar progress={0} />
         </div>
@@ -227,18 +229,18 @@ const TaxaChallenge = () => {
             </span>
             ?
           </div>
-          <div className="taxa-challange__quiz-choices mv-10">
-            <div className="taxa-challange__build__quiz-choice padding-5">
+          <div className={`${BASE_CLASS}__quiz-choices mv-10`}>
+            <div className={`${BASE_CLASS}__build__quiz-choice padding-5`}>
               <Button onClick={() => setTaxaOption(taxaOptions.animals)}>
                 {taxaOptions.animals.label}
               </Button>
             </div>
-            <div className="taxa-challange__build__quiz-choice padding-5">
+            <div className={`${BASE_CLASS}__build__quiz-choice padding-5`}>
               <Button onClick={() => setTaxaOption(taxaOptions.plants)}>
                 {taxaOptions.plants.label}
               </Button>
             </div>
-            <div className="taxa-challange__build__quiz-choice padding-5">
+            <div className={`${BASE_CLASS}__build__quiz-choice padding-5`}>
               <Button onClick={() => setTaxaOption(taxaOptions.fungi)}>
                 {taxaOptions.fungi.label}
               </Button>
@@ -257,39 +259,12 @@ const TaxaChallenge = () => {
         </>
       )}
       {showQuizBuildingProgress && (
-        <div className="taxa-challange__progress mv-10">
+        <div className={`${BASE_CLASS}__progress mv-10`}>
           <div className="mv-10">Building Quiz...</div>
           <ProgressBar progress={0} />
         </div>
       )}
-      {isNotNilOrEmpty(quiz) && (
-        <>
-          <h3 className="text-medium text-light-color">Your Quiz is Ready</h3>
-
-          <div className="mv-20 text-medium">
-            <b>Tips</b>
-          </div>
-
-          <ul className="marine-life-quiz__tips mv-20">
-            <li className="marine-life-quiz__tips__tip">
-              Answering faster gets you a higher score
-            </li>
-            <li className="marine-life-quiz__tips__tip">
-              You can click&nbsp;
-              <span className="text-light-color">
-                <FontAwesomeIcon icon={faSyncAlt} size="sm" />
-              </span>
-              &nbsp;to see different photos
-            </li>
-          </ul>
-          <Link
-            to={{ pathname: '/taxa-quiz', state: { quiz } }}
-            className="text-link"
-          >
-            <Button onClick={() => {}}> Start</Button>
-          </Link>
-        </>
-      )}
+      {isNotNilOrEmpty(quiz) && <TaxaQuizInstructions quiz={quiz!} />}
       {!isPlaceReady && (
         <>
           <MoreFeaturesCTA />

@@ -14,18 +14,7 @@ const NatrueQuizHome = () => (
       >
         <Button onClick={() => {}}>Taxa Challenge</Button>
       </Link>
-      <div className="mv-20 text-medium">
-        <div className="mb-20">
-          There's also a quiz available for Marine Life in B.C.
-        </div>
-        <Link
-          to="/marine-life"
-          className="text-medium text-link text-light-color mv-20 flex"
-        >
-          <Button onClick={() => {}}>B.C. Marine Life</Button>
-        </Link>
-      </div>
-      <div className="mv-20 text-medium">
+      <div className="mb-20 mt-50 text-medium text-large">
         <div>
           Are you an{' '}
           <a href="https://www.inaturalist.org/" className="text-white">
@@ -34,9 +23,24 @@ const NatrueQuizHome = () => (
           &nbsp;user?
         </div>
       </div>
-      <Link to="/my-observations" className="text-medium text-light-color flex">
-        Quiz yourself on the animals you've found!
-      </Link>
+      Quiz yourself on
+      <div className="mv-20">
+        <Link
+          to="/my-observation"
+          className="text-medium text-light-color flex"
+        >
+          taxa you've observed
+        </Link>
+      </div>
+      &nbsp;or&nbsp;
+      <div className="mv-20">
+        <Link
+          to="/inat-projects"
+          className="text-medium text-light-color flex mt-20"
+        >
+          taxa from a specific project
+        </Link>
+      </div>
     </div>
   </div>
 );

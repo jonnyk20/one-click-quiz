@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { parseQueryString, isNilOrEmpty } from '../utils/utils';
+import { useLocation } from 'react-router-dom';
+import { parseQueryString, isNotNilOrEmpty } from '../utils/utils';
 import { FormattedQuiz } from '../utils/formatQuiz';
 import { fetchTaxaAndBuildQuiz } from '../services/InaturalistService';
 import Button from '../components/Button';
 
-import './MyObservations.scss';
 import ProgressBar from '../components/ProgressBar';
 import { QUIZ_TAGS } from '../constants/quizProperties';
 import ProjectInfo from '../components/ProjectInfo';
 import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
+import TaxaQuizInstructions from '../components/TaxaQuizInstructions/TaxaQuizInstructions';
+
+import './MyObservations.scss';
 
 enum QuizBuildingState {
   INITIAL,
@@ -102,33 +102,7 @@ const MyObservations = () => {
           Also, please makse sure you have observations under this account.
         </div>
       )}
-      {!isNilOrEmpty(quiz) && (
-        <>
-          <h3 className="text-medium text-light-color">Your Quiz is Ready</h3>
-          <div className="mv-20 text-medium">
-            <b>Tips</b>
-          </div>
-
-          <ul className="marine-life-quiz__tips mv-20">
-            <li className="marine-life-quiz__tips__tip">
-              Answering faster gets you a higher score
-            </li>
-            <li className="marine-life-quiz__tips__tip">
-              You can click&nbsp;
-              <span className="text-light-color">
-                <FontAwesomeIcon icon={faSyncAlt} size="sm" />
-              </span>
-              &nbsp;to see different photos
-            </li>
-          </ul>
-          <Link
-            to={{ pathname: '/taxa-quiz', state: { quiz } }}
-            className="text-link"
-          >
-            <Button onClick={() => {}}> Start</Button>
-          </Link>
-        </>
-      )}
+      {isNotNilOrEmpty(quiz) && <TaxaQuizInstructions quiz={quiz!} />}
       <MoreFeaturesCTA />
       <ProjectInfo />
     </div>

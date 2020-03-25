@@ -5,5 +5,6 @@ export enum QUIZ_TYPES {
 export enum QUIZ_TAGS {
   TAXA_CHALLENGE,
   MY_OBSERVATIONS,
-  MARINE_LIFE
+  MARINE_LIFE,
+  PROJECT
 }

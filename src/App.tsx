@@ -4,6 +4,7 @@ import ReactGA from 'react-ga';
 import Builder from './pages/MainQuizBuilder';
 import Quiz from './pages/Quiz';
 import TaxaChallenge from './pages/TaxaChallenge';
+import INatProjects from './pages/INatProjects';
 import MyObservations from './pages/MyObservations';
 import ThankYou from './pages/ThankYou';
 import UpcomingFeatures from './pages/UpcomingFeatures';
@@ -38,6 +39,9 @@ const App = () => (
           </Route>
           <Route path="/nature-quiz">
             <NatureQuizHome />
+          </Route>
+          <Route path="/inat-projects">
+            <INatProjects />
           </Route>
           <Route path="/taxa-quiz">
             <TaxaQuiz />
