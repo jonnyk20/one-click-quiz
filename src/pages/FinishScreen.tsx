@@ -80,8 +80,12 @@ const FinishScreen: React.SFC = () => {
   const isTaxaChallengeQuiz = quiz.tags.includes(QUIZ_TAGS.TAXA_CHALLENGE);
   const isMyObservationQuiz = quiz.tags.includes(QUIZ_TAGS.MY_OBSERVATIONS);
   const isMarineLifeQuiz = quiz.tags.includes(QUIZ_TAGS.MARINE_LIFE);
+  const isProjectQuiz = quiz.tags.includes(QUIZ_TAGS.PROJECT);
   const isINaturalistQuiz =
-    isTaxaChallengeQuiz || isMyObservationQuiz || isMarineLifeQuiz;
+    isTaxaChallengeQuiz ||
+    isMyObservationQuiz ||
+    isMarineLifeQuiz ||
+    isProjectQuiz;
 
   const iNaturalizeQuizPath = isMarineLifeQuiz
     ? '/marine-life'

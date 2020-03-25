@@ -44,7 +44,7 @@ const INatProjects = () => {
       setQuizBuildingState(QuizBuildingState.BUILDING);
       const options: TaxaQuizOptions = {
         projectId: project!.slug,
-        name: project!.title,
+        name: `(Project) ${project!.title}`,
         tags: [QUIZ_TAGS.PROJECT]
       };
 

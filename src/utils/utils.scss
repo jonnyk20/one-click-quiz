@@ -229,3 +229,9 @@
 .text-bold {
   font-weight: bold;
 }
+
+.text-one-line {
+  width: 200px;
+  overflow: scroll;
+  white-space: nowrap;
+}
