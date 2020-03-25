@@ -223,11 +223,11 @@ const TaxaQuiz = () => {
       {isEmptyQuiz && (
         <div>
           <div className="mb-20">
-            There might not be any wildlife registered to this location
+            We couldn't find any taxa to build this quiz with
           </div>
           <div className="mv-20">
-            <Link to="/taxa-challenge" className="text-light-color">
-              Try a different one!
+            <Link to="/nature-quiz" className="text-light-color">
+              Try a different location or project!
             </Link>
           </div>
         </div>
