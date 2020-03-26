@@ -53,7 +53,7 @@ const MedoosaProgress: React.SFC<PropTypes> = props => {
           'medoosa-progress__avatar--show-color'}`}
       >
         <div className="medoosa-progress__avatar__medoosa">
-          <Body stage={medoosaStage} modSelections={modSelections} />
+          <Body stage={medoosaStage || 0} modSelections={modSelections} />
         </div>
         {isGlowVisible && <EvolutionGlow />}
       </div>
