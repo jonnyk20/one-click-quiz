@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, Link, useHistory } from 'react-router-dom';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { isEmpty } from 'ramda';
-import Question from '../components/Question';
+import ImageQuestion from '../components/ImageQuestion/ImageQuestion';
+import SentenceQuestion from '../components/SentenceQuestion/SentenceQuestion';
 import formatQuiz, { FormattedQuiz } from '../utils/formatQuiz';
 import { isNilOrEmpty, isNotNilOrEmpty } from '../utils/utils';
 import testQuiz from '../utils/testQuiz';
-import { QUIZ_TYPES, QUIZ_TAGS } from '../constants/quizProperties';
+import { QUIZ_TYPES } from '../constants/quizProperties';
 import initializeModSelections from '../utils/initializeModSelections';
 
 import './Quiz.scss';
@@ -131,30 +132,18 @@ const Quiz = () => {
   const isEmptyQuiz = isNotNilOrEmpty(quiz) && isNilOrEmpty(quiz.questions);
 
   const currentQuestion = quiz?.questions[currentQuestionIndex];
-  const isMyObservationQuiz = quiz.tags.includes(QUIZ_TAGS.MY_OBSERVATIONS);
-  const isTaxaChallengeQuiz = quiz.tags.includes(QUIZ_TAGS.TAXA_CHALLENGE);
-  const isINaturalistQuiz = isMyObservationQuiz || isTaxaChallengeQuiz;
-  const isEmptyINaturalistQuiz = isINaturalistQuiz && isEmptyQuiz;
+
+  const QuestionComponent =
+    quiz?.quizType === QUIZ_TYPES.IMAGE_QUIZ ? ImageQuestion : SentenceQuestion;
 
   return (
     <div className="quiz container">
       {isEmptyQuiz && (
         <h4 className="text-large">Looks like there are no questions</h4>
       )}
-      {isEmptyINaturalistQuiz && (
-        <div>
-          <div className="mb-20">
-            There might not be wildlife observed in this location
-          </div>
-          <div className="mv-20">
-            <Link to="/taxa-challenge" className="text-light-color">
-              Try a different one!
-            </Link>
-          </div>
-        </div>
-      )}
+
       {!isNilOrEmpty(quiz.questions) && !isFinished && (
-        <Question
+        <QuestionComponent
           correctAnswerCount={correctAnswerCount}
           maxCorrectAnswers={maxCorrectAnswers}
           score={score}

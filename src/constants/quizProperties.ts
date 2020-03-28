@@ -1,5 +1,6 @@
 export enum QUIZ_TYPES {
-  IMAGE_QUIZ
+  IMAGE_QUIZ = 'image-quiz',
+  SENTENCE_QUIZ = 'sentence-quiz'
 }
 
 export enum QUIZ_TAGS {

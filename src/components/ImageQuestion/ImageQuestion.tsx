@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Image from './Image';
-import { FormattedQuestion } from '../utils/formatQuiz';
 
-import './Question.scss';
-import Button from './Button';
-import MedoosaProgress from './MedoosaProgress';
-import { isNotNilOrEmpty } from '../utils/utils';
+import { FormattedQuestion } from '../../utils/formatQuiz';
+import { isNotNilOrEmpty } from '../../utils/utils';
+import Image from '../Image';
+import Button from '../Button';
+import MedoosaProgress from '../MedoosaProgress';
+
+import './ImageQuestion.scss';
 
 const states = {
   UNANSWERED: 'UNANSWERED',
@@ -29,6 +30,8 @@ const MULTIPLIER_END = 1;
 const MIN_ADDED_SCORE = 10;
 const totalTime = 5000;
 const intervalTime = 100;
+
+const BASE_CLASS = 'image-question';
 
 const Question: React.SFC<PropTypes> = ({
   question,
@@ -89,15 +92,15 @@ const Question: React.SFC<PropTypes> = ({
   const answerFeedback = isAnsweredCorrectly ? 'Correct!' : 'So Close!';
 
   return (
-    <div className="question">
-      <div className="question__scoreboard mb-20">
+    <div className={BASE_CLASS}>
+      <div className={`${BASE_CLASS}__scoreboard mb-20`}>
         <MedoosaProgress
           correctAnswerCount={correctAnswerCount}
           maxCorrectAnswers={maxCorrectAnswers}
           modSelections={modSelections}
           isAnswered={isAnswered}
         />
-        <div className="question__scoreboard__scores">
+        <div className={`${BASE_CLASS}__scoreboard__scores`}>
           <div>
             questions:&nbsp;
             <span className="text-light-color">{maxCorrectAnswers}</span>
@@ -110,16 +113,12 @@ const Question: React.SFC<PropTypes> = ({
             score:&nbsp;<span className="text-light-color">{score}</span>
           </div>
         </div>
-        {/* <div className="question__scoreboard__indicator">
-          <div className="border padding-5">Multiplier</div>
-          <ProgressBar progress={multiplier / MULTIPLIER_START} transparent />
-        </div> */}
       </div>
-      <div className="question__prompt mb-20">
+      <div className={`${BASE_CLASS}__prompt mb-20`}>
         {!isAnswered ? (
-          <div className="question__instructions mb-10">
+          <div className={`${BASE_CLASS}__instructions mb-10`}>
             <div className="mb-10">Find the...&nbsp;</div>
-            <div className="question__prompt__correct-choice-info">
+            <div className={`${BASE_CLASS}__prompt__correct-choice-info`}>
               <span>
                 <b className="text-light-color">
                   {choices[correctAnswerIndex].name}
@@ -136,10 +135,10 @@ const Question: React.SFC<PropTypes> = ({
           </div>
         ) : (
           <>
-            <div className="question__prompt__feedback">
+            <div className={`${BASE_CLASS}__prompt__feedback`}>
               <div className="mr-10">{answerFeedback}</div>
               {isAnsweredCorrectly && (
-                <div className="question__scoreboard__added-score mr-10">
+                <div className={`${BASE_CLASS}__scoreboard__added-score mr-10`}>
                   <b>&nbsp;+{addedScore}</b>
                 </div>
               )}
@@ -150,7 +149,7 @@ const Question: React.SFC<PropTypes> = ({
           </>
         )}
       </div>
-      <div className="question__image-container">
+      <div className={`${BASE_CLASS}__image-container`}>
         {choices.map(({ image_url, name }, i) => (
           <Image
             key={name}

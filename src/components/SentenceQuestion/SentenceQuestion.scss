@@ -1,0 +1,50 @@
+@import '../../utils/variables.scss';
+
+.sentence-question {
+  color: dark-green;
+
+  &__scoreboard {
+    display: flex;
+    padding-bottom: 10px;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 0 20px;
+    flex-direction: column;
+
+    &__added-score {
+      color: $medium-color;
+    }
+
+    &__scores {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    &__indicator {
+      border: solid 1px;
+      display: flex;
+      margin: 10px;
+    }
+  }
+
+  &__prompt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+
+    &__correct-choice-info {
+      display: inline;
+    }
+
+    &__feedback {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      font-size: 24px;
+    }
+  }
+}

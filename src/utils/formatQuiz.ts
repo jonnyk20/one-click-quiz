@@ -1,10 +1,16 @@
 import { QUIZ_TAGS, QUIZ_TYPES } from '../constants/quizProperties';
 
+export type SnippetType = {
+  snippet?: string;
+  displayUrl?: string;
+};
+
 export type FormattedChoice = {
   name: string;
   image_url: string;
   details?: string;
   id?: number;
+  snippets?: SnippetType[];
 };
 
 export type FormattedQuestion = {

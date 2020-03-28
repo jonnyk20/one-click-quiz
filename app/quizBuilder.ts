@@ -1,4 +1,9 @@
-import { getBingImages } from './services/Azureservice';
+import {
+  getBingImages,
+  getWebSnippets,
+  ItemWithImage,
+  ItemWithSnippetsType
+} from './services/Azureservice';
 import Quiz from './db/models/Quiz';
 import QuizType from './db/models/QuizType';
 import Question from './db/models/Question';
@@ -27,7 +32,7 @@ const generateSlug = async (): Promise<string> => {
     const existingRecord = await Quiz.findOne({
       where: { url: generatedSlug }
     });
-    if (!existingRecord) {
+    if (isNilOrEmpty(existingRecord)) {
       slug = generatedSlug;
     }
   }
@@ -35,16 +40,17 @@ const generateSlug = async (): Promise<string> => {
   return slug;
 };
 
-type ItemWithImage = {
-  data?: {
-    image_url: string;
-    name: string;
-  };
-};
+enum QuizFormatType {
+  IMAGE = 'image',
+  SENTENCE = 'sentence'
+}
 
-const buildTestQuiz = async (
-  rawItemData: ItemWithImage[],
-  socket: SocketIO.Socket
+type QuizItemType = ItemWithImage | ItemWithSnippetsType;
+
+const buildQuiz = async (
+  rawItemData: QuizItemType[],
+  socket: SocketIO.Socket,
+  type: QuizFormatType
 ): Promise<Quiz | null> => {
   try {
     if (isNilOrEmpty(rawItemData)) {
@@ -52,9 +58,13 @@ const buildTestQuiz = async (
       return null;
     }
     // make quiz
-    const quizType = await QuizType.findOne({ where: { name: 'image-quiz' } });
+    const quizType = await QuizType.findOne({
+      where: { name: `${type}-quiz` }
+    });
     const quizTypeId = quizType?.id;
-    const itemType = await ItemType.findOne({ where: { name: 'image-item' } });
+    const itemType = await ItemType.findOne({
+      where: { name: `${type}-item` }
+    });
     const itemTypeId = itemType?.id;
     const numChoices = 4;
     const numQuestions = Math.ceil(rawItemData.length / numChoices);
@@ -104,14 +114,39 @@ type CompletedQuizPayload = {
   url?: string;
 };
 
-const buildQuiz = async (data: string[], socket: SocketIO.Socket) => {
+export const getImageQuiz = async (data: string[], socket: SocketIO.Socket) => {
   const items = data;
   const formattedItems: ItemWithImage[] = await getBingImages(items, socket);
-  const quiz: Quiz | null = await buildTestQuiz(formattedItems, socket);
+  const quiz: Quiz | null = await buildQuiz(
+    formattedItems,
+    socket,
+    QuizFormatType.IMAGE
+  );
   if (isNotNilOrEmpty(quiz)) {
     const payload: CompletedQuizPayload = { url: quiz?.url };
     socket.emit('completed', payload);
   }
 };
 
-export default buildQuiz;
+export const getSentenceQuiz = async (
+  data: string[],
+  socket: SocketIO.Socket
+) => {
+  const items = data;
+  const formattedItems: ItemWithSnippetsType[] = await getWebSnippets(
+    items,
+    socket
+  );
+  const quiz: Quiz | null = await buildQuiz(
+    formattedItems,
+    socket,
+    QuizFormatType.SENTENCE
+  );
+
+  if (isNotNilOrEmpty(quiz)) {
+    const payload: CompletedQuizPayload = { url: quiz?.url };
+    socket.emit('completed', payload);
+  }
+};
+
+export default getImageQuiz;

@@ -10,6 +10,7 @@ import { BuilderState } from '../constants/states';
 
 import './MainQuizBuilder.scss';
 import { Link } from 'react-router-dom';
+import { QUIZ_TYPES } from '../constants/quizProperties';
 
 const convertItemsToInput = (arr: string[]): string => arr.join('\n');
 const convertInputToItems = (input: string): string[] =>
@@ -41,16 +42,25 @@ const Builder = () => {
   const [builderState, setBuilderState] = useState<BuilderState>(
     BuilderState.INPUTTING
   );
+  const [quizType, setQuizType] = useState<QUIZ_TYPES>(QUIZ_TYPES.IMAGE_QUIZ);
 
   const validItems = items.filter(isNotNilOrEmpty);
 
-  const handleChange = (event: any) => {
-    setItems(convertInputToItems(event.target.value));
+  const handleTypeChange = (event: React.FormEvent<HTMLInputElement>): void => {
+    const element = event.currentTarget as HTMLInputElement;
+
+    setQuizType(element.value as QUIZ_TYPES);
+  };
+
+  const handleChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
+    const element = event.currentTarget as HTMLTextAreaElement;
+
+    setItems(convertInputToItems(element.value));
   };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    socket?.emit('submit-quiz', uniq(validItems));
+    socket?.emit(`submit-${quizType}`, uniq(validItems));
     setBuilderState(BuilderState.PREPARING);
   };
 
@@ -118,6 +128,37 @@ const Builder = () => {
       </div>
       {isInputting && (
         <div className="main-quiz-builder__form">
+          <div className="main-quiz-builder__form__type-selection">
+            <div className="main-quiz-builder__form__type-selection__option">
+              <input
+                type="radio"
+                name="quiz-type"
+                value={QUIZ_TYPES.IMAGE_QUIZ}
+                className="form-check-input"
+                onChange={handleTypeChange}
+                checked={quizType === QUIZ_TYPES.IMAGE_QUIZ}
+                id={`quiz-buiild-${QUIZ_TYPES.IMAGE_QUIZ}`}
+              />
+              <label htmlFor={`quiz-buiild-${QUIZ_TYPES.IMAGE_QUIZ}`}>
+                &nbsp;Image Quiz
+              </label>
+            </div>
+
+            <div className="main-quiz-builder__form__type-selection__option">
+              <input
+                type="radio"
+                name="quiz-type"
+                value={QUIZ_TYPES.SENTENCE_QUIZ}
+                className="form-check-input"
+                onChange={handleTypeChange}
+                checked={quizType === QUIZ_TYPES.SENTENCE_QUIZ}
+                id={`quiz-buiild-${QUIZ_TYPES.SENTENCE_QUIZ}`}
+              />
+              <label htmlFor={`quiz-buiild-${QUIZ_TYPES.SENTENCE_QUIZ}`}>
+                &nbsp;Sentence Quiz
+              </label>
+            </div>
+          </div>
           <div className="main-quiz-builder__form__submit-button mb-20">
             <Button onClick={handleSubmit}>Create Quiz</Button>
           </div>

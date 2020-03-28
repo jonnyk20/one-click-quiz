@@ -1,5 +1,5 @@
 import socketIO from 'socket.io';
-import buildQuiz from './buildQuiz';
+import { getImageQuiz, getSentenceQuiz } from './quizBuilder';
 import { Server } from 'http';
 
 const socket = (server: Server) => {
@@ -11,8 +11,12 @@ const socket = (server: Server) => {
       console.log('msg from client', msg);
     });
 
-    socket.on('submit-quiz', data => {
-      buildQuiz(data, socket);
+    socket.on('submit-image-quiz', data => {
+      getImageQuiz(data, socket);
+    });
+
+    socket.on('submit-sentence-quiz', data => {
+      getSentenceQuiz(data, socket);
     });
   });
 };

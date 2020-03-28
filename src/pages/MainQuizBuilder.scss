@@ -38,6 +38,17 @@
       }
     }
 
+    &__type-selection {
+      grid-column: 1 / -1;
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+
+      &__option {
+        margin: 0 10px;
+      }
+    }
+
     &__submit-button {
       grid-column: 1 / -1;
       padding: 10px;

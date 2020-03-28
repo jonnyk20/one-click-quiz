@@ -1,0 +1,35 @@
+.sentence {
+  &__cycle-button {
+    margin: auto;
+    margin-bottom: 20px;
+    border: solid 1px;
+    width: max-content;
+    padding: 7px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+  &__text {
+    color: black;
+    background: white;
+    padding: 10px;
+    margin: 10px;
+  }
+
+  &__link {
+    width: 400px;
+    overflow: scroll;
+    white-space: nowrap;
+    margin: auto;
+    border: solid 1px;
+    padding: 5px;
+    margin-bottom: 20px;
+
+    @media screen and (max-width: 500px) {
+      width: calc(100vw - 100px);
+    }
+
+    .text-link {
+      justify-content: initial;
+    }
+  }
+}
