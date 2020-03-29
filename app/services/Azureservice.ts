@@ -3,7 +3,7 @@ import { isNotNilOrEmpty, isNilOrEmpty } from '../utils/utils';
 
 const BASE_URL = 'https://api.cognitive.microsoft.com/bing/v7.0';
 const MAX_IMAGE_RESULTS = 1;
-const MAX_SNIPPET_RESULTS = 10;
+const MAX_SNIPPET_RESULTS = 25;
 
 const options: RequestPromiseOptions = {
   headers: {
@@ -123,7 +123,7 @@ const getSnippetsFromResponse = (
 ): WebSearchResultType[] =>
   response.webPages?.value?.slice(0, MAX_SNIPPET_RESULTS) || [];
 
-const BLOG_QUERY = `site:blogspot.com `;
+const BLOG_QUERY = `site:medium.com `;
 
 const fetchAndFormatSnippets = async (
   searchQuery: string

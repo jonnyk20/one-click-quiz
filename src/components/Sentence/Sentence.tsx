@@ -37,10 +37,6 @@ const Sentence: React.SFC<PropsType> = ({
 
   return (
     <div className={BASE_CLASS}>
-      <div className={`${BASE_CLASS}__cycle-button`} onClick={cycleSnippet}>
-        Chance Sentence&nbsp;
-        <FontAwesomeIcon icon={faSyncAlt} size="1x" />
-      </div>
       <div className={`${BASE_CLASS}__text`}>{text}</div>
       {isAnswered}
       {isAnswered && (
@@ -55,6 +51,10 @@ const Sentence: React.SFC<PropsType> = ({
           </a>
         </div>
       )}
+      <div className={`${BASE_CLASS}__cycle-button`} onClick={cycleSnippet}>
+        Change Sentence&nbsp;
+        <FontAwesomeIcon icon={faSyncAlt} size="1x" />
+      </div>
     </div>
   );
 };
