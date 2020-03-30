@@ -31,7 +31,7 @@ const Sentence: React.SFC<PropsType> = ({
   };
 
   const rawSnippet = snippets[snippetIndex]?.snippet || '';
-  const regex = new RegExp(word, 'gmi');
+  const regex = new RegExp(`${word}([a-zA-Z]*)`, 'gmi');
   const formattedSnippet = rawSnippet.replace(regex, '____');
   const text = isAnswered ? rawSnippet : formattedSnippet;
 

@@ -123,7 +123,7 @@ const getSnippetsFromResponse = (
 ): WebSearchResultType[] =>
   response.webPages?.value?.slice(0, MAX_SNIPPET_RESULTS) || [];
 
-const BLOG_QUERY = `site:medium.com `;
+const BLOG_QUERY = `site:wordpress.com `;
 
 const fetchAndFormatSnippets = async (
   searchQuery: string
