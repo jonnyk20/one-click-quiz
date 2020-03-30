@@ -55,7 +55,10 @@
     "hello": "node app/server.js",
     "build": "npx tsc -p app/tsconfig.json && react-scripts build",
     "build-prod": "NODE_ENV=production npx tsc -p app/tsconfig.json && react-scripts build",
+    "test-front:cov": "react-scripts test --coverage --watchAll=false",
     "test-front": "react-scripts test",
+    "test-back": "cd app && jest",
+    "test-back:cov": "cd app && jest --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

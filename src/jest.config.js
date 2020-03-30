@@ -2,7 +2,7 @@ module.exports = {
   browser: true,
   testMatch: [
     // https://github.com/isaacs/node-glob
-    '<rootDir>**/*.test.(js|jsx)'
+    '<rootDir>**/*.test.(js|jsx|ts|tsx)'
   ],
   moduleFileExtensions: ['jsx', 'js', 'ts', 'tsx'],
   transform: {
@@ -11,5 +11,7 @@ module.exports = {
   moduleNameMapper: {
     '^.+\\.(css|less|scss)$': 'babel-jest'
   },
-  verbose: true
+  verbose: true,
+  collectCoverageFrom: ['**/*.(js|ts|jsx|tsx)'],
+  coverageReporters: ['text']
 };
