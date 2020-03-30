@@ -299,7 +299,6 @@ export const fetchTaxaAndBuildQuiz = async ({
 
     if (projectId) {
       params.project_id = projectId;
-      params.without_taxon_id = '40151,3,47158';
     }
 
     const taxa = await fetchPaginatedTaxa(params);
