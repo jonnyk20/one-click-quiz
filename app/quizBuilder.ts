@@ -130,12 +130,14 @@ export const getImageQuiz = async (data: string[], socket: SocketIO.Socket) => {
 
 export const getSentenceQuiz = async (
   data: string[],
-  socket: SocketIO.Socket
+  socket: SocketIO.Socket,
+  language: string
 ) => {
   const items = data;
   const formattedItems: ItemWithSnippetsType[] = await getWebSnippets(
     items,
-    socket
+    socket,
+    language
   );
   const quiz: Quiz | null = await buildQuiz(
     formattedItems,

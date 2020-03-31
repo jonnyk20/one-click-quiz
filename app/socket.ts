@@ -1,6 +1,7 @@
 import socketIO from 'socket.io';
 import { getImageQuiz, getSentenceQuiz } from './quizBuilder';
 import { Server } from 'http';
+import { detectLanguage } from './services/DetectLanguageService';
 
 const socket = (server: Server) => {
   const io = socketIO.listen(server);
@@ -15,8 +16,10 @@ const socket = (server: Server) => {
       getImageQuiz(data, socket);
     });
 
-    socket.on('submit-sentence-quiz', data => {
-      getSentenceQuiz(data, socket);
+    socket.on('submit-sentence-quiz', async data => {
+      const language = await detectLanguage(data);
+
+      getSentenceQuiz(data, socket, language);
     });
   });
 };

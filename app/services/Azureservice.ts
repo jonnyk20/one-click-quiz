@@ -1,5 +1,5 @@
 import request, { RequestPromiseOptions } from 'request-promise';
-import { isNotNilOrEmpty, isNilOrEmpty } from '../utils/utils';
+import { isNotNilOrEmpty } from '../utils/utils';
 
 const BASE_URL = 'https://api.cognitive.microsoft.com/bing/v7.0';
 const MAX_IMAGE_RESULTS = 1;
@@ -123,12 +123,16 @@ const getSnippetsFromResponse = (
 ): WebSearchResultType[] =>
   response.webPages?.value?.slice(0, MAX_SNIPPET_RESULTS) || [];
 
-const BLOG_QUERY = `site:wordpress.com `;
+const BLOG_PARAMETER = `site:wordpress.com `;
 
 const fetchAndFormatSnippets = async (
-  searchQuery: string
+  searchQuery: string,
+  language: string
 ): Promise<WebSearchResultType[]> => {
-  const encodedQuery = encodeURI(BLOG_QUERY + searchQuery);
+  const languagePameter = `language:${language} `;
+  const encodedQuery = encodeURI(
+    `${BLOG_PARAMETER} ${languagePameter} ${searchQuery}`
+  );
   const url = `${BASE_URL}/search?q=${encodedQuery}&safeSearch=Strict&count=${MAX_SNIPPET_RESULTS}`;
 
   const res = await request(url, options);
@@ -139,12 +143,13 @@ const fetchAndFormatSnippets = async (
 };
 
 const addSnippetsToItem = async (
-  item: string
+  item: string,
+  language: string
 ): Promise<ItemWithSnippetsType> => {
   let itemWithImage = {};
 
   try {
-    const snippets = await fetchAndFormatSnippets(item);
+    const snippets = await fetchAndFormatSnippets(item, language);
 
     const filteredSnippets = snippets.filter(s =>
       s.snippet.toLowerCase().includes(item.toLowerCase())
@@ -167,7 +172,8 @@ const addSnippetsToItem = async (
 
 export const getWebSnippets = async (
   items: string[],
-  socket: SocketIO.Socket
+  socket: SocketIO.Socket,
+  language: string
 ) => {
   const itemCount = items.length;
   let completed = 0;
@@ -175,7 +181,7 @@ export const getWebSnippets = async (
   const getSnippetsAndUpdateCount = async (
     item: string
   ): Promise<ItemWithSnippetsType> => {
-    const itemWithImage: any = await addSnippetsToItem(item);
+    const itemWithImage: any = await addSnippetsToItem(item, language);
 
     // TODO: Sent update for failed images
     completed += 1;
