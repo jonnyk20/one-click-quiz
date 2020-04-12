@@ -154,12 +154,21 @@ const rankAndFilterTaxaGroups = (
   return outputGroup.map(group => group.taxa);
 };
 
-const buildTaxaQuiz = (
-  taxa: Taxon[],
-  quizName: string,
-  tags: QUIZ_TAGS[] = [],
-  uniqueTaxonomyRank: number = UNIQUE_TAXONOMY_RANK
-): FormattedQuiz => {
+type TaxaQuizOptionsType = {
+  taxa: Taxon[];
+  name: string;
+  tags?: QUIZ_TAGS[];
+  uniqueTaxonomyRank?: number;
+}
+
+const buildTaxaQuiz = (options: TaxaQuizOptionsType): FormattedQuiz => {
+  const {
+  taxa,
+  name,
+  tags = [],
+  uniqueTaxonomyRank = UNIQUE_TAXONOMY_RANK
+  } = options;
+
   const sortedTaxa = filterOutEmptyNames(sortByAncestry(taxa));
   const groupedChoices = splitEvery(MAX_CHOICE_COUNT, sortedTaxa);
   const filteredGroupChoices = rankAndFilterTaxaGroups(
@@ -190,7 +199,7 @@ const buildTaxaQuiz = (
   });
 
   const quiz = {
-    name: quizName,
+    name,
     quizType: QUIZ_TYPES.IMAGE_QUIZ,
     questions,
     tags

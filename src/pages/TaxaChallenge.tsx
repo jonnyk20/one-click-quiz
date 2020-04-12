@@ -7,13 +7,14 @@ import {
   SuggestedPlace,
   fetchTaxaAndBuildQuiz,
   getNearestPlace,
-  TaxaQuizOptions
+  TaxaQuizOptions,
+  DEFAULT_LOCATION_RADIUS,
 } from '../services/InaturalistService';
 import {
   isNilOrEmpty,
   parseQueryString,
   encodeQueryString,
-  isNotNilOrEmpty
+  isNotNilOrEmpty,
 } from '../utils/utils';
 import { FormattedQuiz } from '../utils/formatQuiz';
 import Button from '../components/Button';
@@ -24,7 +25,7 @@ import { QUIZ_TAGS } from '../constants/quizProperties';
 import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
 import {
   taxaOptions,
-  TaxaOptionsType
+  TaxaOptionsType,
 } from '../constants/taxaOptions/taxaOptions';
 
 import TAXA from '../constants/taxaOptions/taxa';
@@ -35,13 +36,13 @@ import './TaxaChallenge.scss';
 enum LocationState {
   INITIAL,
   LOADING,
-  LOADED
+  LOADED,
 }
 
 enum QuizBuildingState {
   INITIAL,
   BUILDING,
-  COMPLETE
+  COMPLETE,
 }
 
 const BASE_CLASS = `taxa-challenge`;
@@ -72,7 +73,7 @@ const TaxaChallenge = () => {
         place,
         taxonIds: taxaOption?.include,
         name: `${taxaOption?.label} of ${place?.display_name}`,
-        tags: [QUIZ_TAGS.TAXA_CHALLENGE]
+        tags: [QUIZ_TAGS.TAXA_CHALLENGE],
       };
 
       if (isNilOrEmpty(taxaOption?.exclude)) {
@@ -97,7 +98,7 @@ const TaxaChallenge = () => {
       <Redirect
         to={{
           pathname: '/my-observations',
-          search: encodeQueryString({ user })
+          search: encodeQueryString({ user }),
         }}
       />
     );
@@ -172,7 +173,9 @@ const TaxaChallenge = () => {
     <div className={`${BASE_CLASS} container`}>
       <div>
         <h3>Taxa Challenge</h3>
-        <div>Test how well you know the plants and animals around you</div>
+        {!isPlaceReady && (
+          <div>Test how well you know the plants and animals around you</div>
+        )}
       </div>
       {!isPlaceReady && (
         <div className={`${BASE_CLASS}__search mv-20`}>
@@ -190,7 +193,7 @@ const TaxaChallenge = () => {
           </form>
           {isNotNilOrEmpty(suggestedPlaces) && (
             <div className={`${BASE_CLASS}__search__suggestions padding-10`}>
-              {suggestedPlaces.map(place => (
+              {suggestedPlaces.map((place) => (
                 <div
                   key={place.id}
                   onClick={() => onSelectPlace(place)}
@@ -222,12 +225,16 @@ const TaxaChallenge = () => {
       )}
       {showQuizChoices && (
         <>
-          <div className="mv-20">
-            What do you know best around{' '}
+          <div className="mv-20 text-medium">
+            What do you know best around&nbsp;
             <span>
               <b>{place?.display_name}</b>
             </span>
             ?
+          </div>
+          <div className="mv-20 text-small">
+            Note: if too few taxa are found, the search will be expanded to
+            {` ${DEFAULT_LOCATION_RADIUS}km from the selected location`}
           </div>
           <div className={`${BASE_CLASS}__quiz-choices mv-10`}>
             <div className={`${BASE_CLASS}__build__quiz-choice padding-5`}>

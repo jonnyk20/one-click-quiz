@@ -7,7 +7,8 @@ import { range } from 'ramda';
 const baseUrl = 'https://api.inaturalist.org/v1';
 const TAXON_FETCH_LIMIT = 2500;
 const TAXA_PER_REQUEST = 500;
-const DEFAULT_LOCATION_RADIUS = 100;
+const MINIMUM_TAXA_COUNT = 40;
+export const DEFAULT_LOCATION_RADIUS = 50;
 const DEFAULT_LOCATION_DIAMETER = 2 * DEFAULT_LOCATION_RADIUS;
 const DEFAULT_LOCATION_SQUARE_AREA = Math.pow(DEFAULT_LOCATION_DIAMETER, 2);
 const KM_TO_DEGREE_LENGTH_RATIO = 110;
@@ -58,7 +59,7 @@ export const getNearestPlace = async (
     nelat: lat.toFixed(3),
     nelng: lng.toFixed(3),
     swlat: lat.toFixed(3),
-    swlng: lng.toFixed(3)
+    swlng: lng.toFixed(3),
   };
 
   const querystring = encodeQueryString(params);
@@ -101,7 +102,7 @@ export const getObservationPhotosForTaxon = async (
     per_page: 200,
     order_by: 'votes',
     quality_grade: 'research',
-    taxon_id: taxonId
+    taxon_id: taxonId,
   };
 
   const querystring = encodeQueryString(params);
@@ -116,12 +117,12 @@ const combineObservationPhotosForTaxon = (
 ): FormattedObservationPhoto[] => {
   return shuffle(
     response.results
-      .map(o =>
+      .map((o) =>
         o.photos
-          .filter(p => isNotNilOrEmpty(p.url))
-          .map(p => ({
+          .filter((p) => isNotNilOrEmpty(p.url))
+          .map((p) => ({
             url: p.url.replace('square.', 'medium.'),
-            user: o.user.login
+            user: o.user.login,
           }))
       )
       .flat()
@@ -216,16 +217,17 @@ const fetchPaginatedTaxa = async (
   const remainingRequests = Math.ceil(remainingTaxaToFetch / TAXA_PER_REQUEST);
 
   const remainingResults = await Promise.all(
-    range(2, remainingRequests + 2).map(page => fetchTaxa({ ...params, page }))
+    range(2, remainingRequests + 2).map((page) =>
+      fetchTaxa({ ...params, page })
+    )
   );
 
-  const remainingTaxa = remainingResults.map(r => r.results).flat();
+  const remainingTaxa = remainingResults.map((r) => r.results).flat();
 
   return [...taxa, ...remainingTaxa];
 };
 
 type Coordinates = {
-  radius: number;
   lat: number;
   lng: number;
 };
@@ -233,18 +235,41 @@ type Coordinates = {
 const formatCoordinates = (place: SuggestedPlace): Coordinates => {
   const [lat, lng] = place.location.split(',').map(Number);
   return {
-    radius: 100,
     lat,
-    lng
+    lng,
   };
 };
 
-const getShouldUseCoordinates = (place: SuggestedPlace): Boolean => {
+export const getShouldUseCoordinates = (place: SuggestedPlace): Boolean => {
   const { bbox_area: degreeArea } = place;
   const shouldUseCoordinates =
     DEFAULT_LOCATION_SQUARE_AREA >=
     degreeArea * KM_SQUARED_TO_DEGREE_AREA_RATIO;
   return shouldUseCoordinates;
+};
+
+const fetchTaxaByPlace = async (
+  name: string,
+  tags: QUIZ_TAGS[] = [],
+  params: SpeciesCountParams,
+  place: SuggestedPlace,
+  radius: number
+): Promise<FormattedQuiz> => {
+  const paramsWithPlaceId = { ...params, place_id: place.id };
+  let taxa = await fetchPaginatedTaxa(paramsWithPlaceId);
+
+  if (taxa.length < MINIMUM_TAXA_COUNT) {
+    const coords = formatCoordinates(place);
+    const paramsWithCoordinates = {
+      ...params,
+      ...coords,
+      radius,
+    };
+
+    taxa = await fetchPaginatedTaxa(paramsWithCoordinates);
+  }
+
+  return buildTaxaQuiz({ taxa, name, tags });
 };
 
 export type TaxaQuizOptions = {
@@ -256,6 +281,7 @@ export type TaxaQuizOptions = {
   tags?: QUIZ_TAGS[];
   projectId?: string;
   uniqueTaxonomyRank?: number;
+  radius?: number;
 };
 
 export const fetchTaxaAndBuildQuiz = async ({
@@ -266,23 +292,16 @@ export const fetchTaxaAndBuildQuiz = async ({
   tags,
   projectId,
   uniqueTaxonomyRank,
-  taxonIdsToExclude
+  taxonIdsToExclude,
+  radius = DEFAULT_LOCATION_RADIUS,
 }: TaxaQuizOptions): Promise<FormattedQuiz | null> => {
   try {
     const params: SpeciesCountParams = {
-      quality_grade: 'research'
+      quality_grade: 'research',
     };
 
     if (isNotNilOrEmpty(place)) {
-      const shouldUseCoordinates = getShouldUseCoordinates(place!);
-      if (shouldUseCoordinates) {
-        const coords = formatCoordinates(place!);
-        params.lat = coords.lat;
-        params.lng = coords.lng;
-        params.radius = coords.radius;
-      } else {
-        params.place_id = place?.id;
-      }
+      return fetchTaxaByPlace(name, tags, params, place!, radius);
     }
 
     if (isNotNilOrEmpty(taxonIds)) {
@@ -303,7 +322,7 @@ export const fetchTaxaAndBuildQuiz = async ({
 
     const taxa = await fetchPaginatedTaxa(params);
 
-    const quiz = buildTaxaQuiz(taxa, name, tags, uniqueTaxonomyRank);
+    const quiz = buildTaxaQuiz({ taxa, name, tags, uniqueTaxonomyRank });
 
     return quiz;
   } catch (err) {
