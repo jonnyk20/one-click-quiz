@@ -7,7 +7,7 @@ export type SnippetType = {
 
 export type FormattedChoice = {
   name: string;
-  image_url: string;
+  image_url?: string;
   details?: string;
   id?: number;
   snippets?: SnippetType[];

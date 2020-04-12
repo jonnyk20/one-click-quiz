@@ -3,7 +3,7 @@ import { useParams, useLocation, Link, useHistory } from 'react-router-dom';
 import TaxaQuestion from '../components/TaxaQuestion/TaxaQuestion';
 import { FormattedQuiz, FormattedQuestion } from '../utils/formatQuiz';
 import { isNilOrEmpty, isNotNilOrEmpty, pluralize } from '../utils/utils';
-import testQuiz from '../utils/testQuiz';
+import { sampleImageQuiz } from '../utils/sampleQuiz';
 import { QUIZ_TYPES } from '../constants/quizProperties';
 import initializeModSelections from '../utils/initializeModSelections';
 import { getObservationPhotosForTaxa } from '../services/InaturalistService';
@@ -124,8 +124,8 @@ const TaxaQuiz = () => {
     }
 
     if (isTesting) {
-      setQuiz(testQuiz);
-      setmaxCorrectAnswers(testQuiz.questions.length);
+      setQuiz(sampleImageQuiz);
+      setmaxCorrectAnswers(sampleImageQuiz.questions.length);
       return;
     }
   }, [history, isTesting, location, slug]);

@@ -4,7 +4,7 @@ import MoreFeaturesCTA from '../components/MoreFeaturesCTA';
 import { FormattedQuiz } from '../utils/formatQuiz';
 import { useLocation, Link, Redirect } from 'react-router-dom';
 import { isNotNilOrEmpty } from '../utils/utils';
-import { QUIZ_TAGS } from '../constants/quizProperties';
+import { QUIZ_TAGS, QUIZ_TYPES } from '../constants/quizProperties';
 import Body from '../components/Medoosa/Body/Body';
 
 import './FinishScreen.scss';
@@ -14,6 +14,7 @@ import ColorSelector from '../components/ColorSelector';
 import ProgressBar from '../components/ProgressBar';
 import ProjectInfo from '../components/ProjectInfo';
 import SubmissionConfirmation from '../components/SubmissionConfirmation';
+import WordsExport from '../components/WordList/WordsExport';
 
 const submitScore = async (scoreRecord: any) => {
   const response = await fetch(
@@ -86,6 +87,7 @@ const FinishScreen: React.SFC = () => {
     isMyObservationQuiz ||
     isMarineLifeQuiz ||
     isProjectQuiz;
+  const isSentenceQuiz = quiz.quizType === QUIZ_TYPES.SENTENCE_QUIZ;
 
   const iNaturalizeQuizPath = isMarineLifeQuiz
     ? '/marine-life'
@@ -185,6 +187,8 @@ const FinishScreen: React.SFC = () => {
           </Link>
         </div>
       )}
+
+      {isSentenceQuiz && <WordsExport quiz={quiz} />}
 
       {!isMarineLifeQuiz && (
         <>

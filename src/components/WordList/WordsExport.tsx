@@ -1,13 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, ReactElement } from 'react';
 import Papa from 'papaparse';
 import { update } from 'ramda';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
-import { sampleSentenceQuiz } from '../utils/sampleQuiz';
-import { FormattedChoice, FormattedQuiz } from '../utils/formatQuiz';
-import { hideWordInSentence } from '../utils/utils';
+import { FormattedChoice, FormattedQuiz } from '../../utils/formatQuiz';
+import { hideWordInSentence } from '../../utils/utils';
+import Button, { ButtonSize } from '../../components/Button';
 
-import './Sandbox.scss';
-import Button from '../components/Button';
+import './WordsExport.scss';
 
 const getChoicesFromQuestion = (quiz: FormattedQuiz): FormattedChoice[] =>
   quiz.questions.reduce(
@@ -15,16 +16,16 @@ const getChoicesFromQuestion = (quiz: FormattedQuiz): FormattedChoice[] =>
     []
   );
 
-const choices = getChoicesFromQuestion(sampleSentenceQuiz);
+const BASE_CLASS = 'words-export';
 
-type ClozeType = {
-  word: string;
-  sentence: string;
+type WordExportPropsType = {
+  quiz: FormattedQuiz;
 };
 
-const BASE_CLASS = 'sandbox';
-
-const Sandbox = () => {
+const WordsExport: React.SFC<WordExportPropsType> = ({
+  quiz
+}): ReactElement => {
+  const choices = getChoicesFromQuestion(quiz);
   const [sentenceIndices, setSenctenceIndices] = useState<number[]>(
     choices.map(() => 0)
   );
@@ -62,24 +63,30 @@ const Sandbox = () => {
   };
 
   return (
-    <div className={`${BASE_CLASS} container`}>
+    <div className={`${BASE_CLASS}`}>
+      <div className={`${BASE_CLASS}__prompt`}>
+        <div>Review and save your words</div>
+        <Button onClick={saveCSV}>Save CSV</Button>
+      </div>
       <div className={`${BASE_CLASS}__vocab-items`}>
         {choices.map((c, i) => (
           <div key={i} className={`${BASE_CLASS}__vocab-items__item`}>
-            <div className="border-right padding-5">{c.name}</div>
-            <div className="border-right padding-5">
+            <div className="border-right padding-5 flex">{c.name}</div>
+            <div className="border-right padding-5 flex">
               {hideWordInSentence(
                 c.name,
                 c.snippets![sentenceIndices[i]].snippet || ''
               )}
             </div>
-            <div onClick={() => cycleSentence(i)} className="padding-5">
-              Change
+            <div className="padding-5 flex">
+              <Button onClick={() => cycleSentence(i)} size={ButtonSize.SMALL}>
+                Change&nbsp;
+                <FontAwesomeIcon icon={faSyncAlt} size="1x" />
+              </Button>
             </div>
           </div>
         ))}
       </div>
-      <Button onClick={saveCSV}>Build CSV</Button>
       <a href="null" download="vocab.csv" ref={ref} style={{ display: 'none' }}>
         Download
       </a>
@@ -87,4 +94,4 @@ const Sandbox = () => {
   );
 };
 
-export default Sandbox;
+export default WordsExport;

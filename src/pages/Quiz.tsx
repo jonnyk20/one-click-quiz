@@ -5,7 +5,7 @@ import ImageQuestion from '../components/ImageQuestion/ImageQuestion';
 import SentenceQuestion from '../components/SentenceQuestion/SentenceQuestion';
 import formatQuiz, { FormattedQuiz } from '../utils/formatQuiz';
 import { isNilOrEmpty, isNotNilOrEmpty } from '../utils/utils';
-import testQuiz from '../utils/testQuiz';
+import { sampleImageQuiz } from '../utils/sampleQuiz';
 import { QUIZ_TYPES } from '../constants/quizProperties';
 import initializeModSelections from '../utils/initializeModSelections';
 
@@ -68,8 +68,8 @@ const Quiz = () => {
     }
 
     if (isTesting) {
-      setQuiz(testQuiz);
-      setmaxCorrectAnswers(testQuiz.questions.length);
+      setQuiz(sampleImageQuiz);
+      setmaxCorrectAnswers(sampleImageQuiz.questions.length);
       return;
     }
 

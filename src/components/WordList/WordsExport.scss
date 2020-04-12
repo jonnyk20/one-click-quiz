@@ -1,0 +1,39 @@
+.words-export {
+  color: black;
+  background: white;
+  margin-top: 20px;
+  font-size: 12px;
+
+  &__prompt {
+    display: flex;
+    border: solid 1px;
+    align-items: center;
+    justify-content: space-around;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+
+    .button {
+      margin: 0;
+    }
+  }
+
+  &__vocab-items {
+    height: 400px;
+    overflow: scroll;
+    &__item {
+      display: grid;
+      grid-template-columns: 1fr 2fr 100px;
+      border: solid 1px;
+    }
+  }
+}
+
+.cell {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

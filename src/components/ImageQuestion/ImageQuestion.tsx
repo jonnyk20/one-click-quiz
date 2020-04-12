@@ -155,7 +155,7 @@ const Question: React.SFC<PropTypes> = ({
             key={name}
             answerQuestion={answerQuestion}
             i={i}
-            image_url={image_url}
+            image_url={image_url || ''}
             name={name}
             isCorrect={i === correctAnswerIndex}
             isAnswered={isAnswered}
