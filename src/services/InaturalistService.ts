@@ -300,10 +300,6 @@ export const fetchTaxaAndBuildQuiz = async ({
       quality_grade: 'research',
     };
 
-    if (isNotNilOrEmpty(place)) {
-      return fetchTaxaByPlace(name, tags, params, place!, radius);
-    }
-
     if (isNotNilOrEmpty(taxonIds)) {
       params.taxon_id = taxonIds!.join(',');
     }
@@ -318,6 +314,10 @@ export const fetchTaxaAndBuildQuiz = async ({
 
     if (projectId) {
       params.project_id = projectId;
+    }
+
+    if (isNotNilOrEmpty(place)) {
+      return fetchTaxaByPlace(name, tags, params, place!, radius);
     }
 
     const taxa = await fetchPaginatedTaxa(params);
