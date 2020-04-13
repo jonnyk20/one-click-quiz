@@ -23,9 +23,17 @@ app.use(express.static(path.join(__dirname, buildPath)));
 
 routes(app);
 
+app.get('/ping', (req, res) => {
+  console.log('IP', req.ip);
+
+  res.end('pong');
+})
+
+
 app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, "/../build/", "index.html"));
 });
+
 
 // test connection
 db.sequelize
