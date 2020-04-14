@@ -2,7 +2,7 @@
   color: black;
   background: white;
   margin-top: 20px;
-  font-size: 12px;
+  font-size: 10px;
 
   &__prompt {
     display: flex;
@@ -25,6 +25,7 @@
       display: grid;
       grid-template-columns: 1fr 2fr 100px;
       border: solid 1px;
+      word-break: break-word;
     }
   }
 }

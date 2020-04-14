@@ -37,7 +37,8 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
       sentence: hideWordInSentence(
         c.name,
         c.snippets![sentenceIndices[i]].snippet || ''
-      )
+      ),
+      source: c.snippets![sentenceIndices[i]].displayUrl
     }));
     var csv = Papa.unparse(data);
 
@@ -78,9 +79,9 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
                 c.snippets![sentenceIndices[i]].snippet || ''
               )}
             </div>
-            <div className="padding-5 flex">
+            <div className="padding-5 flex fd-column jc-around">
+              {c.snippets![sentenceIndices[i]].displayUrl}
               <Button onClick={() => cycleSentence(i)} size={ButtonSize.SMALL}>
-                Change&nbsp;
                 <FontAwesomeIcon icon={faSyncAlt} size="1x" />
               </Button>
             </div>

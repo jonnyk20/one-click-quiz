@@ -222,6 +222,14 @@
   align-items: center;
 }
 
+.fd-column {
+  flex-direction: column;
+}
+
+.jc-around {
+  justify-content: space-around;
+}
+
 .text-center {
   text-align: center;
 }
