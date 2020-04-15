@@ -79,24 +79,24 @@ const Builder = () => {
   };
 
   useEffect(() => {
-    // const socket = socketIOClient();
-    // socket.on('builder-progress-update', (progress: BuilderProgress) => {
-    //   console.log('progress update received', progress);
-    //   setProgress(progress);
-    // });
-    // socket.on('builder-fail', (error: string) => {
-    //   console.log('Quiz Building Failed', error);
-    //   handleFail();
-    // });
-    // socket.on('completed', (payload: CompletedQuizPayload) => {
-    //   console.log('Quiz comleted', payload);
-    //   handleComplete(payload);
-    // });
-    // socket.on('update', (update: any) => console.log('UPDATE', update));
-    // setSocket(socket);
-    // return () => {
-    //   socket.close();
-    // };
+    const socket = socketIOClient();
+    socket.on('builder-progress-update', (progress: BuilderProgress) => {
+      console.log('progress update received', progress);
+      setProgress(progress);
+    });
+    socket.on('builder-fail', (error: string) => {
+      console.log('Quiz Building Failed', error);
+      handleFail();
+    });
+    socket.on('completed', (payload: CompletedQuizPayload) => {
+      console.log('Quiz comleted', payload);
+      handleComplete(payload);
+    });
+    socket.on('update', (update: any) => console.log('UPDATE', update));
+    setSocket(socket);
+    return () => {
+      socket.close();
+    };
   }, []);
 
   const isInputting = builderState === BuilderState.INPUTTING;
