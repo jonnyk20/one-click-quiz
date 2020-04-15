@@ -1,4 +1,4 @@
-@import "../utils/variables.scss";
+@import '../utils/variables.scss';
 
 .button {
   color: white;
@@ -13,4 +13,11 @@
   margin-top: 0;
   margin-bottom: 0;
   border: solid 1px;
+
+  &--size-small {
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 5px;
+  }
 }

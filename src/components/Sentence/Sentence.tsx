@@ -1,10 +1,10 @@
 import React, { useState, ReactElement, MouseEvent } from 'react';
-import { getRandomIndex } from '../../utils/utils';
-
-import './Sentence.scss';
+import { getRandomIndex, hideWordInSentence } from '../../utils/utils';
 import { SnippetType } from '../../utils/formatQuiz';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import './Sentence.scss';
 
 type PropsType = {
   snippets: SnippetType[];
@@ -31,8 +31,9 @@ const Sentence: React.SFC<PropsType> = ({
   };
 
   const rawSnippet = snippets[snippetIndex]?.snippet || '';
-  const regex = new RegExp(`${word}([a-zA-Z]*)`, 'gmi');
-  const formattedSnippet = rawSnippet.replace(regex, '____');
+
+  const formattedSnippet = hideWordInSentence(word, rawSnippet);
+
   const text = isAnswered ? rawSnippet : formattedSnippet;
 
   return (

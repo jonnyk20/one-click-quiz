@@ -110,6 +110,7 @@ const Builder = () => {
     <div className="main-quiz-builder container">
       <div className="main-quiz-builder__examples">
         <Link to="/nature-quiz">Nature Quiz</Link>
+        <Link to="/sentence-finder">Sentence Finder</Link>
         <Link to="/upcoming-features">Project Info</Link>
       </div>
       <div className="padding-20">

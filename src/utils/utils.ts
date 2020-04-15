@@ -64,3 +64,8 @@ export const pluralize = (
   singular: string,
   plural: string
 ): string => (count === 1 ? singular : plural);
+
+export const hideWordInSentence = (word: string, text: string): string => {
+  const regex = new RegExp(`${word}([a-zA-Z]*)`, 'gmi');
+  return text.replace(regex, '____');
+};
