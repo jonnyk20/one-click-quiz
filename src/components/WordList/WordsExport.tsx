@@ -1,4 +1,4 @@
-import React, { useState, useRef, ReactElement } from 'react';
+import React, { useState, useRef, ReactElement, useEffect } from 'react';
 import Papa from 'papaparse';
 import { update } from 'ramda';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,11 +25,13 @@ type WordExportPropsType = {
 const WordsExport: React.SFC<WordExportPropsType> = ({
   quiz
 }): ReactElement => {
-  const choices = getChoicesFromQuestion(quiz);
-  const [sentenceIndices, setSenctenceIndices] = useState<number[]>(
-    choices.map(() => 0)
-  );
+  const [sentenceIndices, setSenctenceIndices] = useState<number[]>([]);
   const ref = useRef<HTMLAnchorElement>(null);
+  const choices = getChoicesFromQuestion(quiz);
+
+  useEffect(() => {
+    setSenctenceIndices(choices.map(() => 0))
+  }, [quiz])
 
   const saveCSV = () => {
     const data = choices.map((c, i) => ({
@@ -41,10 +43,8 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
       source: c.snippets![sentenceIndices[i]].displayUrl
     }));
     var csv = Papa.unparse(data);
-
     var csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     var url = window.URL.createObjectURL(csvData);
-
     const a = ref.current;
 
     if (a?.href) {
@@ -56,7 +56,6 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
   const cycleSentence = (i: number) => {
     const currentIndex = sentenceIndices[i];
     const maxIndex = (choices[i].snippets?.length || 1) - 1;
-
     const nextIndex = currentIndex === maxIndex ? 0 : currentIndex + 1;
     const updatedIndices = update(i, nextIndex, sentenceIndices);
 
@@ -66,7 +65,10 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
   return (
     <div className={`${BASE_CLASS}`}>
       <div className={`${BASE_CLASS}__prompt`}>
-        <div>Review and save your words</div>
+        <div>
+          <div className="text-bold">Pick sentences and save them</div>
+          <div>Click  <FontAwesomeIcon icon={faSyncAlt} size="1x" /> to change sentences</div>
+        </div>
         <Button onClick={saveCSV}>Save CSV</Button>
       </div>
       <div className={`${BASE_CLASS}__vocab-items`}>
@@ -76,11 +78,11 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
             <div className="border-right padding-5 flex">
               {hideWordInSentence(
                 c.name,
-                c.snippets![sentenceIndices[i]].snippet || ''
+                c.snippets![sentenceIndices[i]]?.snippet || ''
               )}
             </div>
             <div className="padding-5 flex fd-column jc-around">
-              {c.snippets![sentenceIndices[i]].displayUrl}
+              {c.snippets![sentenceIndices[i]]?.displayUrl}
               <Button onClick={() => cycleSentence(i)} size={ButtonSize.SMALL}>
                 <FontAwesomeIcon icon={faSyncAlt} size="1x" />
               </Button>

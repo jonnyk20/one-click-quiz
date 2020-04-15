@@ -36,6 +36,7 @@ code {
 .app {
   display: flex;
   justify-content: center;
+  max-width: 100%;
 
   &__bg-overlay {
     position: absolute;

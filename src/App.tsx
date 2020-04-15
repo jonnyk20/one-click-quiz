@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import ReactGA from 'react-ga';
 import Builder from './pages/MainQuizBuilder';
 import Quiz from './pages/Quiz';
+import Sentences from './pages/Sentences';
 import TaxaChallenge from './pages/TaxaChallenge';
 import INatProjects from './pages/INatProjects';
 import MyObservations from './pages/MyObservations';
@@ -14,6 +15,7 @@ import FinishScreen from './pages/FinishScreen';
 import TaxaQuiz from './pages/TaxaQuiz';
 import NatureQuizHome from './pages/NatureQuizHome';
 import Sandbox from './pages/Sandbox';
+import SentenceFinder from './pages/SentenceFinder';
 import ErrorBoundary from './components/ErrorBoundary';
 
 ReactGA.initialize('UA-33174971-5');
@@ -29,6 +31,9 @@ const App = () => (
         <Switch>
           <Route path="/quiz/:slug">
             <Quiz />
+          </Route>
+          <Route path="/sentences/:slug">
+            <Sentences />
           </Route>
           <Route path="/medoosa">
             <MedoosaTest />
@@ -62,6 +67,9 @@ const App = () => (
           </Route>
           <Route path="/thank-you">
             <ThankYou />
+          </Route>
+          <Route path="/sentence-finder">
+            <SentenceFinder />
           </Route>
           <Route path="/">
             <Builder />

@@ -10,13 +10,7 @@ import { QUIZ_TYPES } from '../constants/quizProperties';
 import initializeModSelections from '../utils/initializeModSelections';
 
 import './Quiz.scss';
-
-const fetchQuiz = async (slug: string) => {
-  const response = await fetch(`${window.location.origin}/api/quiz/${slug}`);
-  const json = await response.json();
-
-  return json;
-};
+import { fetchQuiz } from '../services/OneClickQuizService';
 
 interface State {
   quiz: FormattedQuiz;

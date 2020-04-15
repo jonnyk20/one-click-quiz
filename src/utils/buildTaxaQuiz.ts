@@ -190,6 +190,7 @@ const buildTaxaQuiz = (
   });
 
   const quiz = {
+    id: 1,
     name: quizName,
     quizType: QUIZ_TYPES.IMAGE_QUIZ,
     questions,
