@@ -23,15 +23,15 @@ type WordExportPropsType = {
 };
 
 const WordsExport: React.SFC<WordExportPropsType> = ({
-  quiz
+  quiz,
 }): ReactElement => {
   const [sentenceIndices, setSenctenceIndices] = useState<number[]>([]);
   const ref = useRef<HTMLAnchorElement>(null);
   const choices = getChoicesFromQuestion(quiz);
 
   useEffect(() => {
-    setSenctenceIndices(choices.map(() => 0))
-  }, [quiz])
+    setSenctenceIndices(choices.map(() => 0));
+  }, [quiz]);
 
   const saveCSV = () => {
     const data = choices.map((c, i) => ({
@@ -40,7 +40,7 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
         c.name,
         c.snippets![sentenceIndices[i]].snippet || ''
       ),
-      source: c.snippets![sentenceIndices[i]].displayUrl
+      source: c.snippets![sentenceIndices[i]].displayUrl,
     }));
     var csv = Papa.unparse(data);
     var csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -67,7 +67,10 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
       <div className={`${BASE_CLASS}__prompt`}>
         <div>
           <div className="text-bold">Pick sentences and save them</div>
-          <div>Click  <FontAwesomeIcon icon={faSyncAlt} size="1x" /> to change sentences</div>
+          <div>
+            Click <FontAwesomeIcon icon={faSyncAlt} size="1x" /> to change
+            sentences
+          </div>
         </div>
         <Button onClick={saveCSV}>Save CSV</Button>
       </div>
@@ -82,7 +85,16 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
               )}
             </div>
             <div className="padding-5 flex fd-column jc-around">
-              {c.snippets![sentenceIndices[i]]?.displayUrl}
+              <div className="mb-5">
+                <a
+                  href={c.snippets![sentenceIndices[i]]?.displayUrl}
+                  className="text-main-color"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {c.snippets![sentenceIndices[i]]?.displayUrl}
+                </a>
+              </div>
               <Button onClick={() => cycleSentence(i)} size={ButtonSize.SMALL}>
                 <FontAwesomeIcon icon={faSyncAlt} size="1x" />
               </Button>
