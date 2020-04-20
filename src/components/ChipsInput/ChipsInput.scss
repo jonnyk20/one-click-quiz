@@ -1,0 +1,15 @@
+.chips-input {
+  color: green;
+  padding: 10px;
+
+  &__chips {
+    display: grid;
+    justify-content: center;
+    grid-gap: 10px;
+    padding-top: 10px;
+
+    &__chip {
+      width: max-content;
+    }
+  }
+}
