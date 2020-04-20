@@ -70,6 +70,7 @@ const ChipsInput = () => {
       setChips(newChipsSet);
     }
 
+    setInputValue('');
     setIsDeleteMode(false);
   };
 

@@ -3,13 +3,12 @@
   padding: 10px;
 
   &__chips {
-    display: grid;
-    justify-content: center;
-    grid-gap: 10px;
-    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
 
-    &__chip {
+    &__chip.MuiButtonBase-root {
       width: max-content;
+      margin: 5px;
     }
   }
 }

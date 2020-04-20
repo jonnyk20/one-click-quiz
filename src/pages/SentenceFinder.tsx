@@ -3,12 +3,14 @@ import socketIOClient from 'socket.io-client';
 import { uniq } from 'ramda';
 import { isNotNilOrEmpty } from '../utils/utils';
 import ProgressIndicator, {
-  BuilderProgress
+  BuilderProgress,
 } from '../components/ProgressIndicator';
 import Button from '../components/Button';
 import { BuilderState } from '../constants/states';
 
 import './SentenceFinder.scss';
+import ChipsInput from '../components/ChipsInput/ChipsInput';
+import SelectionList from '../components/SelectionList/SelectionList';
 
 const convertItemsToInput = (arr: string[]): string => arr.join('\n');
 const convertInputToItems = (input: string): string[] =>
@@ -26,34 +28,50 @@ const defaultItems = [
   'lumière',
   'boisson',
   'robinet',
-  'peau'
+  'peau',
 ];
 
 type CompletedSentencesPayload = {
   url: string;
 };
 
+enum LanguageCodes {
+  fr = 'fr',
+  sp = 'sp',
+  ja = 'ja',
+  en = 'en',
+}
+
+const languageOtions: { [code in LanguageCodes]: string } = {
+  [LanguageCodes.fr]: 'French',
+  [LanguageCodes.sp]: 'Spanish',
+  [LanguageCodes.ja]: 'Japanese',
+  [LanguageCodes.en]: 'English',
+};
+
+const languageOptionsArray = Object.entries(
+  languageOtions
+).map(([key, label]) => ({ key, label }));
+
 const Builder = () => {
   const [items, setItems] = useState<string[]>(defaultItems);
   const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
   const [sentencesUrl, setSentencesUrl] = useState<string>('my-sentences');
+  const [nativeLanguage, setNativeLanguage] = useState<LanguageCodes>(
+    LanguageCodes.en
+  );
+  const [targetLanguage, setTargetLanguage] = useState<LanguageCodes>(
+    LanguageCodes.ja
+  );
   const [progress, setProgress] = useState<BuilderProgress>({
     completed: 0,
-    total: 0
+    total: 0,
   });
   const [builderState, setBuilderState] = useState<BuilderState>(
     BuilderState.INPUTTING
   );
 
   const validItems = items.filter(isNotNilOrEmpty);
-
-
-
-  const handleChange = (event: React.FormEvent<HTMLTextAreaElement>) => {
-    const element = event.currentTarget as HTMLTextAreaElement;
-
-    setItems(convertInputToItems(element.value));
-  };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -73,6 +91,16 @@ const Builder = () => {
   const reset = () => {
     setItems(defaultItems);
     setBuilderState(BuilderState.INPUTTING);
+  };
+
+  const onChangeNativeLanguage = (value: string) => {
+    const languageCode = value as LanguageCodes;
+    setNativeLanguage(languageCode);
+  };
+
+  const onChangeTargetLanguage = (value: string) => {
+    const languageCode = value as LanguageCodes;
+    setTargetLanguage(languageCode);
   };
 
   useEffect(() => {
@@ -102,42 +130,48 @@ const Builder = () => {
   const isComplete = builderState === BuilderState.READY;
   const isFailed = builderState === BuilderState.FAILED;
   const formattedSentencesUrl = `${window.location.origin}/sentences/${sentencesUrl}`;
-  const inputValue = convertItemsToInput(items);
 
   return (
-    <div className="sentence-miner container">
-      <div className="padding-20">
-        <h1>Sentences Finder</h1>
-        <p className="text-medium text-light-color">
-          Automatically finds sentences for the vocabulary words you enter
-        </p>
-        <p className="text-medium">
-          1. Add words to the box below (up to 12 for now)
-        </p>
-        <p className="text-medium">
-          2. Click&nbsp;<span className="text-light-color">'Find Sentences'</span>
-        </p>
-        <p className="text-medium">3. Pick from the the sentences and save them as a spreadsheet</p>
+    <div className="sentence-finder container">
+      <div className="padding-10">
+        <h2>Sentences Finder</h2>
+      </div>
+      <div className="mb-10 text-light-color text-medium">
+        Automatic sentence cards for language learners
+      </div>
+      <div className="mv-5 text-small">1. Choose your language</div>
+      <div className="mv-5 text-small">1. Choose your words</div>
+      <div className="mt-5 mb-20 text-small">
+        3. Click 'Find Sentences' and we'll find translations and sentences for
+        you
       </div>
       {isInputting && (
-        <div className="sentence-miner__form">
-          <div className="sentence-miner__form__submit-button mb-20">
+        <div className="sentence-finder__form">
+          <div className="sentence-finder__form__language-selection">
+            <div>Native Language</div>
+            <SelectionList
+              options={languageOptionsArray}
+              onChange={onChangeNativeLanguage}
+              initialValue={nativeLanguage}
+            />
+          </div>
+          <div className="sentence-finder__form__language-selection">
+            <div>Target Language</div>
+            <SelectionList
+              options={languageOptionsArray}
+              defaultText="e.g. Reptiles"
+              onChange={onChangeTargetLanguage}
+              initialValue={targetLanguage}
+            />
+          </div>
+          <div className="sentence-finder__form__submission mv-20">
+            <div className="mr-10">
+              {`Enter ${languageOtions[targetLanguage]} words below and then click 'Find Sentences'`}
+            </div>
             <Button onClick={handleSubmit}>Find Sentences</Button>
           </div>
-          <textarea
-            className="sentence-miner__form__input"
-            value={inputValue}
-            onChange={handleChange}
-          />
-          <div className="sentence-miner__form__preview">
-            {validItems.map((item, i) => (
-              <div
-                key={item}
-                className="sentence-miner__form__preview__item"
-              >
-                {`${i + 1}. ${item}`}
-              </div>
-            ))}
+          <div className="sentence-finder__form__input">
+            <ChipsInput />
           </div>
         </div>
       )}
@@ -146,7 +180,7 @@ const Builder = () => {
         <div>
           Your sentences are ready at
           <br />
-          <div className="sentence-miner__sentences-link">
+          <div className="sentence-finder__sentences-link">
             <a
               href={formattedSentencesUrl}
               target="_blank"

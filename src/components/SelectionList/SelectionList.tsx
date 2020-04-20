@@ -1,12 +1,13 @@
 import React, { useState, ReactElement } from 'react';
 
 import './SelectionList.scss';
+import { isNilOrEmpty } from '../../utils/utils';
 
 export type SelectionOptionValueType = string | number;
 
 const SelectionListItem: React.SFC<SelecitonlistOptionType> = ({
   key,
-  label
+  label,
 }): ReactElement => (
   <option value={key} className="seleciton-list__item" key={key}>
     {label}
@@ -20,16 +21,18 @@ export type SelecitonlistOptionType = {
 
 type SelectionListPropsType = {
   options: SelecitonlistOptionType[];
-  defaultText: string;
+  defaultText?: string;
   onChange: (option: string) => void;
+  initialValue?: string;
 };
 
 const SelectionList: React.SFC<SelectionListPropsType> = ({
   options,
   defaultText,
-  onChange
+  onChange,
+  initialValue,
 }): ReactElement => {
-  const [value, setValue] = useState<string>('');
+  const [value, setValue] = useState<string>(initialValue || '');
 
   const handleChange = (e: React.FormEvent) => {
     const target = e.target as HTMLSelectElement;
@@ -40,9 +43,11 @@ const SelectionList: React.SFC<SelectionListPropsType> = ({
 
   return (
     <select className="selection-list" value={value} onChange={handleChange}>
-      <option value="" disabled>
-        {defaultText}
-      </option>
+      {isNilOrEmpty(defaultText) && (
+        <option value="" disabled>
+          {defaultText}
+        </option>
+      )}
       {options.map(SelectionListItem)}
     </select>
   );
