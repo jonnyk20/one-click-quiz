@@ -1,6 +1,8 @@
+import { Express, Response, Request } from 'express';
+
 import Quiz from './db/models/Quiz';
 import TaxaChallengeScore from './db/models/TaxaChallengeScore';
-import { Express, Response, Request } from 'express';
+import * as TranslationService from './services/TranslationService';
 
 const routes = (app: Express) => {
   app.get('/api/quiz/:slug', async (req: Request, res: Response) => {
@@ -16,6 +18,12 @@ const routes = (app: Express) => {
     return res.json(scores);
   });
 
+  // app.get('/translate', async (req: Request, res: Response) => {
+  //   const translation = await TranslationService.translate({});
+
+  //   return res.json({ translation });
+  // });
+
   app.post(
     '/api/taxa-challenge-scores',
     async (req: Request, res: Response) => {
@@ -27,7 +35,7 @@ const routes = (app: Express) => {
       } catch (error) {
         return res.json({
           record: null,
-          error
+          error,
         });
       }
     }

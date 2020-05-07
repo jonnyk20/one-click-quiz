@@ -19,5 +19,5 @@
     "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
     "downlevelIteration": true
   },
-  "include": ["src"]
+  "include": ["src", "typings"]
 }

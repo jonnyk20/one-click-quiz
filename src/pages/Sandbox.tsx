@@ -1,27 +1,13 @@
-import React, { useState, useRef } from 'react';
-import Papa from 'papaparse';
-import { update } from 'ramda';
-import ChipInput from 'material-ui-chip-input';
-
-import { sampleSentenceQuiz } from '../utils/sampleQuiz';
-import { FormattedChoice, FormattedQuiz } from '../utils/formatQuiz';
-import { hideWordInSentence } from '../utils/utils';
-import Button from '../components/Button';
-import TextAreaWithChips from '../components/ChipsInput/ChipsInput';
+import React, { useEffect } from 'react';
 
 import './Sandbox.scss';
+import Button from '../components/Button';
 
-const getChoicesFromQuestion = (quiz: FormattedQuiz): FormattedChoice[] =>
-  quiz.questions.reduce(
-    (acc: FormattedChoice[], q) => [...acc, ...q.choices],
-    []
-  );
+const getTranslations = async () => {
+  const res = await fetch('/translate');
+  const json = await res.json();
 
-const choices = getChoicesFromQuestion(sampleSentenceQuiz);
-
-type ClozeType = {
-  word: string;
-  sentence: string;
+  console.log('JSON', json);
 };
 
 const BASE_CLASS = 'sandbox';
@@ -30,7 +16,7 @@ const Sandbox = () => {
   return (
     <div className={`${BASE_CLASS} container`}>
       <div style={{ background: 'white' }}>
-        <TextAreaWithChips />
+        <Button onClick={getTranslations}>Translate</Button>
       </div>
     </div>
   );

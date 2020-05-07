@@ -64,5 +64,6 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
     "resolveJsonModule": true
   },
-  "ignore": ["src"]
+  "ignore": ["src"],
+  "typeRoots": ["./typings", "./node_modules/@types"]
 }

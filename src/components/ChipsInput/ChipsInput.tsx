@@ -42,9 +42,7 @@ const chipRenderer = (
 );
 
 const ChipsInput = () => {
-  const [chips, setChips] = useState<Set<string>>(
-    new Set(['one', 'two', 'three'])
-  );
+  const [chips, setChips] = useState<Set<string>>(new Set(['友達']));
   const [focusedChip, setFocusedChip] = useState<number>(3);
   const [inputValue, setInputValue] = useState<string>('');
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);

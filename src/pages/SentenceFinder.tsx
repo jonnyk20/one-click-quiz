@@ -16,20 +16,22 @@ const convertItemsToInput = (arr: string[]): string => arr.join('\n');
 const convertInputToItems = (input: string): string[] =>
   input.split('\n').slice(0, 12);
 
-const defaultItems = [
-  'divant',
-  'coeur',
-  'sourcil',
-  'briser',
-  'livre',
-  'thé',
-  'poursuivre',
-  'chauve',
-  'lumière',
-  'boisson',
-  'robinet',
-  'peau',
-];
+// const defaultItems = [
+//   'divant',
+//   'coeur',
+//   'sourcil',
+//   'briser',
+//   'livre',
+//   'thé',
+//   'poursuivre',
+//   'chauve',
+//   'lumière',
+//   'boisson',
+//   'robinet',
+//   'peau',
+// ];
+
+const defaultItems = ['友達'];
 
 type CompletedSentencesPayload = {
   url: string;
@@ -75,7 +77,12 @@ const Builder = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    socket?.emit(`submit-sentence-quiz`, uniq(validItems));
+    socket?.emit(`translate-words`, {
+      words: uniq(validItems),
+      targetLang: targetLanguage,
+      translationLang: nativeLanguage,
+    });
+
     setBuilderState(BuilderState.PREPARING);
   };
 
@@ -105,19 +112,10 @@ const Builder = () => {
 
   useEffect(() => {
     const socket = socketIOClient();
-    socket.on('builder-progress-update', (progress: BuilderProgress) => {
-      console.log('progress update received', progress);
-      setProgress(progress);
+    socket.on('word-translated', (update: any) => {
+      console.log('Word Translated', update);
     });
-    socket.on('builder-fail', (error: string) => {
-      console.log('Sentences Building Failed', error);
-      handleFail();
-    });
-    socket.on('completed', (payload: CompletedSentencesPayload) => {
-      console.log('Sentences comleted', payload);
-      handleComplete(payload);
-    });
-    socket.on('update', (update: any) => console.log('UPDATE', update));
+
     setSocket(socket);
 
     return () => {
