@@ -20,11 +20,17 @@
   &__vocab-items {
     height: 400px;
     overflow: scroll;
+
     &__item {
       display: grid;
-      grid-template-columns: 1fr 2fr 100px;
+      grid-template-columns: 1fr 1fr 2fr 2fr 1fr;
       border: solid 1px;
       word-break: break-word;
+
+      &__loading-indicator {
+        grid-column: 2 / -1;
+        border-right: none;
+      }
     }
   }
 }

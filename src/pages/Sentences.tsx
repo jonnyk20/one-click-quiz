@@ -11,7 +11,6 @@ import WordsExport from '../components/WordList/WordsExport';
 
 import './FinishScreen.scss';
 
-
 interface State {
   quiz: FormattedQuiz;
   user: string;
@@ -36,7 +35,7 @@ const FinishScreen: React.SFC = () => {
     name: '',
     quizType: QUIZ_TYPES.SENTENCE_QUIZ,
     questions: [],
-    tags: []
+    tags: [],
   });
 
   useEffect(() => {
@@ -66,10 +65,9 @@ const FinishScreen: React.SFC = () => {
     }
   }, [history, isTesting, location, slug]);
 
-
   return (
     <div className="sentences container">
-        <WordsExport quiz={quiz} />
+      {/* <WordsExport quiz={quiz} /> */}
     </div>
   );
 };

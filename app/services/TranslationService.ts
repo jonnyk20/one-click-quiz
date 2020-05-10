@@ -1,6 +1,7 @@
 import request, { RequestPromiseOptions } from 'request-promise';
 import cheerio from 'cheerio';
 import { Socket } from 'socket.io';
+import { wait } from '../utils/utils';
 
 enum LanguageCodeType {
   EN = 'en',
@@ -80,7 +81,7 @@ const parseHTML = (
 
   const exampleElements = $('.examples tr');
   const examples = exampleElements
-    .slice(0, 1)
+    .slice(0, 10)
     .map((i, el) => {
       const targetLanguageElement = $(el).find('.sentence.left')[0];
       const targetLanguage = parseSentenceAndSource(
@@ -151,7 +152,6 @@ export const translate = async (
 
     const scraperUrl = `http://api.scraperapi.com/?api_key=${process.env.SCRAPER_API_KEY}&url=${lingueeUrl}`;
 
-    console.log('scraperUrl', scraperUrl);
     const res = await request(scraperUrl, {});
 
     const results = { word, ...parseHTML(res, targetLang, translationLang) };
@@ -172,6 +172,63 @@ export const getTranslations = async (
   for (let word of words) {
     console.log('WORD', word);
     const translation = await translate(word, targetLang, translationLang);
+    // const translation = {
+    //   word,
+    //   translations: ['ill-tempered', 'unkind', 'malicious'],
+    //   examples: [
+    //     {
+    //       targetLanguage: {
+    //         sentence:
+    //           '分離不安の子犬は、行儀が悪いわけでも、飼い主に意地悪をしているわけでもありません。',
+    //         sourceUrl:
+    //           'http://www.eukanuba.jp/ja-JP/puppy-guide/easing-your-puppys-separation-anxiety.jspx',
+    //         sourceName: 'eukanuba.jp',
+    //       },
+    //       translation: {
+    //         sentence:
+    //           'Pups who suffer from separation anxiety are not misbehaving or being spiteful.',
+    //         sourceUrl:
+    //           'http://www.eukanuba.cz/en-US/puppy-guide/easing-your-puppys-separation-anxiety.jspx',
+    //         sourceName: 'eukanuba.cz',
+    //       },
+    //     },
+    //     {
+    //       targetLanguage: {
+    //         sentence:
+    //           '2. 分離不安の子犬は、行儀が悪いわけでも、飼い主に意地悪をしているわけでもありません。',
+    //         sourceUrl:
+    //           'http://www.eukanuba.jp/ja-JP/puppy-guide/easing-your-puppys-separation-anxiety.jspx',
+    //         sourceName: 'eukanuba.jp',
+    //       },
+    //       translation: {
+    //         sentence:
+    //           '2. Pups who suffer from separation anxiety are not misbehaving or being spiteful.',
+    //         sourceUrl:
+    //           'http://www.eukanuba.cz/en-US/puppy-guide/easing-your-puppys-separation-anxiety.jspx',
+    //         sourceName: 'eukanuba.cz',
+    //       },
+    //     },
+    //     {
+    //       targetLanguage: {
+    //         sentence:
+    //           '3. 分離不安の子犬は、行儀が悪いわけでも、飼い主に意地悪をしているわけでもありません。',
+    //         sourceUrl:
+    //           'http://www.eukanuba.jp/ja-JP/puppy-guide/easing-your-puppys-separation-anxiety.jspx',
+    //         sourceName: 'eukanuba.jp',
+    //       },
+    //       translation: {
+    //         sentence:
+    //           '3. Pups who suffer from separation anxiety are not misbehaving or being spiteful.',
+    //         sourceUrl:
+    //           'http://www.eukanuba.cz/en-US/puppy-guide/easing-your-puppys-separation-anxiety.jspx',
+    //         sourceName: 'eukanuba.cz',
+    //       },
+    //     },
+    //   ],
+    // };
+
+    // await wait(2000);
+
     console.log('TRANSLATION', translation);
     socket.emit('word-translated', translation);
   }

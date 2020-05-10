@@ -1,5 +1,5 @@
 import React, { useState, ReactElement, MouseEvent } from 'react';
-import { getRandomIndex, hideWordInSentence } from '../../utils/utils';
+import { getRandomIndex, replaceWordWithText } from '../../utils/utils';
 import { SnippetType } from '../../utils/formatQuiz';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,7 +17,7 @@ const BASE_CLASS = 'sentence';
 const Sentence: React.SFC<PropsType> = ({
   snippets,
   word,
-  isAnswered
+  isAnswered,
 }): ReactElement => {
   const [snippetIndex, setSnippetIndex] = useState<number>(
     getRandomIndex(snippets.length)
@@ -32,7 +32,7 @@ const Sentence: React.SFC<PropsType> = ({
 
   const rawSnippet = snippets[snippetIndex]?.snippet || '';
 
-  const formattedSnippet = hideWordInSentence(word, rawSnippet);
+  const formattedSnippet = replaceWordWithText(word, rawSnippet);
 
   const text = isAnswered ? rawSnippet : formattedSnippet;
 

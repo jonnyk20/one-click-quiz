@@ -2,19 +2,35 @@ import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 import { uniq } from 'ramda';
 import { isNotNilOrEmpty } from '../utils/utils';
+import sampleTranslations from '../utils/sampleTranslations';
 import ProgressIndicator, {
   BuilderProgress,
 } from '../components/ProgressIndicator';
 import Button from '../components/Button';
 import { BuilderState } from '../constants/states';
+import { LanguageCodes, VocabItemType } from '../constants/translationTypes';
 
 import './SentenceFinder.scss';
 import ChipsInput from '../components/ChipsInput/ChipsInput';
 import SelectionList from '../components/SelectionList/SelectionList';
+import WordsExport from '../components/WordList/WordsExport';
 
 const convertItemsToInput = (arr: string[]): string => arr.join('\n');
 const convertInputToItems = (input: string): string[] =>
   input.split('\n').slice(0, 12);
+
+type TranslationOptionsType = {
+  words: string[];
+  targetLang: LanguageCodes;
+  translationLang: LanguageCodes;
+};
+
+// const sampleMap: Map<string, VocabItemType | null> = new Map();
+// sampleMap.set('word 1', sampleTranslations[0]);
+// sampleMap.set('word 2', sampleTranslations[0]);
+// sampleMap.set('word 3', null);
+
+// console.log('sampleMap.size', sampleMap.size);
 
 // const defaultItems = [
 //   'divant',
@@ -31,20 +47,13 @@ const convertInputToItems = (input: string): string[] =>
 //   'peau',
 // ];
 
-const defaultItems = ['友達'];
+const defaultItems = new Set(['意地悪']);
 
 type CompletedSentencesPayload = {
   url: string;
 };
 
-enum LanguageCodes {
-  fr = 'fr',
-  sp = 'sp',
-  ja = 'ja',
-  en = 'en',
-}
-
-const languageOtions: { [code in LanguageCodes]: string } = {
+const languageOptions: { [code in LanguageCodes]: string } = {
   [LanguageCodes.fr]: 'French',
   [LanguageCodes.sp]: 'Spanish',
   [LanguageCodes.ja]: 'Japanese',
@@ -52,11 +61,14 @@ const languageOtions: { [code in LanguageCodes]: string } = {
 };
 
 const languageOptionsArray = Object.entries(
-  languageOtions
+  languageOptions
 ).map(([key, label]) => ({ key, label }));
 
 const Builder = () => {
-  const [items, setItems] = useState<string[]>(defaultItems);
+  const [items, setItems] = useState<Set<string>>(defaultItems);
+  const [vocabMap, setVocabMap] = useState<Map<string, VocabItemType | null>>(
+    new Map()
+  );
   const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
   const [sentencesUrl, setSentencesUrl] = useState<string>('my-sentences');
   const [nativeLanguage, setNativeLanguage] = useState<LanguageCodes>(
@@ -73,15 +85,30 @@ const Builder = () => {
     BuilderState.INPUTTING
   );
 
-  const validItems = items.filter(isNotNilOrEmpty);
+  const validItems = Array.from(items).filter(isNotNilOrEmpty);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    socket?.emit(`translate-words`, {
+    socket?.off('word-translated');
+    socket?.on('word-translated', (vocabItem: VocabItemType) => {
+      console.log('why', vocabItem);
+      setVocabMap((prevMap) => {
+        const newVocabMap = new Map(prevMap);
+        newVocabMap.set(vocabItem.word, vocabItem);
+        return newVocabMap;
+      });
+    });
+
+    const options: TranslationOptionsType = {
       words: uniq(validItems),
       targetLang: targetLanguage,
       translationLang: nativeLanguage,
-    });
+    };
+    socket?.emit(`translate-words`, options);
+
+    const newVocabMap = new Map();
+    validItems.forEach((item) => newVocabMap.set(item, null));
+    setVocabMap(newVocabMap);
 
     setBuilderState(BuilderState.PREPARING);
   };
@@ -112,9 +139,6 @@ const Builder = () => {
 
   useEffect(() => {
     const socket = socketIOClient();
-    socket.on('word-translated', (update: any) => {
-      console.log('Word Translated', update);
-    });
 
     setSocket(socket);
 
@@ -134,61 +158,59 @@ const Builder = () => {
       <div className="padding-10">
         <h2>Sentences Finder</h2>
       </div>
-      <div className="mb-10 text-light-color text-medium">
-        Automatic sentence cards for language learners
-      </div>
-      <div className="mv-5 text-small">1. Choose your language</div>
-      <div className="mv-5 text-small">1. Choose your words</div>
-      <div className="mt-5 mb-20 text-small">
-        3. Click 'Find Sentences' and we'll find translations and sentences for
-        you
-      </div>
       {isInputting && (
-        <div className="sentence-finder__form">
-          <div className="sentence-finder__form__language-selection">
-            <div>Native Language</div>
-            <SelectionList
-              options={languageOptionsArray}
-              onChange={onChangeNativeLanguage}
-              initialValue={nativeLanguage}
-            />
+        <>
+          <div className="mb-10 text-light-color text-medium">
+            Automatic sentence cards for language learners
           </div>
-          <div className="sentence-finder__form__language-selection">
-            <div>Target Language</div>
-            <SelectionList
-              options={languageOptionsArray}
-              defaultText="e.g. Reptiles"
-              onChange={onChangeTargetLanguage}
-              initialValue={targetLanguage}
-            />
+          <div className="mv-5 text-small">1. Choose your language</div>
+          <div className="mv-5 text-small">1. Choose your words</div>
+          <div className="mt-5 mb-20 text-small">
+            3. Click 'Find Sentences' and we'll find translations and sentences
+            for you
           </div>
-          <div className="sentence-finder__form__submission mv-20">
-            <div className="mr-10">
-              {`Enter ${languageOtions[targetLanguage]} words below and then click 'Find Sentences'`}
+
+          <div className="sentence-finder__form">
+            <div className="sentence-finder__form__language-selection">
+              <div>Native Language</div>
+              <SelectionList
+                options={languageOptionsArray}
+                onChange={onChangeNativeLanguage}
+                initialValue={nativeLanguage}
+              />
             </div>
-            <Button onClick={handleSubmit}>Find Sentences</Button>
+            <div className="sentence-finder__form__language-selection">
+              <div>Target Language</div>
+              <SelectionList
+                options={languageOptionsArray}
+                defaultText="e.g. Reptiles"
+                onChange={onChangeTargetLanguage}
+                initialValue={targetLanguage}
+              />
+            </div>
+            <div className="sentence-finder__form__submission mv-20">
+              <div className="mr-10">
+                {`Enter ${languageOptions[targetLanguage]} words below and then click 'Find Sentences'`}
+              </div>
+              <Button onClick={handleSubmit}>Find Sentences</Button>
+            </div>
+            <div className="sentence-finder__form__input">
+              <ChipsInput items={items} setItems={setItems} />
+            </div>
           </div>
-          <div className="sentence-finder__form__input">
-            <ChipsInput />
-          </div>
-        </div>
+        </>
       )}
-      {isPreparing && <ProgressIndicator {...progress} />}
-      {isComplete && (
+      {isPreparing && (
         <div>
-          Your sentences are ready at
-          <br />
-          <div className="sentence-finder__sentences-link">
-            <a
-              href={formattedSentencesUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {formattedSentencesUrl}
-            </a>
-          </div>
+          <ProgressIndicator {...progress} />
+          <WordsExport
+            vocabItems={vocabMap}
+            sourceLang={targetLanguage}
+            translationLang={nativeLanguage}
+          />
         </div>
       )}
+
       {isFailed && (
         <div className="mv-20">
           <div className="mb-20">Failed to Find Sentences</div>

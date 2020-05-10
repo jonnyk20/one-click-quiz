@@ -1,65 +1,87 @@
-import React, { useState, useRef, ReactElement, useEffect } from 'react';
+import React, { useState, useRef, ReactElement } from 'react';
 import Papa from 'papaparse';
-import { update } from 'ramda';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 
-import { FormattedChoice, FormattedQuiz } from '../../utils/formatQuiz';
-import { hideWordInSentence } from '../../utils/utils';
+import {
+  replaceWordWithText,
+  isNotNilOrEmpty,
+  isNilOrEmpty,
+  replaceWordWithElement,
+} from '../../utils/utils';
 import Button, { ButtonSize } from '../../components/Button';
 
 import './WordsExport.scss';
-
-const getChoicesFromQuestion = (quiz: FormattedQuiz): FormattedChoice[] =>
-  quiz.questions.reduce(
-    (acc: FormattedChoice[], q) => [...acc, ...q.choices],
-    []
-  );
+import { LanguageCodes, VocabItemType } from '../../constants/translationTypes';
 
 const BASE_CLASS = 'words-export';
 
 type WordExportPropsType = {
-  quiz: FormattedQuiz;
+  vocabItems: Map<string, VocabItemType | null>;
+  sourceLang: LanguageCodes;
+  translationLang: LanguageCodes;
 };
 
 const WordsExport: React.SFC<WordExportPropsType> = ({
-  quiz,
+  vocabItems,
+  sourceLang,
+  translationLang,
 }): ReactElement => {
-  const [sentenceIndices, setSenctenceIndices] = useState<number[]>([]);
-  const ref = useRef<HTMLAnchorElement>(null);
-  const choices = getChoicesFromQuestion(quiz);
+  const [sentenceIndices, setSenctenceIndices] = useState<Map<string, number>>(
+    () => {
+      const sentencesMap = new Map();
+      [...vocabItems.keys()].forEach((key) => sentencesMap.set(key, 0));
 
-  useEffect(() => {
-    setSenctenceIndices(choices.map(() => 0));
-  }, [quiz]);
+      return sentencesMap;
+    }
+  );
+
+  const ref = useRef<HTMLAnchorElement>(null);
 
   const saveCSV = () => {
-    const data = choices.map((c, i) => ({
-      word: c.name,
-      sentence: hideWordInSentence(
-        c.name,
-        c.snippets![sentenceIndices[i]].snippet || ''
-      ),
-      source: c.snippets![sentenceIndices[i]].displayUrl,
-    }));
+    const data = [...vocabItems.keys()]
+      .filter((word) => isNotNilOrEmpty(vocabItems.get(word)))
+      .map((word) => {
+        const vocabItem = vocabItems.get(word);
+        const sentenceObject = vocabItem!.examples[
+          sentenceIndices.get(word) as number
+        ];
+        const sentence = replaceWordWithText(
+          word,
+          sentenceObject?.targetLanguage.sentence!
+        );
+        const sentenceTranslation = sentenceObject?.translation.sentence;
+        const translations = vocabItem?.translations;
+
+        return {
+          word,
+          translations,
+          sentence,
+          sentenceTranslation,
+        };
+      });
+
     var csv = Papa.unparse(data);
     var csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     var url = window.URL.createObjectURL(csvData);
     const a = ref.current;
-
     if (a?.href) {
       a.href = url;
       a.click();
     }
   };
 
-  const cycleSentence = (i: number) => {
-    const currentIndex = sentenceIndices[i];
-    const maxIndex = (choices[i].snippets?.length || 1) - 1;
-    const nextIndex = currentIndex === maxIndex ? 0 : currentIndex + 1;
-    const updatedIndices = update(i, nextIndex, sentenceIndices);
+  const cycleSentence = (word: string) => {
+    const currentIndex = sentenceIndices.get(word) as number;
+    const vocabItem = vocabItems.get(word);
 
-    setSenctenceIndices(updatedIndices);
+    const maxIndex = Math.max(vocabItem?.examples!.length - 1, 0);
+    const nextIndex = currentIndex === maxIndex ? 0 : currentIndex + 1;
+
+    const updatedSentenceIndices = new Map(sentenceIndices);
+    updatedSentenceIndices.set(word, nextIndex);
+
+    setSenctenceIndices(updatedSentenceIndices);
   };
 
   return (
@@ -75,32 +97,48 @@ const WordsExport: React.SFC<WordExportPropsType> = ({
         <Button onClick={saveCSV}>Save CSV</Button>
       </div>
       <div className={`${BASE_CLASS}__vocab-items`}>
-        {choices.map((c, i) => (
-          <div key={i} className={`${BASE_CLASS}__vocab-items__item`}>
-            <div className="border-right padding-5 flex">{c.name}</div>
-            <div className="border-right padding-5 flex">
-              {hideWordInSentence(
-                c.name,
-                c.snippets![sentenceIndices[i]]?.snippet || ''
+        {Array.from(vocabItems.entries()).map(([word, vocabItem], i) => {
+          const exampleSentence =
+            vocabItem?.examples?.[sentenceIndices.get(word) as number];
+
+          return (
+            <div key={i} className={`${BASE_CLASS}__vocab-items__item`}>
+              <div className="border-right padding-5 flex">{word}</div>
+              {isNilOrEmpty(vocabItem) && (
+                <div
+                  className={`${BASE_CLASS}__vocab-items__item__loading-indicator border-right padding-5 flex grid-column-3`}
+                >
+                  Loading...
+                </div>
+              )}
+
+              {isNotNilOrEmpty(vocabItem) && (
+                <>
+                  <div className="border-right padding-5 flex">
+                    {vocabItem?.translations.join(', ')}
+                  </div>
+                  <div className="border-right padding-5 flex">
+                    {replaceWordWithElement(
+                      word,
+                      exampleSentence?.targetLanguage!.sentence
+                    )}
+                  </div>
+                  <div className="border-right padding-5 flex">
+                    {exampleSentence?.translation.sentence}
+                  </div>
+                  <div className="padding-5 flex fd-column jc-around">
+                    <Button
+                      onClick={() => cycleSentence(word)}
+                      size={ButtonSize.SMALL}
+                    >
+                      <FontAwesomeIcon icon={faSyncAlt} size="1x" />
+                    </Button>
+                  </div>
+                </>
               )}
             </div>
-            <div className="padding-5 flex fd-column jc-around">
-              <div className="mb-5">
-                <a
-                  href={c.snippets![sentenceIndices[i]]?.displayUrl}
-                  className="text-main-color"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {c.snippets![sentenceIndices[i]]?.displayUrl}
-                </a>
-              </div>
-              <Button onClick={() => cycleSentence(i)} size={ButtonSize.SMALL}>
-                <FontAwesomeIcon icon={faSyncAlt} size="1x" />
-              </Button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <a href="null" download="vocab.csv" ref={ref} style={{ display: 'none' }}>
         Download

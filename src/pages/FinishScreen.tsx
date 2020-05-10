@@ -22,9 +22,9 @@ const submitScore = async (scoreRecord: any) => {
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(scoreRecord)
+      body: JSON.stringify(scoreRecord),
     }
   );
   const json = await response.json();
@@ -49,7 +49,7 @@ type Location = {
 enum ScoreSubmissionstate {
   INITIAL,
   SUBMITTING,
-  SUBMITTED
+  SUBMITTED,
 }
 
 const FinishScreen: React.SFC = () => {
@@ -66,7 +66,7 @@ const FinishScreen: React.SFC = () => {
     correctAnswerCount,
     score,
     maxCorrectAnswers,
-    usedRedemption
+    usedRedemption,
   } = location?.state || {};
 
   const [inputValue, setInputValue] = useState<string>('');
@@ -116,7 +116,7 @@ const FinishScreen: React.SFC = () => {
       name: inputValue,
       quizName: quiz.name,
       score,
-      usedRedemption
+      usedRedemption,
     };
 
     if (isNotNilOrEmpty(inputValue.trim())) {
@@ -188,7 +188,7 @@ const FinishScreen: React.SFC = () => {
         </div>
       )}
 
-      {isSentenceQuiz && <WordsExport quiz={quiz} />}
+      {/* {isSentenceQuiz && <WordsExport quiz={quiz} />} */}
 
       {!isMarineLifeQuiz && (
         <>

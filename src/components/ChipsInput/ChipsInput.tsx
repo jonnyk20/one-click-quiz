@@ -41,31 +41,35 @@ const chipRenderer = (
   />
 );
 
-const ChipsInput = () => {
-  const [chips, setChips] = useState<Set<string>>(new Set(['友達']));
+type ChipInputPropsType = {
+  items: Set<string>;
+  setItems: (items: Set<string>) => void;
+};
+
+const ChipsInput: React.SFC<ChipInputPropsType> = ({ items, setItems }) => {
   const [focusedChip, setFocusedChip] = useState<number>(3);
   const [inputValue, setInputValue] = useState<string>('');
   const [isDeleteMode, setIsDeleteMode] = useState<boolean>(false);
 
   const handleDeleteChip = (text: string, i: number) => {
-    const newChipsSet = new Set(chips);
+    const newChipsSet = new Set(items);
     newChipsSet.delete(text);
-    setChips(newChipsSet);
+    setItems(newChipsSet);
   };
 
   const setDeleteModeOrDelete = () => {
     if (!isDeleteMode) {
-      const lastChipIndex = chips.size - 1;
+      const lastChipIndex = items.size - 1;
       setIsDeleteMode(true);
       setFocusedChip(lastChipIndex);
       return;
     }
 
-    const lastItem = Array.from(chips).pop();
+    const lastItem = Array.from(items).pop();
     if (!isNil(lastItem)) {
-      const newChipsSet = new Set(chips);
+      const newChipsSet = new Set(items);
       newChipsSet.delete(lastItem);
-      setChips(newChipsSet);
+      setItems(newChipsSet);
     }
 
     setInputValue('');
@@ -87,14 +91,14 @@ const ChipsInput = () => {
 
     if (containsSeparator) {
       const newItems = value.trim().split(regex);
-      const newChipsSet = new Set(chips);
+      const newChipsSet = new Set(items);
       newItems.forEach((item) => {
         if (isNotNilOrEmpty(item)) {
           newChipsSet.add(item);
         }
       });
 
-      setChips(newChipsSet);
+      setItems(newChipsSet);
       setInputValue('');
 
       return;
@@ -109,7 +113,7 @@ const ChipsInput = () => {
     }
   };
 
-  const chipComponents = Array.from(chips).map((text, i) => {
+  const chipComponents = Array.from(items).map((text, i) => {
     return chipRenderer(
       {
         text,
