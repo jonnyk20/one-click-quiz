@@ -150,9 +150,15 @@ export const translate = async (
       languageStrings[translationLang]
     }/search?source=ja&query=${encodeURIComponent(word)}`;
 
-    const scraperUrl = `http://api.scraperapi.com/?api_key=${process.env.SCRAPER_API_KEY}&url=${lingueeUrl}`;
+    const scrapingBeeUrl = `https://app.scrapingbee.com/api/v1/?api_key=${
+      process.env.SCRAPING_BEE_KEY
+    }&render_js=false&url=${encodeURIComponent(lingueeUrl)}`;
 
-    const res = await request(scraperUrl, {});
+    const scraperUrl = `http://api.scraperapi.com/?api_key=${
+      process.env.SCRAPER_API_KEY
+    }&url=${encodeURIComponent(lingueeUrl)}`;
+
+    const res = await request(scrapingBeeUrl, {});
 
     const results = { word, ...parseHTML(res, targetLang, translationLang) };
 
